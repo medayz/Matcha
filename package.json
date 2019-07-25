@@ -1,20 +1,20 @@
 {
-  "name": "Matcha",
+  "name": "node",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/medayz/Matcha.git"
+    "start": "node index",
+    "dev": "nodemon index"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/medayz/Matcha/issues"
+  "devDependencies": {
+    "nodemon": "^1.19.1"
   },
-  "homepage": "https://github.com/medayz/Matcha#readme"
+  "dependencies": {
+    "express": "^4.17.1",
+    "neo4j-driver": "^1.7.5"
+  }
 }
