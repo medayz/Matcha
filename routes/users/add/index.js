@@ -1,5 +1,7 @@
-const	usersRouter =  require('express').Router();
-const   query = require('../../libraries/database');
+const	addRouter =  require('express').Router();
+const   query = require('../../../libraries/database');
 
-usersRouter.get('/picture', (req, res) => {
+addRouter.get('/picture', (req, res) => {
 });
+
+module.exports = addRouter;
