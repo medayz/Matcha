@@ -13,7 +13,8 @@ addRouter.post('/picture/:username', (req, res) => {
         date: Date.now()
     };
     query
-		.run('MATCH (u:User {username: $username}) CREATE (u)-[:UPLOADED]->(p:Picture {link: $link, username: $username, date: $date})', pics)
+        .run('MATCH (u:User {username: $username}) CREATE (u)-[:UPLOADED]->(p:Picture {link: $link, username: $username, date: $date})', pics)
+        .then(res.send("Image added"))
 		.catch((err) => console.log(err));
 });
 
