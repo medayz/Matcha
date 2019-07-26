@@ -4,9 +4,9 @@ const driver = neo4j.driver("bolt://localhost:7687", neo4j.auth.basic('neo4j', '
 const session = driver.session();
 
 
-async function run(query) {
+async function run(query, params) {
 	const   results = [];
-	const	queryResult = await session.run(query);
+	const	queryResult = await session.run(query, params);
 
 	session.close();
 	queryResult.records.forEach((rec) => {
