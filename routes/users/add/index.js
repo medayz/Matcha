@@ -6,14 +6,15 @@ addRouter.use(express.json());
 
 
 //Add picture
-addRouter.post('/pics/:username', (req, res) => {
+addRouter.post('/picture/:username', (req, res) => {
     const pics = {
         link: req.body.link,
         username: req.params.username,
         date: Date.now()
     };
-    query.run('MATCH (u:Users {username: $username}) create (u)-[:UPLOADED]->(p:Picture {link: $link, username: $username, date: $date})', pics);
-    res.send(pics.link);
+    query
+		.run('MATCH (u:User {username: $username}) CREATE (u)-[:UPLOADED]->(p:Picture {link: $link, username: $username, date: $date})', pics)
+		.catch((err) => console.log(err));
 });
 
 module.exports = addRouter;

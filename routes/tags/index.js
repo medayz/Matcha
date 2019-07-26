@@ -9,7 +9,6 @@ tagsRouter.get('/get', (req, res) => {
 });
 
 tagsRouter.get('/get/:name', (req, res) => {
-	console.log(req.params);
 	query.run('MATCH (n:Tag { name: $name }) RETURN n', {name: req.params.name})
 		.then((results) => {
 			res.json(results);
