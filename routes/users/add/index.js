@@ -1,9 +1,8 @@
 const	addRouter =  require('express').Router();
 const   query = require('../../../libraries/database');
 const   express = require('express');
-const   Joi = require('joi');
-addRouter.use(express.json());
 
+addRouter.use(express.json());
 
 // Add picture
 addRouter.post('/picture/:username', (req, res) => {
@@ -29,23 +28,4 @@ addRouter.post('/tag/:username', (req, res) => {
 		.catch((err) => console.log(err));
 });
 
-//  Add user
-addRouter.post('/user', (req, res) => {
-    const params = {
-        fName: req.body.fName,
-        lName: req.body.lName,
-        username: req.body.username,
-        email: req.body.email,
-        pass: req.body.pass,
-        cPass: req.body.cPass,
-        err_fName: '',
-        err_lName: '',
-        err_username: '',
-        err_email: '',
-        err_pass: '',
-        err_cPass: ''
-    };
-    console.log(params);
-    res.send(params);
-});
 module.exports = addRouter;
