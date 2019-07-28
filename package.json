@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "node index",
-    "dev": "nodemon index"
+    "client": "npm start --prefix client",
+    "dev": "concurrently \"nodemon index\" \"npm run client\""
   },
   "keywords": [],
   "author": "",
@@ -14,6 +15,7 @@
     "nodemon": "^1.19.1"
   },
   "dependencies": {
+    "concurrently": "^4.1.1",
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "joi": "^14.3.1",
