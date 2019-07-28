@@ -65,8 +65,7 @@ class Register extends Component {
                 errState: {}
               }
             );
-
-            document.getElementById("form1").reset();
+            window.location.reload();
           });
       }
       else
