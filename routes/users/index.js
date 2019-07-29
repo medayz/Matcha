@@ -1,5 +1,5 @@
 const 	usersRouter =  require('express').Router();
-const	query = require('../../libraries/database');
+const	userModel = require('../../models/userModel');
 const	validator = require('../../validators/register');
 const	mail = require('../../helpers/sendmail');
 const	token = require('../../helpers/token');
@@ -9,17 +9,21 @@ usersRouter.use(require('express').json());
 usersRouter.use('/add', require('./add'));
 
 usersRouter.get('/get', (req, res) => {
-	query.run('MATCH (n:User) RETURN n;')
-		.then((results) => {
-			res.json(results);
-		});
+	userModel
+		.getAllUsers()
+		.then(results => res.json(results));
 });
 
 usersRouter.get('/get/:username', (req, res) => {
-	query.run('MATCH (n:User {username: $name}) RETURN n;', {name: req.params.username})
-		.then((results) => {
-			res.json(results);
-		});
+	userModel
+		.getUser(req.params.username)
+		.then(results => res.json(results));
+});
+
+usersRouter.get('/get/email/:email', (req, res) => {
+	userModel
+		.getUserByEmail(req.params.email)
+		.then(results => res.json(results));
 });
 
 //  Add user
@@ -41,8 +45,15 @@ usersRouter.post('/create', (req, res) => {
 		cPass: validator.confirmPassword(params.pass, params.cPass)
 	};
 	console.log(params.err);
-	if (!Object.values(params.err).filter(obj => obj).length) {
+	if (!Object.values(params.err).filter(obj => (obj !== "")).length) {
+		let	newUser = {};
+		Object.assign(newUser, params);
+		delete newUser.err;
+		delete newUser.cPass;
 		const tok = token.get();
+		newUser.emailToken = tok;
+		console.log(newUser);
+		userModel.addUser(newUser);
 		mail.send({
 			receiver: params.email,
 			subject: "Confirm your e-mail address",
@@ -53,7 +64,28 @@ usersRouter.post('/create', (req, res) => {
 	res.send(params);
 });
 
+usersRouter.post('/auth', async (req, res) => {
+	const params = {
+		username: req.body.username ? req.body.username.trim() : "",
+		pass: req.body.pass ? req.body.pass : "",
+		err: {
+			username: "",
+			pass: ""
+		}
+	};
+	userModel
+		.logUser(params)
+		.then(result => res.send('Connected Successfully!'))
+		.catch((err) => {
+			console.log(`msg: ${err.message}`);
+			params.err.pass = (err.message === "Wrong password!") ? "Wrong password!" : "";
+			params.err.username = (err.message === "Username not registered!") ? "Username not registered!" : "";
+			res.json(params);
+		});
+});
+
 usersRouter.use((err, req, res, next) => {
+	console.log('error: ' + err.message);
 	res.status(500).send('Bad request!');
 });
 
