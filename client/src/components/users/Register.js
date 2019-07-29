@@ -29,7 +29,7 @@ class Register extends Component {
     this.setState({[e.target.name]: e.target.value});
   };
 
-  onSubmit = e => {
+  onSubmit = async e => {
       e.preventDefault();
       const err = {
         fName: '',
@@ -60,7 +60,7 @@ class Register extends Component {
       && err.pass === '' && err.cPass === '')
       {
         const user = this.state;
-        axios
+        await axios
           .post(`http://localhost:1337/api/users/create`, user)
           .then(res => {
             console.log(res.data);
@@ -175,7 +175,7 @@ class Register extends Component {
               value={this.state.cPass}
           />
           <br />
-          <button type="submit" className="btn btn-danger">Submit</button>
+          <button type="submit" className="btn btn-primary">Submit</button>
         </form>
     </div>
     );
