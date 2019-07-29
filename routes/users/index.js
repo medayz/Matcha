@@ -38,6 +38,7 @@ usersRouter.post('/create', (req, res) => {
 		pass: '',
 		cPass: ''
 	};
+	console.log(params.err);
 	res.send(params);
 });
 

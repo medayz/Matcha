@@ -54,18 +54,43 @@ class Register extends Component {
           .post(`http://localhost:1337/api/users/create`, user)
           .then(res => {
             console.log(res.data);
-            this.setState(
-              { 
-                fName: '',
-                lName: '',
-                username: '',
-                email: '',
-                pass: '',
-                cPass: '',
-                errState: {}
-              }
-            );
-            window.location.reload();
+            
+            const err_back = res.data.err;
+            if (err_back.fName === '' && err_back.lName === ''
+              && err_back.username === '' && err_back.email === '' 
+              && err_back.pass === '' && err_back.cPass === '')
+            {
+              this.setState(
+                { 
+                  fName: '',
+                  lName: '',
+                  username: '',
+                  email: '',
+                  pass: '',
+                  cPass: '',
+                  errState: {}
+                }
+              );
+              window.location.reload();
+            }
+            else
+            {
+              if (err_back.fName !== '')
+                err.pass = err_back.fName;
+              if (err_back.lName !== '')
+                err.cPass = err_back.lName;
+              if (err_back.email !== '')
+                err.cPass = err_back.email;
+              if (err_back.username !== '')
+                err.email = err_back.username;
+              if (err_back.pass !== '')
+                err.username = err_back.pass;
+              if (err_back.cPass !== '')
+                err.lName = err_back.cPass;
+              this.setState({errState: err_back});
+              return;
+            }
+            
           });
       }
       else
