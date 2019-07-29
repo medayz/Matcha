@@ -76,7 +76,7 @@ usersRouter.post('/auth', async (req, res) => {
 	};
 	userModel
 		.logUser(params)
-		.then(result => res.send('Connected Successfully!'))
+		.then(result => res.json(params))
 		.catch((err) => {
 			console.log(`msg: ${err.message}`);
 			if (err.message === "Wrong password!") {

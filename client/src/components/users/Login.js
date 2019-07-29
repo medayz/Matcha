@@ -6,17 +6,21 @@ class Login extends Component {
     state = {
         username: '',
         pass: '',
-        errState: {},
-        login: ''
+        errState: {}
     };
     onChange = e => {
         this.setState({[e.target.name]: e.target.value});
     };
+    clear = () => {
+      document.getElementById('username').value = "";
+      document.getElementById('pass').value = "";
+    }
     onSubmit = async e => {
         e.preventDefault();
         const err = {
           username: '',
-          pass: ''
+          pass: '',
+          active: ''
         };
         this.setState({errState: err});
         if (this.state.username.length === 0)
@@ -27,11 +31,10 @@ class Login extends Component {
         {
           const user = this.state;
           await axios
-            .post(`http://localhost:1337/api/users/login`, user)
+            .post(`http://localhost:1337/api/users/auth`, user)
             .then(res => {
-              //console.log(res.data);
               const err_back = res.data.err;
-              if (err_back.username === '' && err_back.pass === '')
+              if (err_back.username === '' && err_back.pass === '' && err_back.active === '')
               {
                 this.setState({ login: 'done'})
                 this.setState(
@@ -49,6 +52,8 @@ class Login extends Component {
                   err.email = err_back.username;
                 if (err_back.pass !== '')
                   err.username = err_back.pass;
+                if (err_back.active !== '')
+                  err.active = err_back.active;
                 this.setState({errState: err_back});
                 return;
               }
@@ -61,6 +66,7 @@ class Login extends Component {
   render() {
     return (
     <div className="container">
+        {this.state.errState.active && <div className="alert alert-primary" role="alert"> {this.state.errState.active} </div>}
         <form id="Login" onSubmit={this.onSubmit}>
             <RegisterInput 
               label="Username"

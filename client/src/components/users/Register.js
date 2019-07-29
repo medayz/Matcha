@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 import RegisterInput from './RegisterInput';
 import axios from 'axios';
 
-//import * as Joi from 'joi-browser';
-
 class Register extends Component {
   state = {
       fName: '',
@@ -110,9 +108,10 @@ class Register extends Component {
   render() {
     return (
     <div className="container">
+        
         <br />
         <form id="form1" onSubmit={this.onSubmit}>
-          {this.state.registred && <div className="alert alert-danger" role="alert"> you will receive an email to confirm your account before you sign in </div>}
+          {this.state.registred && <div className="alert alert-primary" role="alert"> you will receive an email to confirm your account before you sign in </div>}
           <br />
           <RegisterInput 
               label="First Name"

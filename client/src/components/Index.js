@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 
 
-//import * as Joi from 'joi-browser';
-
 class Index extends Component {
   
   render() {
