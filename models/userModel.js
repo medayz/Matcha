@@ -34,6 +34,9 @@ module.exports = {
 		if (user.length) {
 			user = user[0].props;
 			if (await password.verify(params.pass, user.pwd)) {
+				if (!user.activated)
+					throw new Error("Your account's still not activated, please confirm your e-mail address!");
+
 				return true;
 			}	else {
 				throw new Error("Wrong password!");

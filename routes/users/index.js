@@ -69,6 +69,7 @@ usersRouter.post('/auth', async (req, res) => {
 		username: req.body.username ? req.body.username.trim() : "",
 		pass: req.body.pass ? req.body.pass : "",
 		err: {
+			active: "",
 			username: "",
 			pass: ""
 		}
@@ -78,8 +79,13 @@ usersRouter.post('/auth', async (req, res) => {
 		.then(result => res.send('Connected Successfully!'))
 		.catch((err) => {
 			console.log(`msg: ${err.message}`);
-			params.err.pass = (err.message === "Wrong password!") ? "Wrong password!" : "";
-			params.err.username = (err.message === "Username not registered!") ? "Username not registered!" : "";
+			if (err.message === "Wrong password!") {
+				params.err.pass = err.message;
+			}	else if (err.message === "Username not registered!") {
+				params.err.username = err.message;
+			}	else {
+				params.err.active = err.message;
+			}
 			res.json(params);
 		});
 });
