@@ -12,9 +12,19 @@ class Register extends Component {
       email: '',
       pass: '',
       cPass: '',
-      errState: {}
+      errState: {},
+      registred: ''
   };
   
+  clear = () => {
+    document.getElementById('firstName').value = "";
+    document.getElementById('lastName').value = "";
+    document.getElementById('email').value = "";
+    document.getElementById('username').value = "";
+    document.getElementById('pass').value = "";
+    document.getElementById('cPass').value = "";
+  }
+
   onChange = e => {
     this.setState({[e.target.name]: e.target.value});
   };
@@ -60,6 +70,7 @@ class Register extends Component {
               && err_back.username === '' && err_back.email === '' 
               && err_back.pass === '' && err_back.cPass === '')
             {
+              this.setState({ registred: 'done'})
               this.setState(
                 { 
                   fName: '',
@@ -71,7 +82,7 @@ class Register extends Component {
                   errState: {}
                 }
               );
-              window.location.reload();
+              this.clear();
             }
             else
             {
@@ -99,7 +110,10 @@ class Register extends Component {
   render() {
     return (
     <div className="container">
+        <br />
         <form id="form1" onSubmit={this.onSubmit}>
+          {this.state.registred && <div className="alert alert-danger" role="alert"> you will receive an email to confirm your account before you sign in </div>}
+          <br />
           <RegisterInput 
               label="First Name"
               type="text"
