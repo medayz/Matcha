@@ -1,10 +1,8 @@
-const	chatRouter =  require('express').Router();
-const   query = require('../../libraries/database');
+const chatRouter = require('express').Router();
+const chatsController = require('../../controllers/chatsController');
 
-chatRouter.get('/get/:username', (req, res) => {
-	query.run('MATCH (n:User {username: $name})-[:PARTICIPATE_IN]->(c:Chat) RETURN c;', {name: req.params.username})
-		.then(result => res.send(result))
-		.catch(err => console.log(err));
-});
+chatRouter
+	.route('/get/:username')
+	.get(chatsController.getUserChats);
 
 module.exports = chatRouter;

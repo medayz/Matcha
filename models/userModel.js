@@ -1,30 +1,32 @@
-const   fetch = require('node-fetch');
-const   query = require('../libraries/database');
-const   password = require('../helpers/hashing');
+const fetch = require('node-fetch');
+const query = require('../libraries/database');
+const password = require('../helpers/hashing');
 
 module.exports = {
 	getAllUsers: async () => {
 		return await query.run('MATCH (n:User) RETURN n;');
 	},
 	getUser: async (user) => {
-		return await query.run('MATCH (n:User {username: $name}) RETURN n;', {name: user});
+		return await query.run('MATCH (n:User {username: $name}) RETURN n;', {
+			name: user
+		});
 	},
 	getUserByEmail: async (email) => {
-		return await query.run('MATCH (n:User {email: $email}) RETURN n;', {email: email});
+		return await query.run('MATCH (n:User {email: $email}) RETURN n;', {
+			email: email
+		});
 	},
 	addUser: async (newUser) => {
 		newUser.pass = await password.hash(newUser.pass);
-		query.run('CREATE (u:User {emailToken: $emailToken, lName: $lName, activated: $active, fName: $fName, email: $email, username: $username, pwd: $pwd})',
-				{
-					fName: newUser.fName,
-					lName: newUser.lName,
-					username: newUser.username,
-					email: newUser.email,
-					pwd: newUser.pass,
-					emailToken: newUser.emailToken,
-					active: false
-				}
-		);
+		await query.run('CREATE (u:User {emailToken: $emailToken, lName: $lName, activated: $active, fName: $fName, email: $email, username: $username, pwd: $pwd})', {
+			fName: newUser.fName,
+			lName: newUser.lName,
+			username: newUser.username,
+			email: newUser.email,
+			pwd: newUser.pass,
+			emailToken: newUser.emailToken,
+			active: false
+		});
 	},
 	logUser: async (params) => {
 		if (!params.username)
@@ -38,15 +40,27 @@ module.exports = {
 					throw new Error("Your account's still not activated, please confirm your e-mail address!");
 
 				return true;
-			}	else {
+			} else {
 				throw new Error("Wrong password!");
 			}
-		}	else {
+		} else {
 			throw new Error("Username not registered!");
 		}
 	},
 	removeEmailToken: async (username) => {
-		query
-			.run('MATCH (u:User {username: $user}) REMOVE u.emailToken;', {user: username});
+		await query
+			.run('MATCH (u:User {username: $user}) REMOVE u.emailToken;', {
+				user: username
+			});
+	},
+	add: {
+		picture: async (params) => {
+			await query
+				.run('MATCH (u:User {username: $username}) CREATE (u)-[:UPLOADED]->(p:Picture {link: $link, username: $username, date: $date})', params);
+		},
+		tag: async (params) => {
+			await query
+				.run('MATCH (u:User {username: $username}) CREATE (u)-[:INTRESTED_IN]->(p:Tag {name: $name})', params)
+		}
 	}
 };

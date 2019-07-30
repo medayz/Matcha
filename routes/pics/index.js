@@ -1,16 +1,8 @@
-const	picsRouter =  require('express').Router();
-const   query = require('../../libraries/database');
+const picsRouter = require('express').Router();
+const picturesController = require('../../controllers/picturesController');
 
-picsRouter.get('/get/:username', (req, res) => {
-    const pics = {
-        username: req.params.username
-    };
-    const data = query.run('MATCH (a:User {username: $username})-[:UPLOADED]->(p:Picture) return p', pics);
-    data.then( (result) => {
-        res.json(result);
-    }).catch((err) => {
-         res.send("picture not found!");
-    });
-});
-        
+picsRouter
+    .route('/get/:username')
+    .get(picturesController.getUserPics);
+
 module.exports = picsRouter;

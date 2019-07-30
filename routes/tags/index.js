@@ -1,19 +1,12 @@
-const	tagsRouter =  require('express').Router();
-const   query = require('../../libraries/database');
+const tagsRouter = require('express').Router();
+const tagsController = require('../../controllers/tagsController');
 
-tagsRouter.get('/get', (req, res) => {
-	query.run('MATCH (n:Tag) RETURN n;')
-		.then((results) => {
-			res.json(results);
-		});
-});
+tagsRouter
+	.route('/get')
+	.get(tagsController.getAllTags);
 
-tagsRouter.get('/get/:name', (req, res) => {
-	query.run('MATCH (n:Tag { name: $name }) RETURN n', {name: req.params.name})
-		.then((results) => {
-			res.json(results);
-		})
-		.catch ((err) => console.log(err));
-});
+tagsRouter
+	.route('/get/:name')
+	.get(tagsController.getTagByName);
 
 module.exports = tagsRouter;
