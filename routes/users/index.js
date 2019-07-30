@@ -90,6 +90,24 @@ usersRouter.post('/auth', async (req, res) => {
 		});
 });
 
+usersRouter.get('/activation/:username/:token', async (req, res) => {
+	userModel
+		.getUser(req.params.username)
+		.then(async (result) => {
+			if (result.length) {
+				result = result[0].props;
+				if (result.emailToken === req.params.token) {
+					await userModel.removeEmailToken(req.params.username);
+					res.send('Your Account has been successfully activated!');
+				}	else {
+					throw new Error('Invalid or expired token');
+				}
+			}	else {
+					throw new Error('Username not registered');
+			}
+		}).catch(err => res.send(err.message));
+});
+
 usersRouter.use((err, req, res, next) => {
 	console.log('error: ' + err.message);
 	res.status(500).send('Bad request!');

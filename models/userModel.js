@@ -44,5 +44,9 @@ module.exports = {
 		}	else {
 			throw new Error("Username not registered!");
 		}
+	},
+	removeEmailToken: async (username) => {
+		query
+			.run('MATCH (u:User {username: $user}) REMOVE u.emailToken;', {user: username});
 	}
 };
