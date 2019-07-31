@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import RegisterInput from './RegisterInput';
 import axios from 'axios';
-
+import Alert from '../layout/Alert';
+import { connect } from 'react-redux';
+import { setAlert } from '../../actions/alert';
 class Login extends Component {
     state = {
         username: '',
@@ -33,8 +35,8 @@ class Login extends Component {
           await axios
             .post(`http://localhost:1337/api/users/auth`, user)
             .then(res => {
-              const err_back = res.data.err;
-              if (err_back.username === '' && err_back.pass === '' && err_back.active === '')
+              const backend = res.data;
+              if (backend.status === 200)
               {
                 this.setState({ login: 'done'})
                 this.setState(
@@ -48,13 +50,14 @@ class Login extends Component {
               }
               else
               {
-                if (err_back.username !== '')
-                  err.email = err_back.username;
-                if (err_back.pass !== '')
-                  err.username = err_back.pass;
-                if (err_back.active !== '')
-                  err.active = err_back.active;
-                this.setState({errState: err_back});
+                console.log(backend);
+                if (backend.data.err.username !== '')
+                  err.email = backend.data.err.username;
+                if (backend.data.err.pass !== '')
+                  err.username = backend.data.err.pass;
+                if (backend.data.err.active !== '')
+                  err.active = backend.data.err.active;
+                this.setState({errState: backend.data.err});
                 return;
               }
               
@@ -67,6 +70,7 @@ class Login extends Component {
     return (
     <div className="container">
         {this.state.errState.active && <div className="alert alert-primary" role="alert"> {this.state.errState.active} </div>}
+        <Alert />
         <form id="Login" onSubmit={this.onSubmit}>
             <RegisterInput 
               label="Username"
@@ -95,4 +99,4 @@ class Login extends Component {
   } 
 }
 
-export default Login;
+export default connect(null, { setAlert })(Login);

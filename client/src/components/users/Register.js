@@ -61,12 +61,8 @@ class Register extends Component {
         await axios
           .post(`http://localhost:1337/api/users/create`, user)
           .then(res => {
-            console.log(res.data);
-            
-            const err_back = res.data.err;
-            if (err_back.fName === '' && err_back.lName === ''
-              && err_back.username === '' && err_back.email === '' 
-              && err_back.pass === '' && err_back.cPass === '')
+            const backend = res.data;
+            if (backend.status === 200)
             {
               this.setState({ registred: 'done'})
               this.setState(
@@ -82,24 +78,25 @@ class Register extends Component {
               );
               this.clear();
             }
-            else
+            else if (backend.status === 400)
             {
-              if (err_back.fName !== '')
-                err.pass = err_back.fName;
-              if (err_back.lName !== '')
-                err.cPass = err_back.lName;
-              if (err_back.email !== '')
-                err.cPass = err_back.email;
-              if (err_back.username !== '')
-                err.email = err_back.username;
-              if (err_back.pass !== '')
-                err.username = err_back.pass;
-              if (err_back.cPass !== '')
-                err.lName = err_back.cPass;
-              this.setState({errState: err_back});
+              if (backend.data.err.fName !== '')
+                err.pass = backend.data.err.fName;
+              if (backend.data.err.lName !== '')
+                err.cPass = backend.data.err.lName;
+              if (backend.data.err.email !== '')
+                err.cPass = backend.data.err.email;
+              if (backend.data.err.username !== '')
+                err.email = backend.data.err.username;
+              if (backend.data.err.pass !== '')
+                err.username = backend.data.err.pass;
+              if (backend.data.err.cPass !== '')
+                err.lName = backend.data.err.cPass;
+              this.setState({errState: backend.data.err});
               return;
             }
-            
+            else
+              this.setState({ registred: '500'})
           });
       }
       else
@@ -111,7 +108,8 @@ class Register extends Component {
         
         <br />
         <form id="form1" onSubmit={this.onSubmit}>
-          {this.state.registred && <div className="alert alert-primary" role="alert"> you will receive an email to confirm your account before you sign in </div>}
+          {this.state.registred === 'done' && <div className="alert alert-primary" role="alert"> you will receive an email to confirm your account before you sign in </div>}
+          {this.state.registred === '500' && <div className="alert alert-primary" role="alert"> Unsuccesful registration, please retry! </div>}
           <br />
           <RegisterInput 
               label="First Name"
