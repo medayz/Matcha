@@ -92,6 +92,12 @@ module.exports = {
 			newUser.emailToken = tok;
 			try {
 				await userModel.addUser(newUser);
+				response
+					.status(200)
+					.json({
+						status: 200,
+						msg: 'Successfully Registered!'
+					});
 			} catch (err) {
 				console.log(err.message);
 				response
@@ -109,6 +115,13 @@ module.exports = {
 					html: "<h1>test html</h1><br>here's your token: " + tok
 				})
 				.catch(err => console.log(err));
+		} else {
+			response
+				.status(400)
+				.json({
+					status: 400,
+					data: params
+				});
 		}
 	},
 	connect: async (req, response) => {
