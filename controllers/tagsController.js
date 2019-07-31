@@ -6,7 +6,6 @@ module.exports = {
             .getAllTags()
             .then((results) => {
                 response
-                    .status(200)
                     .json({
                         status: 200,
                         data: results
@@ -15,7 +14,6 @@ module.exports = {
             .catch((err) => {
                 console.log(err.message);
                 response
-                    .status(500)
                     .json({
                         status: 500,
                         msg: 'Error fetching tags'
@@ -26,12 +24,15 @@ module.exports = {
         tagModel
             .getTagByName(req.params.name)
             .then((results) => {
-                res.json(results);
+                response
+                    .json({
+                        status: 200,
+                        data: results
+                    });
             })
             .catch((err) => {
                 console.log(err.message);
                 response
-                    .status(500)
                     .json({
                         status: 500,
                         msg: 'Error fetching tag by name'

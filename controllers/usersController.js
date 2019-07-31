@@ -9,7 +9,6 @@ module.exports = {
 			.getAllUsers()
 			.then(results => {
 				response
-					.status(200)
 					.json({
 						status: 200,
 						data: results
@@ -17,7 +16,6 @@ module.exports = {
 			}).catch(err => {
 				console.log(err.message);
 				response
-					.status(500)
 					.json({
 						status: 500,
 						msg: 'Error fetching users'
@@ -29,7 +27,6 @@ module.exports = {
 			.getUser(req.params.username)
 			.then(results => {
 				response
-					.status(200)
 					.json({
 						status: 200,
 						data: results
@@ -38,7 +35,6 @@ module.exports = {
 			.catch(err => {
 				console.log(err.message);
 				response
-					.status(500)
 					.json({
 						status: 500,
 						msg: 'Error getting User by username'
@@ -50,7 +46,6 @@ module.exports = {
 			.getUserByEmail(req.params.email)
 			.then(results => {
 				response
-					.status(200)
 					.json({
 						status: 200,
 						data: results
@@ -59,7 +54,6 @@ module.exports = {
 			.catch(err => {
 				console.log(err.message);
 				response
-					.status(500)
 					.json({
 						status: 500,
 						msg: 'Error getting User by email'
@@ -93,7 +87,6 @@ module.exports = {
 			try {
 				await userModel.addUser(newUser);
 				response
-					.status(200)
 					.json({
 						status: 200,
 						msg: 'Successfully Registered!'
@@ -101,7 +94,6 @@ module.exports = {
 			} catch (err) {
 				console.log(err.message);
 				response
-					.status(500)
 					.json({
 						status: 500,
 						msg: 'Unsuccesful registration, please retry!'
@@ -117,7 +109,6 @@ module.exports = {
 				.catch(err => console.log(err));
 		} else {
 			response
-				.status(400)
 				.json({
 					status: 400,
 					data: params
@@ -138,7 +129,6 @@ module.exports = {
 			.logUser(params)
 			.then(result => {
 				response
-					.status(200)
 					.json({
 						status: 200,
 						data: params
@@ -154,7 +144,6 @@ module.exports = {
 					params.err.active = err.message;
 				}
 				response
-					.status(400)
 					.json({
 						status: 400,
 						data: params
@@ -170,7 +159,6 @@ module.exports = {
 					if (result.emailToken === req.params.token) {
 						await userModel.removeEmailToken(req.params.username);
 						response
-							.status(200)
 							.json({
 								status: 200,
 								msg: 'Your Account has been successfully activated!'
@@ -185,7 +173,6 @@ module.exports = {
 			.catch(err => {
 				console.log(err);
 				response
-					.status(400)
 					.json({
 						status: 400,
 						msg: err.message
@@ -203,7 +190,6 @@ module.exports = {
 				.add.picture(params)
 				.then(() => {
 					response
-						.status(200)
 						.json({
 							status: 200,
 							msg: 'Picture added'
@@ -212,7 +198,6 @@ module.exports = {
 				.catch((err) => {
 					console.log(err.message);
 					response
-						.status(500)
 						.json({
 							status: 500,
 							msg: 'Picture couldn\'t be added'
@@ -228,7 +213,6 @@ module.exports = {
 				.add.tag(params)
 				.then(() => {
 					response
-						.status(200)
 						.json({
 							status: 200,
 							msg: 'Tag added successfully!'
@@ -237,7 +221,6 @@ module.exports = {
 				.catch((err) => {
 					console.log(err.message)
 					response
-						.status(500)
 						.json({
 							status: 500,
 							msg: 'Tag couldn\'t be added!'
