@@ -33,8 +33,8 @@ module.exports = {
 			throw new Error("Username not registered!");
 		let user = await fetch(`http://localhost:1337/api/users/get/${params.username}`);
 		user = await user.json();
-		if (user.length) {
-			user = user[0].props;
+		if (user.data.length) {
+			user = user.data[0].props;
 			if (await password.verify(params.pass, user.pwd)) {
 				if (!user.activated)
 					throw new Error("Your account's still not activated, please confirm your e-mail address!");
