@@ -6,6 +6,7 @@ module.exports = {
             username: req.params.username
         };
         pictureModel
+            .getUserPics(params)
             .then((result) => {
                 response
                     .json({
@@ -16,9 +17,10 @@ module.exports = {
             .catch((err) => {
                 console.log(err.message);
                 response
+                    .status(500)
                     .json({
-                        status: 404,
-                        msg: "picture not found!"
+                        status: 500,
+                        msg: "Error fetching pictures!"
                     });
             });
     }

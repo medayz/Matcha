@@ -53,6 +53,12 @@ module.exports = {
 				user: username
 			});
 	},
+	serUserActive: async (username) => {
+		await query
+			.run('MATCH (u:User {username: $user}) SET u.activated = true;', {
+				user: username
+			});
+	},
 	add: {
 		picture: async (params) => {
 			await query

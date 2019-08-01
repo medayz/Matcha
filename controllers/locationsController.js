@@ -3,7 +3,7 @@ const chatModel = require('../models/locationModel');
 module.exports = {
     getUserLocations: async (req, response) => {
         chatModel
-            .getUserChats(req.params.username)
+            .getUserLocations(req.params.username)
             .then(result => {
                 response
                     .json({
@@ -14,6 +14,7 @@ module.exports = {
             .catch(err => {
                 console.log(err.message);
                 response
+                    .status(500)
                     .json({
                         status: 500,
                         msg: 'Error fetching user locations'

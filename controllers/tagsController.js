@@ -14,6 +14,7 @@ module.exports = {
             .catch((err) => {
                 console.log(err.message);
                 response
+                    .status(500)
                     .json({
                         status: 500,
                         msg: 'Error fetching tags'
@@ -33,6 +34,7 @@ module.exports = {
             .catch((err) => {
                 console.log(err.message);
                 response
+                    .status(500)
                     .json({
                         status: 500,
                         msg: 'Error fetching tag by name'

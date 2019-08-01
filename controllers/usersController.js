@@ -16,6 +16,7 @@ module.exports = {
 			}).catch(err => {
 				console.log(err.message);
 				response
+					.status(500)
 					.json({
 						status: 500,
 						msg: 'Error fetching users'
@@ -26,15 +27,25 @@ module.exports = {
 		userModel
 			.getUser(req.params.username)
 			.then(results => {
-				response
-					.json({
-						status: 200,
-						data: results
-					});
+				if (results.length) {
+					response
+						.json({
+							status: 200,
+							data: results
+						});
+				} else {
+					response
+						.status(404)
+						.json({
+							status: 404,
+							msg: 'User Not Found!'
+						});
+				}
 			})
 			.catch(err => {
 				console.log(err.message);
 				response
+					.status(500)
 					.json({
 						status: 500,
 						msg: 'Error getting User by username'
@@ -45,15 +56,25 @@ module.exports = {
 		userModel
 			.getUserByEmail(req.params.email)
 			.then(results => {
-				response
-					.json({
-						status: 200,
-						data: results
-					});
+				if (results.length) {
+					response
+						.json({
+							status: 200,
+							data: results
+						});
+				} else {
+					response
+						.status(404)
+						.json({
+							status: 404,
+							msg: 'User Not Found!'
+						});
+				}
 			})
 			.catch(err => {
 				console.log(err.message);
 				response
+					.status(500)
 					.json({
 						status: 500,
 						msg: 'Error getting User by email'
@@ -94,6 +115,7 @@ module.exports = {
 			} catch (err) {
 				console.log(err.message);
 				response
+					.status(500)
 					.json({
 						status: 500,
 						msg: 'Unsuccesful registration, please retry!'
@@ -109,6 +131,7 @@ module.exports = {
 				.catch(err => console.log(err));
 		} else {
 			response
+				.status(400)
 				.json({
 					status: 400,
 					data: params
@@ -144,6 +167,7 @@ module.exports = {
 					params.err.active = err.message;
 				}
 				response
+					.status(400)
 					.json({
 						status: 400,
 						data: params
@@ -157,6 +181,7 @@ module.exports = {
 				if (result.length) {
 					result = result[0].props;
 					if (result.emailToken === req.params.token) {
+						await userModel.setUserActive(req.params.username);
 						await userModel.removeEmailToken(req.params.username);
 						response
 							.json({
@@ -173,6 +198,7 @@ module.exports = {
 			.catch(err => {
 				console.log(err);
 				response
+					.status(400)
 					.json({
 						status: 400,
 						msg: err.message
@@ -198,6 +224,7 @@ module.exports = {
 				.catch((err) => {
 					console.log(err.message);
 					response
+						.status(500)
 						.json({
 							status: 500,
 							msg: 'Picture couldn\'t be added'
@@ -221,6 +248,7 @@ module.exports = {
 				.catch((err) => {
 					console.log(err.message)
 					response
+						.status(500)
 						.json({
 							status: 500,
 							msg: 'Tag couldn\'t be added!'
