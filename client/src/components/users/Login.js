@@ -4,11 +4,15 @@ import axios from 'axios';
 import Alert from '../layout/Alert';
 import { connect } from 'react-redux';
 import { setAlert } from '../../actions/alert';
+import { Redirect } from 'react-router-dom';
+import profile from './ConfirmAcc';
+
 class Login extends Component {
     state = {
         username: '',
         pass: '',
-        errState: {}
+        errState: {},
+        login: ''
     };
     onChange = e => {
         this.setState({[e.target.name]: e.target.value});
@@ -50,7 +54,6 @@ class Login extends Component {
               }
               else
               {
-                console.log(backend);
                 if (backend.data.err.username !== '')
                   err.email = backend.data.err.username;
                 if (backend.data.err.pass !== '')
@@ -92,6 +95,7 @@ class Login extends Component {
               value={this.state.pass}
               onChange={this.onChange}
             />
+            {this.state.login === 'done' && <Redirect to='profile' Component={profile}/>}
           <button type="submit" className="btn btn-primary">Login</button>
         </form>
     </div>
