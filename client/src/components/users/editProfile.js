@@ -3,7 +3,7 @@ import Fjla from "../../backIndex.jpg";
 import axios from "axios";
 import RegisterInput from "./RegisterInput";
 import classnames from "classnames";
-class Profile extends Component {
+class editProfile extends Component {
   state = {
     fName: "",
     lName: "",
@@ -24,16 +24,19 @@ class Profile extends Component {
     errState: {}
   };
   async componentDidMount() {
+    const user = this.props.match.params.username;
     await axios
-      .get(`http://localhost:1337/api/users/get/cmarouan`)
+      .get(`http://localhost:1337/api/users/get/${user}`)
       .then(res => {
-        const user = res.data.data[0].props;
-        if (user.fName) this.setState({ fName: user.fName });
-        if (user.lName) this.setState({ lName: user.lName });
-        if (user.username) this.setState({ username: user.username });
-        if (user.email) this.setState({ email: user.email });
-        if (user.gender) this.setState({ gender: user.gender });
-        if (user.location) this.setState({ location: user.location });
+        if (res.data.data.length > 0){
+          const user = res.data.data[0].props;
+          if (user.fName) this.setState({ fName: user.fName });
+          if (user.lName) this.setState({ lName: user.lName });
+          if (user.username) this.setState({ username: user.username });
+          if (user.email) this.setState({ email: user.email });
+          if (user.gender) this.setState({ gender: user.gender });
+          if (user.location) this.setState({ location: user.location });
+        }
       });
   }
   onChange = e => {
@@ -289,4 +292,4 @@ class Profile extends Component {
   }
 }
 
-export default Profile;
+export default editProfile;

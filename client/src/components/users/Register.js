@@ -78,25 +78,24 @@ class Register extends Component {
               );
               this.clear();
             }
-            else if (backend.status === 400)
-            {
-              if (backend.data.err.fName !== '')
-                err.pass = backend.data.err.fName;
-              if (backend.data.err.lName !== '')
-                err.cPass = backend.data.err.lName;
-              if (backend.data.err.email !== '')
-                err.cPass = backend.data.err.email;
-              if (backend.data.err.username !== '')
-                err.email = backend.data.err.username;
-              if (backend.data.err.pass !== '')
-                err.username = backend.data.err.pass;
-              if (backend.data.err.cPass !== '')
-                err.lName = backend.data.err.cPass;
-              this.setState({errState: backend.data.err});
-              return;
+          })
+          .catch(err => {
+            const back_err = err.response.data;
+            if (back_err.status === 400){
+              if (back_err.data.err.fName !== '')
+                err.fName = back_err.data.err.fName;
+              if (back_err.data.err.lName !== '')
+                err.lName = back_err.data.err.lName;
+              if (back_err.data.err.email !== '')
+                err.email = back_err.data.err.email;
+              if (back_err.data.err.username !== '')
+                err.username = back_err.data.err.username;
+              if (back_err.data.err.pass !== '')
+                err.pass = back_err.data.err.pass;
+              if (back_err.data.err.cPass !== '')
+                err.cPass = back_err.data.err.cPass;
+              this.setState({errState: err});
             }
-            else
-              this.setState({ registred: '500'})
           });
       }
       else

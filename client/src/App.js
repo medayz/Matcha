@@ -3,7 +3,7 @@ import Header  from './components/Header';
 import Register  from './components/users/Register';
 import Index  from './components/Index';
 import Login  from './components/users/Login';
-import Profile  from './components/users/Profile';
+import editProfile  from './components/users/editProfile';
 import ConfirmAcc from './components/users/ConfirmAcc'
 import { BrowserRouter as Router, Route, Switch} from 'react-router-dom'; 
 import { Provider } from 'react-redux'
@@ -19,7 +19,7 @@ class App extends Component {
             <Route exact path="/" component={Index}/>
             <Route exact path="/register" component={Register}/>
             <Route exact path="/login" component={Login}/>
-            <Route exact expath="/profile" component={Profile}/>
+            <Route exact path="/profile/edit/:username" component={editProfile}/>
             <Route exact path="/confirmAcc/:username/:token" component={ConfirmAcc}/>
           </Switch>
         </Router>

@@ -64,6 +64,18 @@ class Login extends Component {
                 return;
               }
               
+            })
+            .catch(err => {
+              const back_err = err.response.data;
+              if (back_err.status === 400){
+                if (back_err.data.err.username !== '')
+                  err.username = back_err.data.err.username;
+                if (back_err.data.err.pass !== '')
+                  err.pass = back_err.data.err.pass;
+                if (back_err.data.err.active !== '')
+                  err.active = back_err.data.err.active;
+                this.setState({errState: err});
+            }
             });
         }
         else
