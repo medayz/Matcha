@@ -1,12 +1,12 @@
 const neo4j = require('neo4j-driver').v1;
+const dbconfig = require('../config/database');
 
-const driver = neo4j.driver("bolt://localhost:7687", neo4j.auth.basic('neo4j', 'Neo4j123$$'));
+const driver = neo4j.driver(dbconfig.DSN, neo4j.auth.basic(dbconfig.USER, dbconfig.PWD));
 const session = driver.session();
 
-
 async function run(query, params) {
-	const   results = [];
-	const	queryResult = await session.run(query, params);
+	const results = [];
+	const queryResult = await session.run(query, params);
 
 	session.close();
 	queryResult.records.forEach((rec) => {
@@ -19,4 +19,20 @@ async function run(query, params) {
 	return results;
 };
 
-module.exports.run = run;
+module.exports = {
+	execute: async (query, params) => {
+		await run(query, params);
+	},
+	getOneRow: async (query, params) => {
+		const results = await run(query, params);
+		return results[0];
+	},
+	getAllRows: async (query, params) => {
+		const results = await run(query, params);
+		return results;
+	},
+	rowCount: async (query, params) => {
+		const results = await run(query, params);
+		return results.length;
+	}
+};

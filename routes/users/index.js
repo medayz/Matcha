@@ -1,5 +1,6 @@
+const paths = require("../../config/paths");
 const usersRouter = require('express').Router();
-const usersController = require('../../controllers/usersController');
+const usersController = require(paths.CONTROLLERS + '/usersController');
 
 usersRouter.use(require('express').json());
 

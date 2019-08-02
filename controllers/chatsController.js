@@ -1,4 +1,5 @@
-const chatModel = require('../models/chatModel');
+const paths = require("../config/paths");
+const chatModel = require(paths.MODELS + '/chatModel');
 
 module.exports = {
     getUserChats: async (req, response) => {

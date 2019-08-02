@@ -1,4 +1,5 @@
-const pictureModel = require('../models/pictureModel');
+const paths = require("../config/paths");
+const pictureModel = require(paths.MODELS + '/pictureModel');
 
 module.exports = {
     getUserPics: async (req, response) => {

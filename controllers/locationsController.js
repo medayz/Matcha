@@ -1,4 +1,5 @@
-const chatModel = require('../models/locationModel');
+const paths = require("../config/paths");
+const chatModel = require(paths.MODELS + '/locationModel');
 
 module.exports = {
     getUserLocations: async (req, response) => {

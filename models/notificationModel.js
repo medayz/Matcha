@@ -1,8 +1,9 @@
-const query = require('../libraries/database');
+const paths = require("../config/paths");
+const query = require(paths.LIBRARIES + "/database");
 
 module.exports = {
     getAllNotifications: async (username) => {
-        return await query.run('MATCH (:User {username: $name})-[:GET]->(n) RETURN n;', {
+        return await query.getAllRows('MATCH (:User {username: $name})-[:GET]->(n) RETURN n;', {
             name: username
         })
     }

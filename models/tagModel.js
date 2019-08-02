@@ -1,11 +1,12 @@
-const query = require('../libraries/database');
+const paths = require("../config/paths");
+const query = require(paths.LIBRARIES + "/database");
 
 module.exports = {
     getAllTags: async () => {
-        return await query.run('MATCH (n:Tag) RETURN n;');
+        return await query.getAllRows('MATCH (n:Tag) RETURN n;');
     },
     getTagByName: async (name) => {
-        return await query.run('MATCH (n:Tag { name: $name }) RETURN n', {
+        return await query.getOneRow('MATCH (n:Tag { name: $name }) RETURN n', {
             name: name
         })
     }

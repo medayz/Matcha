@@ -1,8 +1,9 @@
-const query = require('../libraries/database');
+const paths = require("../config/paths");
+const query = require(paths.LIBRARIES + "/database");
 
 module.exports = {
     getUserChats: async (username) => {
-        return await query.run('MATCH (n:User {username: $name})-[:PARTICIPATE_IN]->(c:Chat) RETURN c;', {
+        return await query.getAllRows('MATCH (n:User {username: $name})-[:PARTICIPATE_IN]->(c:Chat) RETURN c;', {
             name: username
         })
     }

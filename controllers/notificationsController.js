@@ -1,4 +1,5 @@
-const notificationModel = require('../models/notificationModel');
+const paths = require("../config/paths");
+const notificationModel = require(paths.MODELS + '/notificationModel');
 
 module.exports = {
     getAllNotifications: async (req, response) => {

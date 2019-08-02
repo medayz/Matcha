@@ -1,8 +1,9 @@
-const query = require('../libraries/database');
+const paths = require("../config/paths");
+const query = require(paths.LIBRARIES + "/database");
 
 module.exports = {
     getUserPics: async (params) => {
         return await query
-            .run('MATCH (a:User {username: $username})-[:UPLOADED]->(p:Picture) return p', pics);
+            .getAllRows('MATCH (a:User {username: $username})-[:UPLOADED]->(p:Picture) return p', pics);
     }
 }
