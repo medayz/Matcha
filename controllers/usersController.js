@@ -159,7 +159,6 @@ module.exports = {
 				`http://localhost:1337/api/users/get/${params.username}`
 			);
 			user = await user.json();
-			console.log(user);
 			if (user.data) {
 				userModel
 					.logUser(params)
@@ -214,8 +213,9 @@ module.exports = {
 		userModel
 			.getUser(req.params.username)
 			.then(async result => {
+
 				if (result) {
-					result = result[0].props;
+					result = result.props;
 					if (result.emailToken === req.params.token) {
 						const setActive = userModel.setUserActive(req.params.username);
 						const rmToken = userModel.removeEmailToken(req.params.username);
@@ -233,7 +233,6 @@ module.exports = {
 				}
 			})
 			.catch(err => {
-				console.log(err);
 				response
 					.status(400)
 					.json({

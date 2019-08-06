@@ -28,8 +28,10 @@ class editProfile extends Component {
     await axios
       .get(`http://localhost:1337/api/users/get/${user}`)
       .then(res => {
-        if (res.data.data.length > 0){
-          const user = res.data.data[0].props;
+       // console.log(res.data.data.props)
+        if (res.data.data.props){
+          const user = res.data.data.props;
+         // console.log(user);
           if (user.fName) this.setState({ fName: user.fName });
           if (user.lName) this.setState({ lName: user.lName });
           if (user.username) this.setState({ username: user.username });
