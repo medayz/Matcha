@@ -15,16 +15,19 @@ async componentDidMount(){
     await axios
           .get(`http://localhost:1337/api/users/activation/${params.username}/${params.token}`)
           .then(res => {
-            if (!res.data.status === 200)
+            console.log("hello");
+            if (res.data.status === 200)
             {
                 this.setState({ msg: res.data.msg});
                 this.props.setAlert(this.state.msg, 'success');
             }
-            else
-            {
-                this.setState({ msg: res.data.msg});
-                this.props.setAlert(this.state.msg, 'danger');
-            }
+          })
+          .catch (err => {
+              const errBack = err.response.data;
+              if (errBack.status === 400){
+                   this.setState({ msg: errBack.msg});
+                   this.props.setAlert(errBack.msg, 'danger');
+              }
           }); 
     this.setState({isVerified: true});
 }    
