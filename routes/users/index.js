@@ -1,10 +1,11 @@
 const paths = require("../../config/paths");
 const usersRouter = require('express').Router();
-const usersController = require(paths.CONTROLLERS + '/usersController');
+const usersController = require(`${paths.CONTROLLERS}/usersController`);
+const auth = require(`${paths.MIDDLEWARES}/checkToken`);
 
 usersRouter.use(require('express').json());
 
-usersRouter.use('/add', require('./add'));
+usersRouter.use('/add', auth, require('./add'));
 
 usersRouter
 	.route('/get')
@@ -16,7 +17,7 @@ usersRouter
 
 usersRouter
 	.route('/get/email/:email')
-	.get(usersController.getUserByEmail);
+	.get(auth, usersController.getUserByEmail);
 
 //  Add user
 usersRouter
@@ -33,7 +34,7 @@ usersRouter
 
 usersRouter
 	.use((err, req, res, next) => {
-		console.log('error: ' + err.message);
+		console.log(`error: ${err.message}`);
 		res.status(400).send('Bad request!');
 	});
 

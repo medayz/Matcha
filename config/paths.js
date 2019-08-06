@@ -8,4 +8,5 @@ module.exports = {
     ROUTES: path.join(path.dirname(__dirname), 'routes'),
     CONTROLLERS: path.join(path.dirname(__dirname), 'controllers'),
     MODELS: path.join(path.dirname(__dirname), 'models'),
+    MIDDLEWARES: path.join(path.dirname(__dirname), 'middlewares')
 };
