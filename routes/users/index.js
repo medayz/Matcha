@@ -1,41 +1,32 @@
 const paths = require("../../config/paths");
-const usersRouter = require('express').Router();
+const usersRouter = require("express").Router();
 const usersController = require(`${paths.CONTROLLERS}/usersController`);
 const auth = require(`${paths.MIDDLEWARES}/checkToken`);
 
-usersRouter.use(require('express').json());
+usersRouter.use(require("express").json());
 
-usersRouter.use('/add', auth, require('./add'));
+usersRouter.use("/add", auth, require("./add"));
 
-usersRouter
-	.route('/get')
-	.get(usersController.getAllUsers);
+usersRouter.route("/get").get(usersController.getAllUsers);
 
-usersRouter
-	.route('/get/:username')
-	.get(usersController.getUserByUsername);
+usersRouter.route("/get/:username").get(usersController.getUserByUsername);
 
 usersRouter
-	.route('/get/email/:email')
-	.get(auth, usersController.getUserByEmail);
+  .route("/get/email/:email")
+  .get(auth, usersController.getUserByEmail);
 
 //  Add user
-usersRouter
-	.route('/create')
-	.post(usersController.addUser);
+usersRouter.route("/create").post(usersController.addUser);
+
+usersRouter.route("/auth").post(usersController.connect);
 
 usersRouter
-	.route('/auth')
-	.post(usersController.connect);
+  .route("/activation/:username/:token")
+  .get(usersController.accountActivation);
 
-usersRouter
-	.route('/activation/:username/:token')
-	.get(usersController.accountActivation);
-
-usersRouter
-	.use((err, req, res, next) => {
-		console.log(`error: ${err.message}`);
-		res.status(400).send('Bad request!');
-	});
+usersRouter.use((err, req, res, next) => {
+  console.log(`error: ${err.message}`);
+  res.status(400).send("Bad request!");
+});
 
 module.exports = usersRouter;

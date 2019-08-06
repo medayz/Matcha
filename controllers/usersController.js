@@ -214,11 +214,12 @@ module.exports = {
 		userModel
 			.getUser(req.params.username)
 			.then(async result => {
-				if (result.length) {
+				if (result) {
 					result = result[0].props;
 					if (result.emailToken === req.params.token) {
-						await userModel.setUserActive(req.params.username);
-						await userModel.removeEmailToken(req.params.username);
+						const setActive = userModel.setUserActive(req.params.username);
+						const rmToken = userModel.removeEmailToken(req.params.username);
+						await Promise.all([setActive, rmToken]);
 						response
 							.json({
 								status: 200,
