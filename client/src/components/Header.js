@@ -27,13 +27,13 @@ class Header extends Component {
                         </li>}
                         {this.token &&
                         <li className="nav-item">
-                            <Link to="/profile" className="nav-link">
+                            <Link to="/profile/users/cmarouan" className="nav-link">
                                 profile
                             </Link>
                         </li>}
                         {this.token &&
                         <li className="nav-item">
-                            <Link to="/register" className="nav-link">
+                            <Link to="/profile/edit/cmarouan" className="nav-link">
                                 Edit 
                             </Link>
                         </li>
