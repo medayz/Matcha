@@ -8,25 +8,20 @@ module.exports = {
         });
     },
     addChat: (user1, user2) => {
-        query.execute('MATCH (u1:User {username: $name1}), (u2:User {username: $name2}) CREATE (u1)-[:PARTICIPATE_IN]->(c:Chat {dateLastMsg: date(), timeLastMsg: time()})<-[:PARTICIPATE_IN]-(u2);', {
-            name1: user1,
-            name2: user2
-        });
-    },
-    deleteChat: (user1, user2) => {
-        query.execute('MATCH (u1:User {username: $name1})-[r1:PARTICIPATE_IN]->(c)<-[r2:PARTICIPATE_IN]-(u2:User {username: $name2}) DELETE r1, r2, c;', {
+        query.execute('MATCH (u1:User {username: $name1}), (u2:User {username: $name2}) CREATE (u1)-[:PARTICIPATE_IN]->(c:Chat {dateLastMsg: date(), timeLastMsg: time(), user1: $name1, user2: $name2})<-[:PARTICIPATE_IN]-(u2);', {
             name1: user1,
             name2: user2
         });
     },
     addMessage: (msg) => {
-        query.execute('MATCH (u1:User {username: $name1})-[r1PARTICIPATE_IN]->(c)<-[r2:PARTICIPATE_IN]-(u2:User {username: $name2}) DELETE r1, r2, c;', {
-            name1: user1,
-            name2: user2
+        query.execute('MATCH (u1:User {username: $name1})-[:PARTICIPATE_IN]->(c)<-[:PARTICIPATE_IN]-(u2:User {username: $name2}) CREATE (c)-[:CONTAINS]->(m:Message {date: date(), time: time(), sender: u1.username, body: $body})', {
+            name1: msg.sender,
+            name2: msg.receiver,
+            body: msg.body
         });
     },
-    deleteMessages: (user) => {
-        query.execute('MATCH (c:Chat)-[r:CONTAINS]->(m) DELETE r, m;', {
+    deleteChat: (user1, user2) => {
+        query.execute('MATCH (c:Chat)-[r:CONTAINS]->(m:Message) WHERE (:User {username: $user1})-[:PARTICIPATED_IN]->(c)<-[:PARTICIPATED_IN]-(:User {username: $user2}) RETURN r, m, c;', {
             name1: user1,
             name2: user2
         });

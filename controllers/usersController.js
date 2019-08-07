@@ -291,5 +291,116 @@ module.exports = {
 						});
 				});
 		}
+	},
+	edit: {
+		infos: (req, response) => {
+			const params = {
+				fName: req.body.fName ? req.body.fName.trim() : "",
+				lName: req.body.lName ? req.body.lName.trim() : "",
+				gender: req.body.gender ? req.body.gender.trim() : "",
+				sexualPref: req.body.sexualPref ? req.body.sexualPref.trim() : "",
+				bio: req.body.bio ? req.body.bio.trim() : "",
+				birthDate: req.body.birthDate
+			};
+			params.err = {
+				fName: validator.firstName(params.fName),
+				lName: validator.lastName(params.lName),
+			};
+			if (!Object.values(params.err).filter(obj => obj !== "").length) {
+				userModel.edit.infos(req.username, params)
+					.then(res => {
+						response
+							.json({
+								status: 200,
+								msg: "Infos Successfully updated!"
+							});
+					})
+					.catch(err => {
+						console.log(err.message);
+						response
+							.status(500)
+							.json({
+								status: 500,
+								msg: "Infos could not be changed!"
+							});
+					})
+			} else {
+				response
+					.status(400)
+					.json({
+						status: 400,
+						data: params
+					});
+			}
+		},
+		username: (req, response) => {
+			const params = {
+				newUsername: req.body.newUsername ? trim(req.body.newUsername) : ''
+			};
+			params.err = {
+				newUsername: validator.username(newUsername, userModel.getUser(newUsername))
+			};
+			if (!Object.values(params.err).filter(errMsg => errMsg).length) {
+				userModel.edit.username(req.username, params.newUsername)
+					.then(res => {
+						response
+							.json({
+								status: 200,
+								msg: "Username Successfully updated!"
+							});
+					})
+					.catch(err => {
+						console.log(err.message);
+						response
+							.status(500)
+							.json({
+								status: 500,
+								msg: "Username could not be changed!"
+							});
+					})
+			} else {
+				response
+					.status(400)
+					.json({
+						status: 400,
+						data: params
+					});
+			}
+		},
+		email: (req, response) => {
+			const params = {
+				email: req.body.email ? trim(req.body.email) : '',
+				newEmail: req.body.newEmail ? trim(req.body.newEmail) : ''
+			};
+			params.err = {
+				newEmail: validator.email(newEmail, userModel.getUserByEmail(email))
+			};
+			if (!Object.values(params.err).filter(errMsg => errMsg).length) {
+				userModel.edit.username(req.username, params.newEmail)
+					.then(res => {
+						response
+							.json({
+								status: 200,
+								msg: "E-mail address Successfully updated!"
+							});
+					})
+					.catch(err => {
+						console.log(err.message);
+						response
+							.status(500)
+							.json({
+								status: 500,
+								msg: "E-mail could not be changed!"
+							});
+					})
+			} else {
+				response
+					.status(400)
+					.json({
+						status: 400,
+						data: params
+					});
+			}
+		}
 	}
 };
