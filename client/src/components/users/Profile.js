@@ -2,6 +2,7 @@ import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Avatar from "@material-ui/core/Avatar";
 import Fjla from "../../backIndex.jpg";
+import defaultProfilePic from '../../images/default/boss.png';
 import Account from "@material-ui/icons/AccountCircle";
 import Location from "@material-ui/icons/LocationCity";
 import Gender from "@material-ui/icons/SupervisedUserCircle";
@@ -45,7 +46,7 @@ export default function Profile() {
             <center>
               <Avatar
                 alt="Remy Sharp"
-                src={Fjla}
+                src={defaultProfilePic}
                 className={classes.bigAvatar}
               />
             </center>
@@ -81,7 +82,7 @@ export default function Profile() {
               </ListItem>
             </List>
           </div>
-        </div>        
+        </div>     
         <div className="row">
           <div className="col-md-3" />
           <div className="col-md-7">

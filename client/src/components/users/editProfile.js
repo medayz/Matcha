@@ -1,11 +1,21 @@
 import React, { Component } from "react";
-import Fjla from "../../backIndex.jpg";
+import defaultProfilePic from "../../images/default/boss.png";
+import noSnap from "../../images/default/icon.png";
+import deleteLogo from "../../images/default/delete.png";
+import addLogo from "../../images/default/plus.png";
 import axios from "axios";
 import RegisterInput from "./RegisterInput";
 import classnames from "classnames";
 import Chip from "@material-ui/core/Chip";
 import Select from "react-select";
 import { getAllTags } from "../../helpers/getAllTags";
+import "./test.css";
+
+const logoAdd = {
+  width: "25%",
+  height: "25%",
+  paddingLeft: "2%"
+};
 
 class editProfile extends Component {
   state = {
@@ -64,20 +74,23 @@ class editProfile extends Component {
             <div className="profile-sidebar">
               <div className="profile-userpic">
                 <div className="row">
-                  <img src={Fjla} className="img-responsive" alt="" />
+                  <img
+                    src={defaultProfilePic}
+                    className="img-responsive"
+                    alt=""
+                  />
                 </div>
               </div>
               <div className="profile-usertitle">
-                <div className="profile-usertitle-name">Marcus Doe</div>
-                <div className="profile-usertitle-job">Developer</div>
+                <div className="profile-usertitle-name">
+                  {this.state.fName} {this.state.lName}
+                </div>
               </div>
-              <div className="profile-userbuttons">
-                <button type="button" className="btn btn-success btn-sm">
-                  Upload
-                </button>
-                <button type="button" className="btn btn-danger btn-sm">
-                  Delete
-                </button>
+              <div className="upload-btn-wrapper">
+                <center>
+                  <button className="btn222">Upload image</button>
+                  <input type="file" name="myfile" />
+                </center>
               </div>
             </div>
           </div>
@@ -235,23 +248,6 @@ class editProfile extends Component {
                       />
                     )}
                   </div>
-                  <div className="col">
-                    <label>E-mail</label>
-                    {this.state.visible !== "" && (
-                      <input
-                        type="email"
-                        name="email"
-                        id="email"
-                        placeholder="Enter email"
-                        className={classnames("form-control", {
-                          "is-invalid": false
-                        })}
-                        err={this.state.errState.email}
-                        value={this.state.email}
-                        onChange={this.onChange}
-                      />
-                    )}
-                  </div>
                 </div>
                 <br />
                 <div className="row">
@@ -351,16 +347,32 @@ class editProfile extends Component {
               <form>
                 <div className="row jjj">
                   <div className="card jj">
-                    <img src={Fjla} className="card-img-top" alt="..." />
+                    <img src={noSnap} className="card-img-top" alt="..." />
+                    <center>
+                      <img src={deleteLogo} style={logoAdd} alt='...'/>
+                      <img src={addLogo} style={logoAdd} alt='...'/>
+                    </center>
                   </div>
                   <div className="card jj">
-                    <img src={Fjla} className="card-img-top" alt="..." />
+                    <img src={noSnap} className="card-img-top" alt="..." />
+                    <center>
+                      <img src={deleteLogo} style={logoAdd} alt='...'/>
+                      <img src={addLogo} style={logoAdd} alt='...'/>
+                    </center>
                   </div>
                   <div className="card jj">
-                    <img src={Fjla} className="card-img-top" alt="..." />
+                    <img src={noSnap} className="card-img-top" alt="..." />
+                    <center>
+                      <img src={deleteLogo} style={logoAdd} alt='...'/>
+                      <img src={addLogo} style={logoAdd} alt='...'/>
+                    </center>
                   </div>
                   <div className="card jj">
-                    <img src={Fjla} className="card-img-top" alt="..." />
+                    <img src={noSnap} className="card-img-top" alt="..." />
+                    <center>
+                      <img src={deleteLogo} style={logoAdd} alt='...'/>
+                      <img src={addLogo} style={logoAdd} alt='...'/>
+                    </center>
                   </div>
                 </div>
                 <br />
