@@ -9,7 +9,8 @@ const RegisterInput = ({
     id,
     placeholder,
     onChange,
-    err
+    err,
+    value
 }) => {
     return (
         <div className="form-group">
@@ -17,6 +18,7 @@ const RegisterInput = ({
             <input type={type}
                 name={name}
                 id={id}
+                value={value}
                 placeholder={placeholder}
                 className={classnames('form-control', {'is-invalid': err})}
                 onChange={onChange} 
@@ -32,8 +34,7 @@ RegisterInput.propTypes = {
     type:  PropTypes.string.isRequired,
     name:  PropTypes.string.isRequired,
     id:  PropTypes.string.isRequired,
-    placeholder:  PropTypes.string.isRequired,
-    onChange:  PropTypes.func.isRequired
+    placeholder:  PropTypes.string.isRequired
 }
 
 export default RegisterInput;

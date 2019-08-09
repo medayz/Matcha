@@ -5,11 +5,13 @@ import deleteLogo from "../../images/default/delete.png";
 import addLogo from "../../images/default/plus.png";
 import axios from "axios";
 import RegisterInput from "./RegisterInput";
-import classnames from "classnames";
 import Chip from "@material-ui/core/Chip";
 import Select from "react-select";
 import { getAllTags } from "../../helpers/getAllTags";
 import "./test.css";
+import TextField from '@material-ui/core/TextField';
+import { getter } from '../../helpers/tokenOperation';
+import { Redirect } from 'react-router';
 
 const logoAdd = {
   width: "25%",
@@ -17,29 +19,139 @@ const logoAdd = {
   paddingLeft: "2%"
 };
 
-class editProfile extends Component {
+const head =  {
+  'auth-token': getter('token'),
+  'Accept' : 'application/json',
+  'Content-Type': 'application/json'
+}
+
+class EditProfile extends Component {
   state = {
     fName: "",
     lName: "",
     gender: "",
     location: "",
+    birthDate: "",
+    sexualPref: "",
     activeLocation: false,
-    tags: {
-      tag: ""
-    },
+    bio: "",
     visible: false,
     pass: "",
     cPass: "",
     email: "",
     username: "",
-    pics: {
-      type: 0,
-      link: ""
-    },
+    msg1: "",
+    msg2: "",
+    msg3: "",
+    tokenErr: "",
     errState: {}
   };
+  clearErrorState = () => {
+    this.setState({errState: {}});
+    this.setState({msg1: ''});
+    this.setState({msg2: ''});
+    this.setState({msg3: ''});
+  }
+  editInfo = async e => {
+    e.preventDefault();
+    this.clearErrorState();
+    const usr = {
+      fName: this.state.fName,
+      lName: this.state.lName,
+      gender: this.state.gender,
+      location: this.state.location,
+      activeLocation: this.state.activeLocation,
+      bio: this.state.bio,
+      birthDate: this.state.birthDate,
+      sexualPref: this.state.sexualPref
+    };
+    if (usr.activeLocation === "1") usr.activeLocation = true;
+    else usr.activeLocation = false;
+    this.setState({ activeLocation: usr.activeLocation });
+    await axios.put(`http://localhost:1337/api/users/edit/infos`,usr,{
+        headers: head
+      }
+    )
+    .then(res => {
+      this.setState({msg1: res.data.msg});
+    })
+    .catch(err => {
+      const backend = err.response.data
+      if (backend.status === 400)
+        this.setState({errState: backend.data.err});
+      else if (backend.status === 401){
+        this.setState({tokenErr: backend.msg});
+      }
+    });
+  };
+
+  editEmail = async e => {
+    e.preventDefault();
+    this.clearErrorState();
+    const usr = {
+      email: this.state.email
+    };
+    console.log(usr);
+  }
+
+  uploadProfileImg = async e => {
+    let img = e.target.files[0];
+    if (img.name.match(/\.(jpg|jpeg|png)$/)){
+      console.log(img);
+      const formData = new FormData();
+      formData.append('profileImg', img, img.name);
+    }
+  }
+
+  editUsername = async e => {
+    this.clearErrorState();
+    e.preventDefault();
+    const usr = {
+      newUsername: this.state.username,
+    };
+    await axios.put(`http://localhost:1337/api/users/edit/username`,usr,{
+        headers: head
+      }
+    )
+    .then(res => {
+      this.setState({msg1: res.data.msg});
+    })
+    .catch(err => {
+      const backend = err.response.data;
+      if (backend.status === 400)
+        this.setState({errState: backend.data.err});
+      else if (backend.status === 401){
+        this.setState({tokenErr: backend.msg});
+      }
+      console.log(this.state.errState);
+    });
+    //console.log(usr);
+  };
+
+  editPass = async e => {
+    e.preventDefault();
+    const usr = {
+      pass: this.state.pass,
+      cPass: this.state.cPass
+    };
+    console.log(usr);
+  };
+
+  handleBirthday = e => {
+    this.setState({ birthDate: e.currentTarget.value });
+  }
+
+  handleActiveNotif = e => {
+    this.setState({ activeLocation: e.currentTarget.value });
+  };
+
+  handleGender = e => {
+    this.setState({ gender: e.currentTarget.value });
+  };
+
   async componentDidMount() {
     const user = this.props.match.params.username;
+    
     await axios.get(`http://localhost:1337/api/users/get/${user}`).then(res => {
       if (res.data.data.props) {
         const user = res.data.data.props;
@@ -49,10 +161,14 @@ class editProfile extends Component {
         if (user.email) this.setState({ email: user.email });
         if (user.gender) this.setState({ gender: user.gender });
         if (user.location) this.setState({ location: user.location });
+        if (user.bio) this.setState({ bio: user.bio });
+        if (user.sexualPref) this.setState({ sexualPref: user.sexualPref });
+        if (user.birthDate) this.setState({ birthDate: user.birthDate });
         this.setState({ visible: true });
       }
     });
   }
+
   onChange = e => {
     this.setState({ [e.target.name]: e.target.value });
   };
@@ -89,7 +205,7 @@ class editProfile extends Component {
               <div className="upload-btn-wrapper">
                 <center>
                   <button className="btn222">Upload image</button>
-                  <input type="file" name="myfile" />
+                  <input type="file" name="myfile" onChange={this.uploadProfileImg}/>
                 </center>
               </div>
             </div>
@@ -97,38 +213,32 @@ class editProfile extends Component {
           <br />
           <div className="col-md-9">
             <div className="profile-content">
-              <form>
+              <form onSubmit={this.editInfo}>
                 <div className="row">
                   <div className="col">
-                    <label>First name</label>
                     {this.state.visible !== "" && (
-                      <input
+                      <RegisterInput
+                        label="First name"
                         type="text"
                         name="fName"
                         id="fName"
-                        placeholder="Enter first name"
-                        className={classnames("form-control", {
-                          "is-invalid": false
-                        })}
-                        err={this.state.errState.fName}
                         value={this.state.fName}
+                        placeholder="Enter first name"
+                        err={this.state.errState.fName}
                         onChange={this.onChange}
                       />
                     )}
                   </div>
                   <div className="col">
-                    <label>Last name</label>
                     {this.state.visible !== "" && (
-                      <input
+                      <RegisterInput
+                        label="Last name"
                         type="text"
                         name="lName"
                         id="lName"
-                        placeholder="Enter last name"
-                        className={classnames("form-control", {
-                          "is-invalid": false
-                        })}
-                        err={this.state.errState.lName}
                         value={this.state.lName}
+                        placeholder="Enter last name"
+                        err={this.state.errState.lName}
                         onChange={this.onChange}
                       />
                     )}
@@ -140,7 +250,8 @@ class editProfile extends Component {
                     <label>Gender</label>
                     <select
                       id="gender"
-                      defaultValue={"Male"}
+                      defaultValue={this.state.gender}
+                      onChange={this.handleGender}
                       className="form-control"
                     >
                       <option value="Male">Male</option>
@@ -149,18 +260,15 @@ class editProfile extends Component {
                     </select>
                   </div>
                   <div className="col">
-                    <label>Adress</label>
                     {this.state.visible !== "" && (
-                      <input
+                      <RegisterInput
+                        label="sexualPref"
                         type="text"
-                        name="adress"
-                        id="adress"
-                        placeholder="Enter adress"
-                        className={classnames("form-control", {
-                          "is-invalid": false
-                        })}
-                        err={this.state.errState.location}
-                        value={this.state.location}
+                        name="sexualPref"
+                        id="sexualPref"
+                        value={this.state.sexualPref}
+                        placeholder="Enter your sexualPref"
+                        err={this.state.errState.sexualPref}
                         onChange={this.onChange}
                       />
                     )}
@@ -169,14 +277,47 @@ class editProfile extends Component {
                 <br />
                 <div className="row">
                   <div className="col">
-                    <label>Active notification</label>
+                    {this.state.visible !== "" && (
+                      <RegisterInput
+                        label="Location"
+                        type="text"
+                        name="location"
+                        id="location"
+                        value={this.state.location}
+                        placeholder="Enter your location"
+                        err={this.state.errState.location}
+                        onChange={this.onChange}
+                      />
+                    )}
+                  </div>
+                </div>
+                <br />
+                <div className="row">
+                <div className="col">
+                <label><small>Your birthDay</small> {this.state.birthDate}</label>
+                <br />
+                {this.state.visible !== "" && (
+                    <TextField
+                      id="date"
+                      type="date"
+                      onChange={this.handleBirthday}
+                      defaultValue={this.state.birthDate}
+                      InputLabelProps={{
+                        shrink: true
+                      }}
+                    />
+                    )}
+                  </div>
+                  <div className="col">
+                    <label>Active location</label>
                     <select
+                      onChange={this.handleActiveNotif}
                       id="activeNotf"
-                      defaultValue={"No"}
+                      defaultValue={""}
                       className="form-control"
                     >
-                      <option value="No">Yes</option>
-                      <option value="Yes">No</option>
+                      <option value="1">True</option>
+                      <option value="0">False</option>
                     </select>
                   </div>
                 </div>
@@ -184,12 +325,17 @@ class editProfile extends Component {
                 <div className="row">
                   <div className="col">
                     <label>Biography</label>
-                    <textarea
-                      className="form-control"
-                      id="bio"
-                      rows="3"
-                      placeholder="Bio"
-                    />
+                    {this.state.visible !== "" && (
+                      <textarea
+                        className="form-control"
+                        id="bio"
+                        rows="3"
+                        name="bio"
+                        placeholder="Bio"
+                        value={this.state.bio}
+                        onChange={this.onChange}
+                      />
+                    )}
                   </div>
                 </div>
                 <br />
@@ -215,9 +361,17 @@ class editProfile extends Component {
                 <br />
                 <div className="row">
                   <div className="col">
-                    <button type="button" className="btn btn-primary">
+                    <button type="submit" className="btn btn-primary">
                       Save
                     </button>
+                  </div>
+                  <div className="col">
+                    {this.state.msg1 && (
+                      <div className="alert alert-primary" role="alert">
+                        {" "}
+                        {this.state.msg1}{" "}
+                      </div>
+                    )}
                   </div>
                 </div>
               </form>
@@ -229,30 +383,68 @@ class editProfile extends Component {
           <br />
           <div className="col-md-9">
             <div className="profile-content">
-              <form>
+              <form onSubmit={this.editUsername}>
                 <div className="row">
                   <div className="col">
-                    <label>Username</label>
                     {this.state.visible !== "" && (
-                      <input
-                        type="text"
-                        name="username"
-                        id="username"
-                        placeholder="Enter username"
-                        className={classnames("form-control", {
-                          "is-invalid": false
-                        })}
-                        err={this.state.errState.username}
-                        value={this.state.username}
-                        onChange={this.onChange}
-                      />
+                      <RegisterInput
+                      label="Username"
+                      type="text"
+                      name="username"
+                      id="username"
+                      value={this.state.username}
+                      placeholder="Enter an username"
+                      err={this.state.errState.newUsername}
+                      onChange={this.onChange}
+                    />
+                    )}
+                  </div>
+                </div>
+                <div className="row">
+                  <div className="col">
+                    <button type="submit" className="btn btn-primary">
+                      Save
+                    </button>
+                  </div>
+                  <div className="col">
+                    {this.state.msg2 && (
+                      <div className="alert alert-primary" role="alert">
+                        {" "}
+                        {this.state.msg2}{" "}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+        <div className="row profile">
+          <div className="col-md-3" />
+          <br />
+          <div className="col-md-9">
+            <div className="profile-content">
+              <form onSubmit={this.editEmail}>
+                <div className="row">
+                  <div className="col">
+                    {this.state.visible !== "" && (
+                       <RegisterInput
+                       label="E-mail"
+                       type="email"
+                       name="email"
+                       id="email"
+                       value={this.state.email}
+                       placeholder="Enter an E-mail"
+                       err={this.state.errState.email}
+                       onChange={this.onChange}
+                     />
                     )}
                   </div>
                 </div>
                 <br />
                 <div className="row">
                   <div className="col">
-                    <button type="button" className="btn btn-primary">
+                    <button type="submit" className="btn btn-primary">
                       Save
                     </button>
                   </div>
@@ -266,44 +458,7 @@ class editProfile extends Component {
           <br />
           <div className="col-md-9">
             <div className="profile-content">
-              <form>
-                <div className="row">
-                  <div className="col">
-                    <label>E-mail</label>
-                    {this.state.visible !== "" && (
-                      <input
-                        type="email"
-                        name="email"
-                        id="email"
-                        placeholder="Enter email"
-                        className={classnames("form-control", {
-                          "is-invalid": false
-                        })}
-                        err={this.state.errState.email}
-                        value={this.state.email}
-                        onChange={this.onChange}
-                      />
-                    )}
-                  </div>
-                </div>
-                <br />
-                <div className="row">
-                  <div className="col">
-                    <button type="button" className="btn btn-primary">
-                      Save
-                    </button>
-                  </div>
-                </div>
-              </form>
-            </div>
-          </div>
-        </div>
-        <div className="row profile">
-          <div className="col-md-3" />
-          <br />
-          <div className="col-md-9">
-            <div className="profile-content">
-              <form>
+              <form onSubmit={this.editPass}>
                 <div className="row">
                   <div className="col">
                     <RegisterInput
@@ -312,6 +467,7 @@ class editProfile extends Component {
                       name="pass"
                       id="pass"
                       placeholder="Enter password"
+                      value={this.state.pass}
                       err={this.state.errState.password}
                       onChange={this.onChange}
                     />
@@ -323,6 +479,7 @@ class editProfile extends Component {
                       name="cPass"
                       id="cPass"
                       placeholder="Confirm password"
+                      value={this.state.cPass}
                       err={this.state.errState.cPass}
                       onChange={this.onChange}
                     />
@@ -330,7 +487,7 @@ class editProfile extends Component {
                 </div>
                 <div className="row">
                   <div className="col">
-                    <button type="button" className="btn btn-primary">
+                    <button type="submit" className="btn btn-primary">
                       Save
                     </button>
                   </div>
@@ -349,29 +506,29 @@ class editProfile extends Component {
                   <div className="card jj">
                     <img src={noSnap} className="card-img-top" alt="..." />
                     <center>
-                      <img src={deleteLogo} style={logoAdd} alt='...'/>
-                      <img src={addLogo} style={logoAdd} alt='...'/>
+                      <img src={deleteLogo} style={logoAdd} alt="..." />
+                      <img src={addLogo} style={logoAdd} alt="..." />
                     </center>
                   </div>
                   <div className="card jj">
                     <img src={noSnap} className="card-img-top" alt="..." />
                     <center>
-                      <img src={deleteLogo} style={logoAdd} alt='...'/>
-                      <img src={addLogo} style={logoAdd} alt='...'/>
+                      <img src={deleteLogo} style={logoAdd} alt="..." />
+                      <img src={addLogo} style={logoAdd} alt="..." />
                     </center>
                   </div>
                   <div className="card jj">
                     <img src={noSnap} className="card-img-top" alt="..." />
                     <center>
-                      <img src={deleteLogo} style={logoAdd} alt='...'/>
-                      <img src={addLogo} style={logoAdd} alt='...'/>
+                      <img src={deleteLogo} style={logoAdd} alt="..." />
+                      <img src={addLogo} style={logoAdd} alt="..." />
                     </center>
                   </div>
                   <div className="card jj">
                     <img src={noSnap} className="card-img-top" alt="..." />
                     <center>
-                      <img src={deleteLogo} style={logoAdd} alt='...'/>
-                      <img src={addLogo} style={logoAdd} alt='...'/>
+                      <img src={deleteLogo} style={logoAdd} alt="..." />
+                      <img src={addLogo} style={logoAdd} alt="..." />
                     </center>
                   </div>
                 </div>
@@ -387,9 +544,10 @@ class editProfile extends Component {
             </div>
           </div>
         </div>
+        {this.state.tokenErr && <Redirect to='/login'/>}
       </div>
     );
   }
 }
 
-export default editProfile;
+export default EditProfile;

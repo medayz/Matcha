@@ -3,7 +3,6 @@ const tagModel = require(paths.MODELS + '/tagModel');
 
 module.exports = {
     getAllTags: async (req, response) => {
-        console.log(req.username);
         tagModel
             .getAllTags()
             .then((results) => {

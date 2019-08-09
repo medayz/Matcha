@@ -335,7 +335,7 @@ module.exports = {
 		},
 		username: (req, response) => {
 			const params = {
-				newUsername: req.body.newUsername ? trim(req.body.newUsername) : ''
+				newUsername: req.body.newUsername ? req.body.newUsername.trim() : ''
 			};
 			params.err = {
 				newUsername: validator.username(newUsername, userModel.getUser(newUsername))

@@ -1,5 +1,4 @@
-import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
+import React, { Component } from "react";
 import Avatar from "@material-ui/core/Avatar";
 import Fjla from "../../backIndex.jpg";
 import defaultProfilePic from '../../images/default/boss.png';
@@ -7,6 +6,7 @@ import Account from "@material-ui/icons/AccountCircle";
 import Location from "@material-ui/icons/LocationCity";
 import Gender from "@material-ui/icons/SupervisedUserCircle";
 import Help from "@material-ui/icons/Help";
+import axios from "axios";
 import Thumb from "@material-ui/icons/ThumbsUpDown";
 import Info from "@material-ui/icons/Info";
 import Divider from "@material-ui/core/Divider";
@@ -15,30 +15,34 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 
-const useStyles = makeStyles(theme => ({
-  bigAvatar: {
-    margin: 10,
-    width: 200,
-    height: 200
-  },
-  root: {
-    padding: theme.spacing(3, 2)
-  },
-  card: {
-    maxWidth: 345
-  }
-}));
-
+const sizeImg = {
+  margin: 10,
+  width: 200,
+  height: 200
+};
 const paddingImg = {
 
 };
 
 
-export default function Profile() {
+class Profile extends Component  {
+  state = {
+    user: {}
+  };
   
-  const classes = useStyles();
-  return (
-    <div className={classes.root}>
+  async componentDidMount() {
+    const user = this.props.match.params.username;
+    await axios.get(`http://localhost:1337/api/users/get/${user}`).then(res => {
+      if (res.data.data.props) {
+        const user = res.data.data.props;
+        this.setState({ user: user });
+        this.setState({ visible: true });
+      }
+    });
+  }
+  render() {
+    return (
+      <div >
       <div className="container">
         <div className="row">
           <div className="col-md-2" />
@@ -47,20 +51,20 @@ export default function Profile() {
               <Avatar
                 alt="Remy Sharp"
                 src={defaultProfilePic}
-                className={classes.bigAvatar}
+                style={sizeImg}
               />
             </center>
           </div>
           <div className="col-md-2" />
           <div className="col-md-5">
-            <List className={classes.root}>
+            <List >
               <ListItem>
                 <ListItemAvatar>
                   <Avatar>
                     <Account />
                   </Avatar>
                 </ListItemAvatar>
-                <ListItemText primary="cmarouan" secondary="Marouane Chakour" />
+                <ListItemText primary={this.state.user.username} secondary={`${this.state.user.fName} ${this.state.user.lName}`} />
               </ListItem>
               <Divider variant="inset" component="li" />
               <ListItem>
@@ -69,7 +73,7 @@ export default function Profile() {
                     <Location />
                   </Avatar>
                 </ListItemAvatar>
-                <ListItemText primary="Location" secondary="1337, Khouribga" />
+                <ListItemText primary="Location" secondary={this.state.user.location} />
               </ListItem>
               <Divider variant="inset" component="li" />
               <ListItem>
@@ -78,7 +82,7 @@ export default function Profile() {
                     <Gender />
                   </Avatar>
                 </ListItemAvatar>
-                <ListItemText primary="Gender" secondary="Male" />
+                <ListItemText primary="Gender" secondary={this.state.user.gender} />
               </ListItem>
             </List>
           </div>
@@ -86,14 +90,14 @@ export default function Profile() {
         <div className="row">
           <div className="col-md-3" />
           <div className="col-md-7">
-          <List className={classes.root}>
+          <List >
               <ListItem>
                 <ListItemAvatar>
                   <Avatar>
                     <Thumb />
                   </Avatar>
                 </ListItemAvatar>
-                <ListItemText primary="Fame rating" secondary="100%" />
+                <ListItemText primary="Fame rating" secondary={this.state.user.fameRating} />
               </ListItem>
               <Divider variant="inset" component="li" />
               <ListItem>
@@ -102,7 +106,7 @@ export default function Profile() {
                     <Help />
                   </Avatar>
                 </ListItemAvatar>
-                <ListItemText primary="Biography" secondary="student in 1337, Khouribga" />
+                <ListItemText primary="Biography" secondary={this.state.user.bio} />
               </ListItem>
               <Divider variant="inset" component="li" />
               <ListItem>
@@ -111,7 +115,7 @@ export default function Profile() {
                     <Info />
                   </Avatar>
                 </ListItemAvatar>
-                <ListItemText primary="tages" secondary="Male, coding, sport, raja casablanca" />
+                <ListItemText primary="tages" secondary={this.state.user.tags} />
               </ListItem>
             </List>
             </div>
@@ -172,5 +176,9 @@ export default function Profile() {
         </div>
       </div>
     </div>
-  );
+    );
+  } 
+
 }
+
+export default Profile;
