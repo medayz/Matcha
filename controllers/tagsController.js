@@ -61,7 +61,7 @@ module.exports = {
     },
     getUserTags: async (req, response) => {
         tagModel
-            .getTagsByUsername(req.username)
+            .getTagsByUsername(req.params.username)
             .then(results => {
                 response.json({
                     status: 200,

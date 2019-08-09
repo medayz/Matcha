@@ -16,7 +16,7 @@ module.exports = {
         });
     },
     getTagsByUsername: async (username) => {
-        return await query.getAllRows('MATCH (:User {username: $username})-[:INTERESTED_IN]->(t:Tag) RETURN t;', {
+        return await query.getAllRows('MATCH p=(u:User {username: $username})-[r:INTRESTED_IN]->(t:Tag) RETURN t', {
             username: username
         });
     }

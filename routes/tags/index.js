@@ -5,9 +5,9 @@ tagsRouter
 	.route('/get')
 	.get(tagsController.getAllTags);
 
-tagsRouter
+/*tagsRouter
 	.route('/get/:name')
-	.get(tagsController.getTagByName);
+	.get(tagsController.getTagByName);*/
 
 tagsRouter
 	.route('/get/:username')
