@@ -9,4 +9,12 @@ tagsRouter
 	.route('/get/:name')
 	.get(tagsController.getTagByName);
 
+tagsRouter
+	.route('/get/:username')
+	.get(tagsController.getUserTags);
+
+tagsRouter
+	.route('/filter/:match')
+	.get(tagsController.filterTags);
+
 module.exports = tagsRouter;

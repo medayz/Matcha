@@ -1,10 +1,10 @@
 const fetch = require("node-fetch");
 const paths = require("../config/paths");
-const jwtHelper = require(paths.HELPERS + "/jwtokens");
-const userModel = require(paths.MODELS + "/userModel");
-const validator = require(paths.HELPERS + "/validator");
-const mail = require(paths.HELPERS + "/sendmail");
-const token = require(paths.HELPERS + "/token");
+const jwtHelper = require(`${paths.HELPERS}/jwtokens`);
+const userModel = require(`${paths.MODELS}/userModel`);
+const validator = require(`${paths.HELPERS}/validator`);
+const mail = require(`${paths.HELPERS}/sendmail`);
+const token = require(`${paths.HELPERS}/token`);
 
 module.exports = {
 	getAllUsers: async (req, response) => {
