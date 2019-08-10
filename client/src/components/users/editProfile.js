@@ -110,11 +110,11 @@ class EditProfile extends Component {
       formData.append("profileImg", img, img.name);
     }
   };
-
   editUsername = async e => {
     this.clearErrorState();
     e.preventDefault();
     const usr = {
+      username: 'cmarouan1',
       newUsername: this.state.username
     };
     await axios
@@ -122,7 +122,7 @@ class EditProfile extends Component {
         headers: head
       })
       .then(res => {
-        this.setState({ msg1: res.data.msg });
+        this.setState({ msg2: res.data.msg });
       })
       .catch(err => {
         const backend = err.response.data;
@@ -133,11 +133,9 @@ class EditProfile extends Component {
         }
         console.log(this.state.errState);
       });
-    //console.log(usr);
   };
   uploadsnap = () => {
     this.fileUpload.current.click();
-    console.log("hello");
   };
   editPass = async e => {
     e.preventDefault();
@@ -162,11 +160,10 @@ class EditProfile extends Component {
     this.setState({ activeLocation: e.currentTarget.value });
   };
 
-  handleChangeTag = e => {};
-
   handleGender = e => {
     this.setState({ gender: e.currentTarget.value });
   };
+
   callTags = () => {
     getAllTags().then(({ data }) => {
       this.setState({
@@ -179,8 +176,8 @@ class EditProfile extends Component {
       });
     });
   }
+
   calluserTags = () => {
-    
     getUserTags(this.state.username).then(({ data }) => {
       this.setState({
         optionsUser: data.data.map(tag => {
@@ -192,6 +189,7 @@ class EditProfile extends Component {
       });
     });
   }
+
   onChangeTags = async (newValue) => {
     if (newValue){
       var Tags = {
@@ -209,8 +207,8 @@ class EditProfile extends Component {
       });
     }
   };
+  
   async componentDidMount() { 
-    
     this.callTags();
     const user = this.props.match.params.username;
     await axios.get(`http://localhost:1337/api/users/get/${user}`).then(res => {
@@ -227,19 +225,18 @@ class EditProfile extends Component {
         if (user.birthDate) this.setState({ birthDate: user.birthDate });
         this.setState({ visible: true });
         this.calluserTags();
-        /*getUserTags(this.state.user).then(({data}) => {
-          console.log(data);
-        });*/
       }
     });
   }
-  //-----------------------
 
   onChange = e => {
     this.setState({ [e.target.name]: e.target.value });
   };
 
-  onSubmit = async e => {};
+  componentWillUnmount() {
+    this.setState({tokenErr : ''});
+  }
+
   render() {
     function handleDelete() {
       alert("You clicked the delete icon.");
