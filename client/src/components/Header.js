@@ -1,7 +1,12 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { getter } from '../helpers/tokenOperation';
+import { connect } from 'react-redux';
 import './../css/profile.css'
+
+const mapStateToProps = state => ({
+    user: state.user.username
+});
 
 class Header extends Component {
     state = {
@@ -9,7 +14,8 @@ class Header extends Component {
     };
 
     
-    
+  
+
   render() {
       setTimeout(() => {
         this.setState({token: getter('token')});
@@ -36,13 +42,13 @@ class Header extends Component {
                         </li>}
                         {this.state.token &&
                         <li className="nav-item">
-                            <Link to="/profile/users/cmarouan" className="nav-link">
+                            <Link to={`/profile/users/${this.props.user}`} className="nav-link">
                                 profile
                             </Link>
                         </li>}
                         {this.state.token &&
                         <li className="nav-item">
-                            <Link to="/profile/edit/cmarouan" className="nav-link">
+                            <Link to={`/profile/edit/${this.props.user}`} className="nav-link">
                                 Edit 
                             </Link>
                         </li>
@@ -62,4 +68,4 @@ class Header extends Component {
   }
 } 
 
-export default Header;
+export default connect(mapStateToProps)(Header);

@@ -333,12 +333,12 @@ module.exports = {
 					});
 			}
 		},
-		username: (req, response) => {
+		username: async (req, response) => {
 			const params = {
 				newUsername: req.body.newUsername ? req.body.newUsername.trim() : ''
 			};
 			params.err = {
-				newUsername: validator.username(newUsername, userModel.getUser(newUsername))
+				newUsername: validator.username(params.newUsername, await userModel.getUser(params.newUsername))
 			};
 			if (!Object.values(params.err).filter(errMsg => errMsg).length) {
 				userModel.edit.username(req.username, params.newUsername)
@@ -367,16 +367,15 @@ module.exports = {
 					});
 			}
 		},
-		email: (req, response) => {
+		email: async (req, response) => {
 			const params = {
-				email: req.body.email ? trim(req.body.email) : '',
-				newEmail: req.body.newEmail ? trim(req.body.newEmail) : ''
+				newEmail: req.body.newEmail ? req.body.newEmail.trim() : ''
 			};
 			params.err = {
-				newEmail: validator.email(newEmail, userModel.getUserByEmail(email))
+				newEmail: validator.email(params.newEmail, await userModel.getUserByEmail(params.newEmail))
 			};
 			if (!Object.values(params.err).filter(errMsg => errMsg).length) {
-				userModel.edit.username(req.username, params.newEmail)
+				userModel.edit.email(req.username, params.newEmail)
 					.then(res => {
 						response
 							.json({

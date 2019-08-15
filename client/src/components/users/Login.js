@@ -4,6 +4,7 @@ import axios from "axios";
 import Alert from "../layout/Alert";
 import { connect } from "react-redux";
 import { setAlert } from "../../actions/alert";
+import { setUser } from "../../actions/user";
 import { Redirect } from "react-router-dom";
 import profile from "./ConfirmAcc";
 import { setter } from "../../helpers/tokenOperation";
@@ -42,7 +43,9 @@ class Login extends Component {
       await axios
         .post(`http://localhost:1337/api/users/auth`, user)
         .then(res => {
+          this.props.setUser(this.state.username);
           const backend = res.data;
+          this.props.setUser(this.state.username);
           if (backend.status === 200) {
             if (this._isMounted === true) {
               this.setState({
@@ -132,5 +135,5 @@ class Login extends Component {
 
 export default connect(
   null,
-  { setAlert }
+  { setAlert, setUser }
 )(Login);
