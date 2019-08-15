@@ -20,9 +20,11 @@ usersRouter
 usersRouter
   .route("/edit/infos")
   .put(auth, usersController.edit.infos);
+
 usersRouter
   .route("/edit/username")
   .put(auth, usersController.edit.username);
+
 usersRouter
   .route("/edit/email")
   .put(auth, usersController.edit.email);
