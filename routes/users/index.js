@@ -3,31 +3,21 @@ const usersRouter = require("express").Router();
 const usersController = require(`${paths.CONTROLLERS}/usersController`);
 const auth = require(`${paths.MIDDLEWARES}/checkToken`);
 
-usersRouter
-  .use(require("express").json());
+usersRouter.use(require("express").json());
 
-usersRouter
-  .use("/add", auth, require("./add"));
+usersRouter.use("/add", auth, require("./add"));
 
-usersRouter
-  .route("/get")
-  .get(usersController.getAllUsers);
+usersRouter.route("/get").get(usersController.getAllUsers);
 
-usersRouter
-  .route("/get/:username")
-  .get(usersController.getUserByUsername);
+usersRouter.route("/get/:username").get(usersController.getUserByUsername);
 
-usersRouter
-  .route("/edit/infos")
-  .put(auth, usersController.edit.infos);
+usersRouter.route("/edit/infos").put(auth, usersController.edit.infos);
 
-usersRouter
-  .route("/edit/username")
-  .put(auth, usersController.edit.username);
+usersRouter.route("/edit/username").put(auth, usersController.edit.username);
 
-usersRouter
-  .route("/edit/email")
-  .put(auth, usersController.edit.email);
+usersRouter.route("/edit/password").put(auth, usersController.edit.password);
+
+usersRouter.route("/edit/email").put(auth, usersController.edit.email);
 
 //  Add user
 usersRouter.route("/create").post(usersController.addUser);
