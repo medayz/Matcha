@@ -67,7 +67,7 @@ module.exports = {
 		},
 		tag: async params => {
 			await query.execute(
-				"MATCH (u:User {username: $username}) CREATE (u)-[:INTRESTED_IN]->(p:Tag {name: $name})",
+				"MATCH (u:User {username: $username}) MERGE (t:Tag {name: $name}) MERGE (u)-[:INTERESTED_IN]->(t);",
 				params
 			);
 		}

@@ -6,12 +6,12 @@ addRouter.use(express.json());
 
 // Add picture
 addRouter
-    .route('/picture/:username')
+    .route('/picture')
     .post(usersController.add.picture);
 
 //	Add tag
 addRouter
-    .route('/tag/:username')
+    .route('/tag')
     .post(usersController.add.tag);
 
 module.exports = addRouter;

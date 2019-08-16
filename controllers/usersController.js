@@ -245,7 +245,7 @@ module.exports = {
 		picture: (req, response) => {
 			const params = {
 				link: req.body.link,
-				username: req.params.username,
+				username: req.username,
 				date: Date.now()
 			};
 			userModel.add
@@ -269,7 +269,7 @@ module.exports = {
 		},
 		tag: (req, response) => {
 			const params = {
-				username: req.params.username,
+				username: req.username,
 				name: req.body.tagName
 			};
 			userModel
@@ -283,21 +283,12 @@ module.exports = {
 				})
 				.catch(err => {
 					console.log(err.message);
-					if (err.code === 'Neo.ClientError.Schema.ConstraintValidationFailed') {
-						response
-							.status(400)
-							.json({
-								status: 400,
-								msg: "Tag already exist!"
-							});
-					} else {
-						response
-							.status(500)
-							.json({
-								status: 500,
-								msg: "Tag couldn't be added!"
-							});
-					}
+					response
+						.status(500)
+						.json({
+							status: 500,
+							msg: "Tag couldn't be added!"
+						});
 				});
 		}
 	},
