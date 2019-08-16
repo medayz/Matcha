@@ -3,8 +3,8 @@ import noSnap from "../../images/default/icon.png";
 import deleteLogo from "../../images/default/delete.png";
 import addLogo from "../../images/default/plus.png";
 import axios from "axios";
-import defaultProfilePic from "../../images/default/boss.png";
 import EditInfos from "./editProfileCom/EditInfos";
+import ProfilePic from "./editProfileCom/ProfilePic";
 import EditUsername from "./editProfileCom/EditUsername";
 import EditPassword from "./editProfileCom/EditPassword";
 import EditEmail from "./editProfileCom/EditEmail";
@@ -93,32 +93,7 @@ class EditProfile extends Component {
       <div className="container-fluid">
         <div className="row profile">
           <div className="col-md-3">
-            <div className="profile-sidebar">
-              <div className="profile-userpic">
-                <div className="row">
-                  <img
-                    src={defaultProfilePic}
-                    className="img-responsive"
-                    alt=""
-                  />
-                </div>
-              </div>
-              <div className="profile-usertitle">
-                <div className="profile-usertitle-name">
-                  {this.state.fName} {this.state.lName}
-                </div>
-              </div>
-              <div className="upload-btn-wrapper">
-                <center>
-                  <button className="btn222">Upload image</button>
-                  <input
-                    type="file"
-                    name="myfile"
-                    onChange={this.uploadProfileImg}
-                  />
-                </center>
-              </div>
-            </div>
+            <ProfilePic />
           </div>
           <br />
           <div className="col-md-9">

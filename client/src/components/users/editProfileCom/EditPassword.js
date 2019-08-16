@@ -8,6 +8,7 @@ export default class EditUsername extends Component {
   state = {
     pass: "",
     cPass: "",
+    newPass: "",
     errState: {},
     isValid: false
   };
@@ -21,6 +22,7 @@ export default class EditUsername extends Component {
       newPass: this.state.newPass,
       cPass: this.state.cPass
     };
+    console.log(pwd);
     await axios
       .put(`http://localhost:1337/api/users/edit/password`, pwd, {
         headers: {

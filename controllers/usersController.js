@@ -4,6 +4,7 @@ const userModel = require(`${paths.MODELS}/userModel`);
 const validator = require(`${paths.HELPERS}/validator`);
 const mail = require(`${paths.HELPERS}/sendmail`);
 const token = require(`${paths.HELPERS}/token`);
+const upload = require(`${paths.HELPERS}/upload`);
 
 module.exports = {
   getAllUsers: async (req, response) => {
@@ -213,28 +214,37 @@ module.exports = {
       });
   },
   add: {
-    picture: (req, response) => {
-      const params = {
-        link: req.body.link,
-        username: req.username,
-        date: Date.now()
-      };
-      userModel.add
-        .picture(params)
-        .then(() => {
-          response.json({
-            status: 200,
-            msg: "Picture added"
-          });
-        })
-        .catch(err => {
-          console.log(err.message);
-          response.status(500).json({
-            status: 500,
-            msg: "Picture couldn't be added"
-          });
-        });
-    },
+    picture: (req, res) => {
+			upload(req, res, (err) => {
+      			if (!err){
+					if (!req.file){
+						res
+						.status(400)
+						.json({
+							status: 400,
+							msg: 'Image not found'
+						});
+					}
+					else {
+						res
+						.status(200)
+						.json({
+							status: 200,
+							msg: 'Image modified !'
+						});
+					}
+				}
+				else{
+					if (!req.file)
+					res
+						.status(400)
+						.json({
+							status: 400,
+							msg: err
+						});
+				}
+			 });
+		},
     tag: (req, response) => {
       const params = {
         username: req.username,
@@ -333,17 +343,17 @@ module.exports = {
         pass: req.body.pass ? req.body.pass : "",
         newPass: req.body.newPass ? req.body.newPass : "",
         cPass: req.body.cPass ? req.body.cPass : "",
-        err: {
-          pass: "",
-          newPass: validator.password(params.newPass),
-          cPass: validator.confirmPassword(params.newPass, params.cPass)
-        }
       };
+      const errParams = {
+        pass: "",
+        newPass: validator.password(params.newPass),
+        cPass: validator.confirmPassword(params.newPass, params.cPass)
+      }
       userModel
         .checkUserPwd(params)
         .then(async result => {
           try {
-            if (!Object.values(params.err).filter(errMsg => errMsg).length) {
+            if (!Object.values(errParams).filter(errMsg => errMsg).length) {
               await userModel.edit.password(params.username, params.newPass);
               response.json({
                 status: 200,
