@@ -47,7 +47,7 @@ class Header extends Component {
                         }
                         {this.state.token &&
                         <li className="nav-item">
-                            <Link to="#" className="nav-link">
+                            <Link to={`/matches`} className="nav-link">
                                 Matches 
                             </Link>
                         </li>

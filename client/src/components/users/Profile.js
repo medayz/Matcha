@@ -117,7 +117,7 @@ class Profile extends Component  {
                     <Info />
                   </Avatar>
                 </ListItemAvatar>
-                <ListItemText primary="tages" secondary={this.state.user.tags} />
+                <ListItemText primary="tags" secondary={this.state.user.tags} />
               </ListItem>
             </List>
             </div>
