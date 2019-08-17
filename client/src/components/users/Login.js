@@ -120,7 +120,7 @@ class Login extends Component {
           />
           {this.state.login === "done" && ((this._isMounted = false)) === false && (
             <Redirect
-              to={`/profile/edit/${this.state.username}`}
+              to={`/profile/edit`}
               Component={profile}
             />
           )}

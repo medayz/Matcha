@@ -10,6 +10,8 @@ import EditPassword from "./editProfileCom/EditPassword";
 import EditEmail from "./editProfileCom/EditEmail";
 import "./test.css";
 import { Redirect } from "react-router";
+import jwt from 'jsonwebtoken';
+import { getter } from "../../helpers/tokenOperation";
 
 const logoAdd = {
   width: "25%",
@@ -59,29 +61,18 @@ class EditProfile extends Component {
     };
     console.log(Tags);
   };
-  handleBirthday = e => {
-    this.setState({ birthDate: e.currentTarget.value });
-  };
-
-  handleActiveNotif = e => {
-    this.setState({ activeLocation: e.currentTarget.value });
-  };
-
-  handleGender = e => {
-    this.setState({ gender: e.currentTarget.value });
-  };
 
   async componentWillMount() {
-    const user = this.props.match.params.username;
+    const user = jwt.decode(getter('token')).username;
     await axios.get(`http://localhost:1337/api/users/get/${user}`).then(res => {
       if (res.data.data.props) {
         const user = res.data.data.props;
         if (user.username) this.setState({ username: user.username });
         if (user.email) this.setState({ email: user.email });
-
         this.setState({ visible: true });
       }
     });
+    //console.log(this.state);
   }
 
   onChange = e => {
@@ -97,32 +88,26 @@ class EditProfile extends Component {
           </div>
           <br />
           <div className="col-md-9">
-            {this.state.visible === true && (
-              <EditInfos username={this.state.username} />
-            )}
+          { this.state.visible && 
+          <EditInfos username={this.state.username}/> }
           </div>
         </div>
         <div className="row profile">
           <div className="col-md-3" />
           <br />
           <div className="col-md-9">
-            {this.state.visible === true && (
-              <EditUsername username={this.state.username} />
-            )}
+          { this.state.visible && 
+              <EditUsername username={this.state.username}/>}
           </div>
         </div>
         <div className="row profile">
           <div className="col-md-3" />
           <br />
           <div className="col-md-9">
-            {this.state.visible === true && (
-              <EditEmail email={this.state.email} />
-            )}
+            { this.state.visible && <EditEmail email={this.state.email}/> }
           </div>
         </div>
-
-        <EditPassword />
-
+            <EditPassword />
         <div className="row profile">
           <div className="col-md-3" />
           <br />

@@ -14,6 +14,7 @@ const head = {
   Accept: "application/json",
   "Content-Type": "application/json"
 };
+
 const tagsErrorStyle = {
   color: "red"
 };
@@ -122,6 +123,18 @@ export default class EditInfos extends Component {
     console.log("tag will be deleted");
   };
 
+  handleBirthday = e => {
+    this.setState({ birthDate: e.currentTarget.value });
+  };
+
+  handleActiveNotif = e => {
+    this.setState({ activeLocation: e.currentTarget.value });
+  };
+
+  handleGender = e => {
+    this.setState({ gender: e.currentTarget.value });
+  };
+  
   async componentWillMount() {
     const user = this.props.username;
     this.calluserTags(this.state.user);
@@ -141,6 +154,8 @@ export default class EditInfos extends Component {
         this.setState({ visible: true });
         this.callTags();
       }
+    }).catch (err => {
+      console.log("adadad");
     });
   }
 
@@ -157,6 +172,7 @@ export default class EditInfos extends Component {
       birthDate: this.state.birthDate,
       sexualPref: this.state.sexualPref
     };
+    console.log(usr);
     if (usr.activeLocation === "1") usr.activeLocation = true;
     else usr.activeLocation = false;
     this.setState({

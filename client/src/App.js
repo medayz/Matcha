@@ -21,9 +21,9 @@ class App extends Component {
             <Route exact path="/" component={Index}/>
             <Route exact path="/register" component={Register}/>
             <Route exact path="/login" component={Login}/>
-            <Route exact path="/profile/edit/:username" component={editProfile}/>
+            <Route exact path="/profile/edit/" component={editProfile}/>
             <Route exact path="/confirmAcc/:username/:token" component={ConfirmAcc}/>
-            <Route exact path="/profile/users/:username" component={Profile}/>
+            <Route exact path="/profile/users/" component={Profile}/>
             <Route exact path="/logout" component={Logout}/>
           </Switch>
         </Router>
