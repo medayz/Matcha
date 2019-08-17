@@ -344,7 +344,7 @@ module.exports = {
         newPass: req.body.newPass ? req.body.newPass : "",
         cPass: req.body.cPass ? req.body.cPass : "",
       };
-      const errParams = {
+      params.err = {
         pass: "",
         newPass: validator.password(params.newPass),
         cPass: validator.confirmPassword(params.newPass, params.cPass)
@@ -353,7 +353,7 @@ module.exports = {
         .checkUserPwd(params)
         .then(async result => {
           try {
-            if (!Object.values(errParams).filter(errMsg => errMsg).length) {
+            if (!Object.values(params.err).filter(errMsg => errMsg).length) {
               await userModel.edit.password(params.username, params.newPass);
               response.json({
                 status: 200,
@@ -374,7 +374,7 @@ module.exports = {
           }
         })
         .catch(err => {
-          if (err.message != -1) {
+          if (err.message != -2) {
             response.status(500).json({
               status: 500,
               msg: "Something went wrong, please retry!"

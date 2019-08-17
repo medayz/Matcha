@@ -101,7 +101,7 @@ export default class EditUsername extends Component {
             </form>
           </div>
         </div>
-        {this.state.isValid && <Redirect />}
+        {this.state.isValid && <Redirect to='/login'/>}
       </div>
     );
   }

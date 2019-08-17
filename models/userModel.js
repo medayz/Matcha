@@ -104,13 +104,13 @@ module.exports = {
         }
       );
     },
-    password: async (username, password) => {
-      password = await password.hash(password);
+    password: async (username, pwd) => {
+      pwd = await password.hash(pwd);
       await query.execute(
         "MATCH (u:User {username: $username}) SET u.pwd = $password;",
         {
           username: username,
-          password: password
+          password: pwd
         }
       );
     },
