@@ -98,108 +98,105 @@ class Profile extends Component {
               </List>
             </div>
           </div>
-          <div className="row">
-            <div className="col-md-3" />
-            <div className="col-md-7">
-              <List>
-                <ListItem>
-                  <ListItemAvatar>
-                    <Avatar>
-                      <Thumb />
-                    </Avatar>
-                  </ListItemAvatar>
-                  <ListItemText
-                    primary="Fame rating"
-                    secondary={this.state.user.fameRating}
-                  />
-                </ListItem>
-                <Divider variant="inset" component="li" />
-                <ListItem>
-                  <ListItemAvatar>
-                    <Avatar>
-                      <Help />
-                    </Avatar>
-                  </ListItemAvatar>
-                  <ListItemText
-                    primary="Biography"
-                    secondary={this.state.user.bio}
-                  />
-                </ListItem>
-                <Divider variant="inset" component="li" />
-                <ListItem>
-                  <ListItemAvatar>
-                    <Avatar>
-                      <Info />
-                    </Avatar>
-                  </ListItemAvatar>
-                  <ListItemText
-                    primary="tages"
-                    secondary={this.state.user.tags}
-                  />
-                </ListItem>
-              </List>
-            </div>
-            <div className="col-md-2" />
+        </div>
+        <div className="row">
+          <div className="col-md-3" />
+          <div className="col-md-7">
+            <List>
+              <ListItem>
+                <ListItemAvatar>
+                  <Avatar>
+                    <Thumb />
+                  </Avatar>
+                </ListItemAvatar>
+                <ListItemText
+                  primary="Fame rating"
+                  secondary={this.state.user.fameRating}
+                />
+              </ListItem>
+              <Divider variant="inset" component="li" />
+              <ListItem>
+                <ListItemAvatar>
+                  <Avatar>
+                    <Help />
+                  </Avatar>
+                </ListItemAvatar>
+                <ListItemText
+                  primary="Biography"
+                  secondary={this.state.user.bio}
+                />
+              </ListItem>
+              <Divider variant="inset" component="li" />
+              <ListItem>
+                <ListItemAvatar>
+                  <Avatar>
+                    <Info />
+                  </Avatar>
+                </ListItemAvatar>
+                <ListItemText primary="tags" secondary={this.state.user.tags} />
+              </ListItem>
+            </List>
           </div>
-          <div className="row">
-            <div className="col-md-4" />
-            <div className="col-md-5">
-              <center>
-                <div className="alert alert-primary" role="alert">
-                  Snap
-                </div>
-              </center>
-            </div>
-            <div className="col-md-3" />
-          </div>
-          <div className="row">
-            <div className="col-md-3" />
-            <div className="col-md-7">
-              <div
-                id="carouselExampleControls"
-                className="carousel slide"
-                data-ride="carousel"
-                style={paddingImg}
-              >
-                <div className="carousel-inner">
-                  <div className="carousel-item active">
-                    <img src={Fjla} className="d-block w-100" alt="..." />
-                  </div>
-                  <div className="carousel-item">
-                    <img src={Fjla} className="d-block w-100" alt="..." />
-                  </div>
-                  <div className="carousel-item">
-                    <img src={Fjla} className="d-block w-100" alt="..." />
-                  </div>
-                </div>
-                <a
-                  className="carousel-control-prev"
-                  href="#carouselExampleControls"
-                  role="button"
-                  data-slide="prev"
-                >
-                  <span
-                    className="carousel-control-prev-icon"
-                    aria-hidden="true"
-                  />
-                  <span className="sr-only">Previous</span>
-                </a>
-                <a
-                  className="carousel-control-next"
-                  href="#carouselExampleControls"
-                  role="button"
-                  data-slide="next"
-                >
-                  <span
-                    className="carousel-control-next-icon"
-                    aria-hidden="true"
-                  />
-                  <span className="sr-only">Next</span>
-                </a>
+          <div className="col-md-2" />
+        </div>
+        <div className="row">
+          <div className="col-md-4" />
+          <div className="col-md-5">
+            <center>
+              <div className="alert alert-primary" role="alert">
+                Snap
               </div>
-            </div>
-            <div className="col-md-2" />
+            </center>
           </div>
+          <div className="col-md-3" />
+        </div>
+        <div className="row">
+          <div className="col-md-3" />
+          <div className="col-md-7">
+            <div
+              id="carouselExampleControls"
+              className="carousel slide"
+              data-ride="carousel"
+              style={paddingImg}
+            >
+              <div className="carousel-inner">
+                <div className="carousel-item active">
+                  <img src={Fjla} className="d-block w-100" alt="..." />
+                </div>
+                <div className="carousel-item">
+                  <img src={Fjla} className="d-block w-100" alt="..." />
+                </div>
+                <div className="carousel-item">
+                  <img src={Fjla} className="d-block w-100" alt="..." />
+                </div>
+              </div>
+              <a
+                className="carousel-control-prev"
+                href="#carouselExampleControls"
+                role="button"
+                data-slide="prev"
+              >
+                <span
+                  className="carousel-control-prev-icon"
+                  aria-hidden="true"
+                />
+                <span className="sr-only">Previous</span>
+              </a>
+              <a
+                className="carousel-control-next"
+                href="#carouselExampleControls"
+                role="button"
+                data-slide="next"
+              >
+                <span
+                  className="carousel-control-next-icon"
+                  aria-hidden="true"
+                />
+                <span className="sr-only">Next</span>
+              </a>
+            </div>
+          </div>
+          <div className="col-md-2" />
         </div>
       </div>
     );
