@@ -7,7 +7,12 @@ import { setAlert } from "../../actions/alert";
 import { setUser } from "../../actions/user";
 import { Redirect } from "react-router-dom";
 import profile from "./ConfirmAcc";
-import { setter } from "../../helpers/tokenOperation";
+// import { setter } from "../../helpers/tokenOperation";
+
+const head = {
+  Accept: "application/json",
+  "Content-Type": "application/json"
+};
 
 class Login extends Component {
   state = {
@@ -16,8 +21,7 @@ class Login extends Component {
     errState: {},
     login: ""
   };
- 
-  _isMounted = false;
+
   onChange = e => {
     this.setState({ [e.target.name]: e.target.value });
   };
@@ -29,7 +33,6 @@ class Login extends Component {
 
   onSubmit = async e => {
     e.preventDefault();
-    this._isMounted = true;
     const err = {
       username: "",
       pass: "",
@@ -41,47 +44,40 @@ class Login extends Component {
     if (err.username === "" && err.pass === "") {
       const user = this.state;
       await axios
-        .post(`http://localhost:1337/api/users/auth`, user)
+        .post(`http://localhost:1337/api/users/auth`, user, head)
         .then(res => {
           this.props.setUser(this.state.username);
           const backend = res.data;
-          this.props.setUser(this.state.username);
-          if (backend.status === 200) {
-            if (this._isMounted === true) {
-              this.setState({
-                pass: "",
-                errState: {}
-              });
-              this.clear();
-            }
-            setter('token', backend.data.token);
-            this.setState({ login: "done" });
+          if (res.status === 200) {
+            this.setState({
+              pass: "",
+              errState: {}
+            });
+            this.clear();
+            // setter('token', backend.data.token);
+            // this.setState({ login: "done" });
           } else {
-            if (this._isMounted === true) {
-              if (backend.data.err.username !== "")
-                err.email = backend.data.err.username;
-              if (backend.data.err.pass !== "")
-                err.username = backend.data.err.pass;
-              if (backend.data.err.active !== "")
-                err.active = backend.data.err.active;
-              this.setState({ errState: backend.data.err });
-              return;
-            }
+            if (backend.data.err.username !== "")
+              err.email = backend.data.err.username;
+            if (backend.data.err.pass !== "")
+              err.username = backend.data.err.pass;
+            if (backend.data.err.active !== "")
+              err.active = backend.data.err.active;
+            this.setState({ errState: backend.data.err });
+            return;
           }
         })
         .catch(err => {
-          if (this._isMounted === true) {
-            const back_err = err.response.data;
-            if (back_err.status === 400) {
-              if (back_err.data.err.username !== "")
-                err.username = back_err.data.err.username;
-              if (back_err.data.err.pass !== "")
-                err.pass = back_err.data.err.pass;
-              if (back_err.data.err.active !== "")
-                err.active = back_err.data.err.active;
-              this.setState({ errState: err });
-              return;
-            }
+          const back_err = err.response.data;
+          if (err.response.status === 400) {
+            if (back_err.data.err.username !== "")
+              err.username = back_err.data.err.username;
+            if (back_err.data.err.pass !== "")
+              err.pass = back_err.data.err.pass;
+            if (back_err.data.err.active !== "")
+              err.active = back_err.data.err.active;
+            this.setState({ errState: err });
+            return;
           }
         });
     } else return;
@@ -118,11 +114,8 @@ class Login extends Component {
             value={this.state.pass}
             onChange={this.onChange}
           />
-          {this.state.login === "done" && ((this._isMounted = false)) === false && (
-            <Redirect
-              to={`/profile/edit`}
-              Component={profile}
-            />
+          {this.state.login === "done" && (
+            <Redirect to={`/profile/edit`} Component={profile} />
           )}
           <button type="submit" className="btn btn-primary">
             Login

@@ -4,16 +4,16 @@ import CreatableSelect from "react-select/creatable";
 import RegisterInput from "../RegisterInput";
 import TextField from "@material-ui/core/TextField";
 import axios from "axios";
-import { getter } from "../../../helpers/tokenOperation";
+// import { getter } from "../../../helpers/tokenOperation";
 import { getAllTags } from "../../../helpers/getAllTags";
 import { getUserTags } from "../../../helpers/getUserTags";
 import { addTags } from "../../../helpers/addTags";
 
-const head = {
-  "auth-token": getter("token"),
-  Accept: "application/json",
-  "Content-Type": "application/json"
-};
+// const head = {
+//   "auth-token": getter("token"),
+//   Accept: "application/json",
+//   "Content-Type": "application/json"
+// };
 
 const tagsErrorStyle = {
   color: "red"
@@ -59,7 +59,7 @@ export default class EditInfos extends Component {
       this.setState({
         options: neww
       });
-      addTags(Tags, head)
+      addTags(Tags /*, head*/)
         .then(({ data }) => {
           this.calluserTags();
           this.callTags();
@@ -134,29 +134,32 @@ export default class EditInfos extends Component {
   handleGender = e => {
     this.setState({ gender: e.currentTarget.value });
   };
-  
+
   async componentWillMount() {
     const user = this.props.username;
     this.calluserTags(this.state.user);
     this.setState({
       username: user
     });
-    await axios.get(`http://localhost:1337/api/users/get/${user}`).then(res => {
-      if (res.data.data.props) {
-        const user = res.data.data.props;
-        user.fName && this.setState({ fName: user.fName });
-        user.lName && this.setState({ lName: user.lName });
-        user.gender && this.setState({ gender: user.gender });
-        user.location && this.setState({ location: user.location });
-        user.bio && this.setState({ bio: user.bio });
-        user.sexualPref && this.setState({ sexualPref: user.sexualPref });
-        user.birthDate && this.setState({ birthDate: user.birthDate });
-        this.setState({ visible: true });
-        this.callTags();
-      }
-    }).catch (err => {
-      console.log("adadad");
-    });
+    await axios
+      .get(`http://localhost:1337/api/users/get/${user}`)
+      .then(res => {
+        if (res.data.data.props) {
+          const user = res.data.data.props;
+          user.fName && this.setState({ fName: user.fName });
+          user.lName && this.setState({ lName: user.lName });
+          user.gender && this.setState({ gender: user.gender });
+          user.location && this.setState({ location: user.location });
+          user.bio && this.setState({ bio: user.bio });
+          user.sexualPref && this.setState({ sexualPref: user.sexualPref });
+          user.birthDate && this.setState({ birthDate: user.birthDate });
+          this.setState({ visible: true });
+          this.callTags();
+        }
+      })
+      .catch(err => {
+        console.log("adadad");
+      });
   }
 
   editInfo = async e => {
@@ -179,9 +182,12 @@ export default class EditInfos extends Component {
       activeLocation: usr.activeLocation
     });
     await axios
-      .put(`http://localhost:1337/api/users/edit/infos`, usr, {
+      .put(
+        `http://localhost:1337/api/users/edit/infos`,
+        usr /*, {
         headers: head
-      })
+      }*/
+      )
       .then(res => {
         this.setState({
           msg1: res.data.msg

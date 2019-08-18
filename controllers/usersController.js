@@ -147,12 +147,18 @@ module.exports = {
             const token = jwtHelper.getToken({
               username: params.username
             });
-            response.json({
-              status: 200,
-              data: {
-                token: token
-              }
-            });
+            req.session.token = token;
+            console.log(req.session);
+            response
+              // .cookie("token", token /*, { httpOnly: true }*/)
+              .sendStatus(200);
+            // response.cookie("salam", "cava").sendStatus(200);
+            // response.json({
+            //   status: 200,
+            //   data: {
+            //     token: token
+            //   }
+            // });
           })
           .catch(err => {
             if (err.message != -1 && err.message != -2) {
@@ -172,14 +178,14 @@ module.exports = {
           });
       } else {
         params.err.username = "Username not registered";
-        response.json({
+        response.status(400).json({
           status: 400,
           data: params
         });
       }
     } else {
       params.err.username = "Username not registered";
-      response.json({
+      response.status(400).json({
         status: 400,
         data: params
       });
@@ -215,36 +221,28 @@ module.exports = {
   },
   add: {
     picture: (req, res) => {
-			upload(req, res, (err) => {
-      			if (!err){
-					if (!req.file){
-						res
-						.status(400)
-						.json({
-							status: 400,
-							msg: 'Image not found'
-						});
-					}
-					else {
-						res
-						.status(200)
-						.json({
-							status: 200,
-							msg: 'Image modified !'
-						});
-					}
-				}
-				else{
-					if (!req.file)
-					res
-						.status(400)
-						.json({
-							status: 400,
-							msg: err
-						});
-				}
-			 });
-		},
+      upload(req, res, err => {
+        if (!err) {
+          if (!req.file) {
+            res.status(400).json({
+              status: 400,
+              msg: "Image not found"
+            });
+          } else {
+            res.status(200).json({
+              status: 200,
+              msg: "Image modified !"
+            });
+          }
+        } else {
+          if (!req.file)
+            res.status(400).json({
+              status: 400,
+              msg: err
+            });
+        }
+      });
+    },
     tag: (req, response) => {
       const params = {
         username: req.username,
@@ -342,13 +340,13 @@ module.exports = {
         username: req.username ? req.username.trim() : "",
         pass: req.body.pass ? req.body.pass : "",
         newPass: req.body.newPass ? req.body.newPass : "",
-        cPass: req.body.cPass ? req.body.cPass : "",
+        cPass: req.body.cPass ? req.body.cPass : ""
       };
       params.err = {
         pass: "",
         newPass: validator.password(params.newPass),
         cPass: validator.confirmPassword(params.newPass, params.cPass)
-      }
+      };
       userModel
         .checkUserPwd(params)
         .then(async result => {

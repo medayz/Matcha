@@ -10,8 +10,8 @@ import EditPassword from "./editProfileCom/EditPassword";
 import EditEmail from "./editProfileCom/EditEmail";
 import "./test.css";
 import { Redirect } from "react-router";
-import jwt from 'jsonwebtoken';
-import { getter } from "../../helpers/tokenOperation";
+// import jwt from "jsonwebtoken";
+// import { getter } from "../../helpers/tokenOperation";
 
 const logoAdd = {
   width: "25%",
@@ -63,7 +63,8 @@ class EditProfile extends Component {
   };
 
   async componentWillMount() {
-    const user = jwt.decode(getter('token')).username;
+    // const user = jwt.decode(getter('token')).username;
+    const user = "hamid";
     await axios.get(`http://localhost:1337/api/users/get/${user}`).then(res => {
       if (res.data.data.props) {
         const user = res.data.data.props;
@@ -88,26 +89,26 @@ class EditProfile extends Component {
           </div>
           <br />
           <div className="col-md-9">
-          { this.state.visible && 
-          <EditInfos username={this.state.username}/> }
+            {this.state.visible && <EditInfos username={this.state.username} />}
           </div>
         </div>
         <div className="row profile">
           <div className="col-md-3" />
           <br />
           <div className="col-md-9">
-          { this.state.visible && 
-              <EditUsername username={this.state.username}/>}
+            {this.state.visible && (
+              <EditUsername username={this.state.username} />
+            )}
           </div>
         </div>
         <div className="row profile">
           <div className="col-md-3" />
           <br />
           <div className="col-md-9">
-            { this.state.visible && <EditEmail email={this.state.email}/> }
+            {this.state.visible && <EditEmail email={this.state.email} />}
           </div>
         </div>
-            <EditPassword />
+        <EditPassword />
         <div className="row profile">
           <div className="col-md-3" />
           <br />
