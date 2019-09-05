@@ -1,14 +1,7 @@
 import React, { Component } from "react";
 import defaultProfilePic from "../../../images/default/boss.png";
-// import { getter } from "../../../helpers/tokenOperation";
 import { addPic } from "../../../helpers/addImg";
-/*
-const head = {
-    "auth-token": getter("token"),
-    Accept: "application/json",
-    "Content-Type": "application/json"
-  };
-*/
+
 export default class ProfilePic extends Component {
   constructor(props) {
     super(props);
@@ -19,7 +12,7 @@ export default class ProfilePic extends Component {
     if (img.name.match(/\.(jpg|jpeg|png)$/)) {
       var formData = new FormData();
       formData.append("profileImg", img);
-      addPic(formData /*, head*/)
+      addPic(formData)
         .then(({ data }) => {
           console.log(data);
         })

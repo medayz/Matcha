@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import RegisterInput from "../RegisterInput";
 import axios from "axios";
-import { getter, deletter } from "../../../helpers/tokenOperation";
 import { Redirect } from "react-router";
 
 export default class EditUsername extends Component {
@@ -24,15 +23,8 @@ export default class EditUsername extends Component {
     };
     console.log(pwd);
     await axios
-      .put(`http://localhost:1337/api/users/edit/password`, pwd, {
-        headers: {
-          "auth-token": getter("token"),
-          Accept: "application/json",
-          "Content-Type": "application/json"
-        }
-      })
+      .put(`/api/users/edit/password`, pwd)
       .then(res => {
-        deletter("token");
         this.setState({ isValid: true });
       })
       .catch(err => {

@@ -1,15 +1,16 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router';
-import { deletter } from '../../helpers/tokenOperation';
+import axios from 'axios';
 
 class Logout extends Component {
 
-    componentDidMount(){
-        console.log(deletter('token'));
-    }
+  componentDidMount() {
+    axios.get('/api/users/logout');
+  }
+
   render() {
     return (
-        !deletter() && <Redirect to='/login'/>
+        1 && <Redirect to='/login'/>
     );
   } 
 }

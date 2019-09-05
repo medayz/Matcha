@@ -10,8 +10,6 @@ import EditPassword from "./editProfileCom/EditPassword";
 import EditEmail from "./editProfileCom/EditEmail";
 import "./test.css";
 import { Redirect } from "react-router";
-// import jwt from "jsonwebtoken";
-// import { getter } from "../../helpers/tokenOperation";
 
 const logoAdd = {
   width: "25%",
@@ -63,9 +61,8 @@ class EditProfile extends Component {
   };
 
   async componentWillMount() {
-    // const user = jwt.decode(getter('token')).username;
     const user = "hamid";
-    await axios.get(`http://localhost:1337/api/users/get/${user}`).then(res => {
+    await axios.get(`/api/users/get/${user}`).then(res => {
       if (res.data.data.props) {
         const user = res.data.data.props;
         if (user.username) this.setState({ username: user.username });
@@ -73,7 +70,6 @@ class EditProfile extends Component {
         this.setState({ visible: true });
       }
     });
-    //console.log(this.state);
   }
 
   onChange = e => {

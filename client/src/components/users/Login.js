@@ -7,7 +7,6 @@ import { setAlert } from "../../actions/alert";
 import { setUser } from "../../actions/user";
 import { Redirect } from "react-router-dom";
 import profile from "./ConfirmAcc";
-// import { setter } from "../../helpers/tokenOperation";
 
 const head = {
   Accept: "application/json",
@@ -44,7 +43,7 @@ class Login extends Component {
     if (err.username === "" && err.pass === "") {
       const user = this.state;
       await axios
-        .post(`http://localhost:1337/api/users/auth`, user, head)
+        .post(`/api/users/auth`, user, head)
         .then(res => {
           this.props.setUser(this.state.username);
           const backend = res.data;
@@ -54,8 +53,7 @@ class Login extends Component {
               errState: {}
             });
             this.clear();
-            // setter('token', backend.data.token);
-            // this.setState({ login: "done" });
+            this.setState({ login: "done" });
           } else {
             if (backend.data.err.username !== "")
               err.email = backend.data.err.username;

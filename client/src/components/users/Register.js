@@ -59,7 +59,7 @@ class Register extends Component {
       {
         const user = this.state;
         await axios
-          .post(`http://localhost:1337/api/users/create`, user)
+          .post(`/api/users/create`, user)
           .then(res => {
             const backend = res.data;
             if (backend.status === 200)

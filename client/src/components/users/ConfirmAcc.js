@@ -13,7 +13,7 @@ async componentDidMount(){
     const { match: { params } } = this.props;
    
     await axios
-          .get(`http://localhost:1337/api/users/activation/${params.username}/${params.token}`)
+          .get(`/api/users/activation/${params.username}/${params.token}`)
           .then(res => {
             console.log("hello");
             if (res.data.status === 200)

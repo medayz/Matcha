@@ -14,8 +14,6 @@ import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
-// import jwt from "jsonwebtoken";
-// import { getter } from "../../helpers/tokenOperation";
 
 const sizeImg = {
   margin: 10,
@@ -30,9 +28,8 @@ class Profile extends Component {
   };
 
   async componentWillMount() {
-    // const user = jwt.decode(getter('token')).username;
     const user = "hamid";
-    await axios.get(`http://localhost:1337/api/users/get/${user}`).then(res => {
+    await axios.get(`/api/users/get/${user}`).then(res => {
       if (res.data.data.props) {
         const user = res.data.data.props;
         this.setState({ user: user });

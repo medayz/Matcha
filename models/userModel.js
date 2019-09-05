@@ -42,7 +42,6 @@ module.exports = {
       pwd: user.props.pwd,
       activated: user.props.activated
     };
-    console.log(user);
     if (await password.verify(params.pass, user.pwd)) {
       if (!user.activated) throw new Error(-1);
       return true;

@@ -148,17 +148,9 @@ module.exports = {
               username: params.username
             });
             req.session.token = token;
-            console.log(req.session);
             response
-              // .cookie("token", token /*, { httpOnly: true }*/)
-              .sendStatus(200);
-            // response.cookie("salam", "cava").sendStatus(200);
-            // response.json({
-            //   status: 200,
-            //   data: {
-            //     token: token
-            //   }
-            // });
+              // .cookie("token", token, { httpOnly: true })
+              .sendStatus(200)
           })
           .catch(err => {
             if (err.message != -1 && err.message != -2) {
@@ -190,6 +182,12 @@ module.exports = {
         data: params
       });
     }
+  },
+  logOut: async (req, response) => {
+    req.session.destroy(function(err) {
+      // cannot access session here
+      console.log('destroyed azebby');
+    })
   },
   accountActivation: async (req, response) => {
     userModel

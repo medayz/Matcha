@@ -11,6 +11,8 @@ usersRouter.route("/get").get(auth, usersController.getAllUsers);
 
 usersRouter.route("/get/:username").get(usersController.getUserByUsername);
 
+usersRouter.route("/logout").get(usersController.logOut);
+
 usersRouter.route("/edit/infos").put(auth, usersController.edit.infos);
 
 usersRouter.route("/edit/username").put(auth, usersController.edit.username);

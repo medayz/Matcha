@@ -1,7 +1,6 @@
-import { getter } from './tokenOperation'
 
 export const isLogged = () => {
-    if (getter('token'))
+    if (1)
         return true;
     else
         return false;

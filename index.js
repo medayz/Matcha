@@ -2,8 +2,8 @@ const express = require("express");
 const app = express();
 const PORT = process.env.PORT || 1337;
 const cors = require("cors");
-// const cookieParser = require("cookie-parser");
 const session = require("express-session");
+// const cookieParser = require("cookie-parser");
 const genuuid = require("uuid");
 const FileStore = require("session-file-store")(session);
 
@@ -21,13 +21,14 @@ app.use(
     secret: "testets",
     cookie: {
       secure: false,
-      httpOnly: false,
+      httpOnly: true,
       maxAge: 60000
     },
     store: new FileStore(),
-    name: "matchaCookie"
+    name: "session"
   })
 );
+
 app.use("/api", require("./routes"));
 
 app.get("/", (req, res) => {

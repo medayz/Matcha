@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import RegisterInput from "../RegisterInput";
 import axios from "axios";
-import { getter } from "../../../helpers/tokenOperation";
 
 export default class EditUsername extends Component {
   state = {
@@ -21,11 +20,7 @@ export default class EditUsername extends Component {
     };
     
     await axios
-    .put(`http://localhost:1337/api/users/edit/email`, usr, {
-      headers: { "auth-token": await getter("token"),
-      Accept: "application/json",
-      "Content-Type": "application/json"}
-    })
+    .put(`/api/users/edit/email`, usr)
     .then(res => {
       this.setState({ msg3: res.data.msg });
     })

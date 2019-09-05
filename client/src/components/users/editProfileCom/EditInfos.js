@@ -4,16 +4,9 @@ import CreatableSelect from "react-select/creatable";
 import RegisterInput from "../RegisterInput";
 import TextField from "@material-ui/core/TextField";
 import axios from "axios";
-// import { getter } from "../../../helpers/tokenOperation";
 import { getAllTags } from "../../../helpers/getAllTags";
 import { getUserTags } from "../../../helpers/getUserTags";
 import { addTags } from "../../../helpers/addTags";
-
-// const head = {
-//   "auth-token": getter("token"),
-//   Accept: "application/json",
-//   "Content-Type": "application/json"
-// };
 
 const tagsErrorStyle = {
   color: "red"
@@ -59,7 +52,7 @@ export default class EditInfos extends Component {
       this.setState({
         options: neww
       });
-      addTags(Tags /*, head*/)
+      addTags(Tags)
         .then(({ data }) => {
           this.calluserTags();
           this.callTags();
@@ -142,7 +135,7 @@ export default class EditInfos extends Component {
       username: user
     });
     await axios
-      .get(`http://localhost:1337/api/users/get/${user}`)
+      .get(`/api/users/get/${user}`)
       .then(res => {
         if (res.data.data.props) {
           const user = res.data.data.props;
@@ -183,10 +176,8 @@ export default class EditInfos extends Component {
     });
     await axios
       .put(
-        `http://localhost:1337/api/users/edit/infos`,
-        usr /*, {
-        headers: head
-      }*/
+        `/api/users/edit/infos`,
+        usr
       )
       .then(res => {
         this.setState({
@@ -349,7 +340,6 @@ export default class EditInfos extends Component {
                 <CreatableSelect
                   isClearable
                   onChange={this.onChangeTags}
-                  //onInputChange={this.handleInputChange}
                   options={this.state.options}
                 />{" "}
                 {this.state.tagsExit && (
