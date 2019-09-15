@@ -150,7 +150,7 @@ module.exports = {
             req.session.token = token;
             response
               // .cookie("token", token, { httpOnly: true })
-              .sendStatus(200)
+              .sendStatus(200);
           })
           .catch(err => {
             if (err.message != -1 && err.message != -2) {
@@ -185,9 +185,12 @@ module.exports = {
   },
   logOut: async (req, response) => {
     req.session.destroy(function(err) {
-      // cannot access session here
-      console.log('destroyed azebby');
-    })
+      if (err) {
+        console.log(err);
+      } else {
+        response.clearCookie("session").sendStatus(200);
+      }
+    });
   },
   accountActivation: async (req, response) => {
     userModel
