@@ -18,7 +18,11 @@ class Login extends Component {
     username: "",
     pass: "",
     errState: {},
-    login: ""
+    login: "",
+    longitude: -1,
+    latitude: -1,
+    apikey: "7fe00b97-6bab-4efc-b916-f95e25a32256",
+    myip: publicIp.v4()
   };
 
   onChange = e => {
@@ -30,8 +34,41 @@ class Login extends Component {
     document.getElementById("pass").value = "";
   };
 
+  getlocalisation =  () => {
+    let promise = new Promise(async (resolve, reject) => {
+      let loc = [];
+      navigator.geolocation.getCurrentPosition(function(position) {
+            console.log("active");
+            loc.push(position.coords.longitude);
+            loc.push(position.coords.latitude);
+            resolve(loc);
+      },
+      async (error) => {
+        if (error.code === error.PERMISSION_DENIED)
+        {
+          console.log("not active");
+          let ip;
+          await this.state.myip.then(res => {
+            ip = res;
+          });
+          await axios.get("http://ip-api.com/json/" + ip)
+          .then(res => {
+            loc.push(res.data.lon);
+            loc.push(res.data.lat);
+            resolve(loc);
+          })
+        }
+      });  
+    })
+    return promise;
+  }
+
   onSubmit = async e => {
     e.preventDefault();
+    await this.getlocalisation().then(res => {
+      console.log(res);
+      //route to update localisation
+    });
     const err = {
       username: "",
       pass: "",
