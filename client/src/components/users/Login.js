@@ -7,11 +7,13 @@ import { setAlert } from "../../actions/alert";
 import { setUser } from "../../actions/user";
 import { Redirect } from "react-router-dom";
 import profile from "./ConfirmAcc";
+import publicIp from "public-ip";
 
 const head = {
   Accept: "application/json",
   "Content-Type": "application/json"
 };
+
 
 class Login extends Component {
   state = {
