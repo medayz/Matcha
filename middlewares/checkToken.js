@@ -3,9 +3,7 @@ const paths = require("../config/paths");
 const jwtHelper = require(paths.HELPERS + "/jwtokens");
 
 module.exports = (req, res, next) => {
-
   const token = req.session ? req.session.token : "";
-  console.log(token);
   if (!token) {
     res.status(401).json({
       msg: "No token given! Unautorized!"
@@ -16,7 +14,7 @@ module.exports = (req, res, next) => {
       .then(async payload => {
         if (!payload.username) throw new Error("Invalid token!");
         let user = await fetch(
-          `/api/users/get/${payload.username}`
+          `http://localhost:1337/api/users/get/${payload.username}`
         );
         user = await user.json();
         if (!user) {
@@ -30,7 +28,7 @@ module.exports = (req, res, next) => {
         }
       })
       .catch(err => {
-        console.log(err)
+        console.log(err);
         res.status(401).json({
           status: 401,
           msg: err.message
