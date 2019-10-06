@@ -5,6 +5,7 @@ import Alert from "../layout/Alert";
 import { connect } from "react-redux";
 import { setAlert } from "../../actions/alert";
 import { setUser } from "../../actions/user";
+import { user_state } from "../../actions/connected";
 import { Redirect } from "react-router-dom";
 import profile from "./ConfirmAcc";
 import publicIp from "public-ip";
@@ -53,7 +54,7 @@ class Login extends Component {
           await this.state.myip.then(res => {
             ip = res;
           });
-          await axios.get("http://ip-api.com/json/" + ip)
+          await axios.get("https://ipinfo.io/" + ip)
           .then(res => {
             loc.push(res.data.lon);
             loc.push(res.data.lat);
@@ -67,6 +68,9 @@ class Login extends Component {
 
   onSubmit = async e => {
     e.preventDefault();
+    //move this to status 200
+    this.props.user_state(true);
+    //
     await this.getlocalisation().then(res => {
       console.log(res);
       //route to update localisation
@@ -91,7 +95,8 @@ class Login extends Component {
               pass: "",
               errState: {}
             });
-            this.clear();
+            //this.clear();
+            this.props.user_state(true);
             this.setState({ login: "done" });
           } else {
             if (backend.data.err.username !== "")
@@ -165,5 +170,5 @@ class Login extends Component {
 
 export default connect(
   null,
-  { setAlert, setUser }
+  { setAlert, setUser , user_state }
 )(Login);

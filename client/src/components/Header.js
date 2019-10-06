@@ -1,12 +1,20 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import "./../css/profile.css";
+import { connect } from 'react-redux';
 
 class Header extends Component {
 
   state = {
-    connected: true
+    connected: false
   };
+
+
+  componentDidUpdate () {
+    let stateuser = this.props.userState;
+    if (stateuser !== this.state.connected)
+      this.setState({connected : stateuser});
+  }
 
   render() {
     return (
@@ -67,4 +75,10 @@ class Header extends Component {
   }
 }
 
-export default Header;
+const mapStateToProps = (state) => {
+  return {
+    userState: state.connected
+  }
+}
+
+export default connect(mapStateToProps)(Header);
