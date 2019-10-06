@@ -13,6 +13,7 @@ const head = {
   Accept: "application/json",
   "Content-Type": "application/json"
 };
+const ipinfo_token = "fb1bb2d727f4b8";
 
 
 class Login extends Component {
@@ -37,31 +38,43 @@ class Login extends Component {
   };
 
   getlocalisation =  () => {
-    let promise = new Promise(async (resolve, reject) => {
-      let loc = [];
-      navigator.geolocation.getCurrentPosition(function(position) {
+    let promise = new Promise(
+      (resolve, reject) => {
+        let loc = [];
+        navigator.geolocation.getCurrentPosition(
+          function(position) {
             console.log("active");
             loc.push(position.coords.longitude);
             loc.push(position.coords.latitude);
             resolve(loc);
-      },
-      async (error) => {
-        if (error.code === error.PERMISSION_DENIED)
-        {
-          console.log("not active");
-          let ip;
-          await this.state.myip.then(res => {
-            ip = res;
-          });
-          await axios.get("http://ip-api.com/json/" + ip)
-          .then(res => {
-            loc.push(res.data.lon);
-            loc.push(res.data.lat);
-            resolve(loc);
-          })
-        }
-      });  
-    })
+          },
+          (error) => {
+            if (error.code === error.PERMISSION_DENIED)
+            {
+              console.log("not active");
+              let ip;
+              this.state.myip.then(res => {
+                ip = res;
+                console.log('hey');
+                axios
+                  .get(`http://ipinfo.io/${ip}?token=${ipinfo_token}`)
+                  .then(
+                    res => {
+                      console.log(res);
+                      loc.push(res.data.lon);
+                      loc.push(res.data.lat);
+                      resolve(loc);
+                    }
+                  )
+                  .catch(err => {
+                    // console.log(err.code);
+                  });
+              });
+            }
+          }
+        );  
+      }
+    )
     return promise;
   }
 
