@@ -185,7 +185,11 @@ module.exports = {
     },
     logOut: async (req, response) => {
         req.session.destroy(function(err) {
-            console.log("session destroyed");
+            if (err) {
+              console.log(err);
+            } else {
+              response.clearCookie("session").sendStatus(200);
+            }
         });
     },
     accountActivation: async (req, response) => {
