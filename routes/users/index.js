@@ -7,7 +7,7 @@ usersRouter.use(require("express").json());
 
 usersRouter.use("/add", auth, require("./add"));
 
-usersRouter.route("/get").get(auth, usersController.getAllUsers);
+usersRouter.route("/get").get(auth, usersController.getPersonalInfos);
 
 usersRouter.route("/get/:username").get(usersController.getUserByUsername);
 

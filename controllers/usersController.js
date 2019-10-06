@@ -24,10 +24,43 @@ module.exports = {
                 });
             });
     },
+    getPersonalInfos: (req, response) => {
+        userModel
+            .getUser(req.username)
+            .then(results => {
+                let {lName, fName, username, email} = results.props;
+                results = Object.assign({}, {
+                    username: username,
+                    fName: fName,
+                    lName: lName,
+                    email: email
+                });
+                console.log(results);
+                if (results) {
+                    response.json({
+                        status: 200,
+                        data: results
+                    });
+                }
+            })
+            .catch(err => {
+                console.log(err.message);
+                response.status(500).json({
+                    status: 500,
+                    msg: "Error getting your personal info"
+                });
+            });
+    },
     getUserByUsername: (req, response) => {
         userModel
             .getUser(req.params.username)
             .then(results => {
+                let {lName, fName, username} = results.props;
+                results = Object.assign({}, {
+                    username: username,
+                    fName: fName,
+                    lName: lName
+                });
                 if (results) {
                     response.json({
                         status: 200,
@@ -360,10 +393,7 @@ module.exports = {
                 .checkUserPwd(params)
                 .then(async result => {
                     try {
-                        if (
-                            !Object.values(params.err).filter(errMsg => errMsg)
-                                .length
-                        ) {
+                        if (!Object.values(params.err).filter(errMsg => errMsg).length) {
                             await userModel.edit.password(
                                 params.username,
                                 params.newPass

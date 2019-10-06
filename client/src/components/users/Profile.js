@@ -28,10 +28,10 @@ class Profile extends Component {
   };
 
   async componentWillMount() {
-    const user = "hamid";
-    await axios.get(`/api/users/get/${user}`).then(res => {
-      if (res.data.data.props) {
-        const user = res.data.data.props;
+    // const user = "hamid";
+    await axios.get(`/api/users/get`).then(res => {
+      if (res.data.data) {
+        const user = res.data.data;
         this.setState({ user: user });
         this.setState({ visible: true });
       }

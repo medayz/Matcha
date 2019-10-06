@@ -22,7 +22,7 @@ app.use(
     cookie: {
       secure: false,
       httpOnly: true,
-      maxAge: 60000
+      maxAge: 600000000
     },
     store: new FileStore(),
     name: "session"
