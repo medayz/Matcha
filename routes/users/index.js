@@ -9,6 +9,10 @@ usersRouter.use("/add", auth, require("./add"));
 
 usersRouter.route("/get").get(auth, usersController.getPersonalInfos);
 
+usersRouter.route("/isLoggedOn").get(auth, (req, res) => {
+  res.send("logged");
+});
+
 usersRouter.route("/get/:username").get(usersController.getUserByUsername);
 
 usersRouter.route("/logout").get(usersController.logOut);

@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import "./../css/profile.css";
 import { connect } from 'react-redux';
+import axios from 'axios';
+import { user_state } from "../actions/connected";
 
 class Header extends Component {
 
@@ -9,6 +11,16 @@ class Header extends Component {
     connected: false
   };
 
+  componentDidMount () {
+      axios
+        .get("/api/users/isLoggedOn")
+        .then(res => {
+            this.props.user_state(true);
+            })
+        .catch(err => {
+          this.props.user_state(false);
+          })
+  }
 
   componentDidUpdate () {
     let stateuser = this.props.userState;
@@ -75,10 +87,12 @@ class Header extends Component {
   }
 }
 
+
+
 const mapStateToProps = (state) => {
   return {
     userState: state.connected
   }
 }
 
-export default connect(mapStateToProps)(Header);
+export default connect(mapStateToProps, {user_state})(Header);
