@@ -30,8 +30,8 @@ class EditProfile extends Component {
     username: "",
     msg2: "",
     msg3: "",
-    tokenErr: "",
-    errState: {}
+    tokenErr: false,
+    errState: {},
   };
   clearErrorState = () => {
     this.setState({ errState: {} });
@@ -62,14 +62,19 @@ class EditProfile extends Component {
 
   async componentWillMount() {
     // const user = "hamid";
-    await axios.get(`/api/users/get`).then(res => {
-      if (res.data.data) {
-        const user = res.data.data;
-        if (user.username) this.setState({ username: user.username });
-        if (user.email) this.setState({ email: user.email });
-        this.setState({ visible: true });
-      }
-    });
+
+    await axios.get(`/api/users/get`)
+      .then(res => {
+        if (res.data.data) {
+          const user = res.data.data;
+          if (user.username) this.setState({ username: user.username });
+          if (user.email) this.setState({ email: user.email });
+          this.setState({ visible: true });
+        }
+      })
+      .catch(err => {
+        this.setState({tokenErr : true});
+      });
   }
 
   onChange = e => {
@@ -79,9 +84,10 @@ class EditProfile extends Component {
   render() {
     return (
       <div className="container-fluid">
+        {this.state.tokenErr && <Redirect to="/login" />}
         <div className="row profile">
           <div className="col-md-3">
-            <ProfilePic />
+           {this.state.visible &&  <ProfilePic />}
           </div>
           <br />
           <div className="col-md-9">
@@ -104,8 +110,8 @@ class EditProfile extends Component {
             {this.state.visible && <EditEmail email={this.state.email} />}
           </div>
         </div>
-        <EditPassword />
-        <div className="row profile">
+            {this.state.visible && <EditPassword /> }
+            {this.state.visible &&  <div className="row profile">
           <div className="col-md-3" />
           <br />
           <div className="col-md-9">
@@ -113,7 +119,7 @@ class EditProfile extends Component {
               <form>
                 <div className="row jjj">
                   <div className="card jj">
-                    <img src={noSnap} className="card-img-top" alt="..." />
+                    <img src="https://cdn.intra.42.fr/users/large_mzahir.jpg" className="card-img-top" alt="..." />
                     <center>
                       <img src={deleteLogo} style={logoAdd} alt="..." />
                       <img
@@ -125,7 +131,7 @@ class EditProfile extends Component {
                     </center>
                   </div>
                   <div className="card jj">
-                    <img src={noSnap} className="card-img-top" alt="..." />
+                    <img src="https://cdn.intra.42.fr/users/large_kmoussai.jpg" className="card-img-top" alt="..." />
                     <center>
                       <img src={deleteLogo} style={logoAdd} alt="..." />
                       <img
@@ -137,7 +143,7 @@ class EditProfile extends Component {
                     </center>
                   </div>
                   <div className="card jj">
-                    <img src={noSnap} className="card-img-top" alt="..." />
+                    <img src="https://cdn.intra.42.fr/users/large_aalaoui-.jpg" className="card-img-top" alt="..." />
                     <center>
                       <img src={deleteLogo} style={logoAdd} alt="..." />
                       <img
@@ -178,8 +184,7 @@ class EditProfile extends Component {
               </form>
             </div>
           </div>
-        </div>
-        {this.state.tokenErr && <Redirect to="/login" />}
+        </div>}
       </div>
     );
   }

@@ -44,7 +44,6 @@ class Login extends Component {
         let loc = [];
         navigator.geolocation.getCurrentPosition(
           function(position) {
-            console.log("active");
             loc.push(position.coords.longitude);
             loc.push(position.coords.latitude);
             resolve(loc);
@@ -52,16 +51,13 @@ class Login extends Component {
           (error) => {
             if (error.code === error.PERMISSION_DENIED)
             {
-              console.log("not active");
               let ip;
               this.state.myip.then(res => {
                 ip = res;
-                console.log('hey');
                 axios
                   .get(`http://ipinfo.io/${ip}?token=${ipinfo_token}`)
                   .then(
                     res => {
-                      console.log(res);
                       loc.push(res.data.lon);
                       loc.push(res.data.lat);
                       resolve(loc);
@@ -81,9 +77,6 @@ class Login extends Component {
 
   onSubmit = async e => {
     e.preventDefault();
-    //move this to status 200
-    this.props.user_state(true);
-    //
     await this.getlocalisation().then(res => {
       console.log(res);
       //route to update localisation
@@ -104,11 +97,11 @@ class Login extends Component {
           this.props.setUser(this.state.username);
           const backend = res.data;
           if (res.status === 200) {
+            this.props.user_state(true);
             this.setState({
               pass: "",
               errState: {}
             });
-            //this.clear();
             this.props.user_state(true);
             this.setState({ login: "done" });
           } else {

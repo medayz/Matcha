@@ -11,6 +11,7 @@
     "filepond": "^4.4.12",
     "jsonwebtoken": "^8.5.1",
     "jwt-decode": "^2.2.0",
+    "mdbreact": "^4.21.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-filepond": "^7.0.1",
