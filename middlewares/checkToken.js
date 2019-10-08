@@ -21,13 +21,12 @@ module.exports = (req, res, next) => {
             msg: "Invalid or expired token!"
           });
         } else {
-          console.log(user);
           req.username = user.props.username;
           next();
         }
       })
       .catch(err => {
-        console.log(`wayli 3la ${err}`);
+        console.log(err.message);
         res.status(401).json({
           status: 401,
           msg: err.message

@@ -38,45 +38,43 @@ class Login extends Component {
     document.getElementById("pass").value = "";
   };
 
-  getlocalisation =  () => {
-    let promise = new Promise(
-      (resolve, reject) => {
-        let loc = [];
-        navigator.geolocation.getCurrentPosition(
-          function(position) {
-            console.log("active");
-            loc.push(position.coords.longitude);
-            loc.push(position.coords.latitude);
-            resolve(loc);
-          },
-          (error) => {
-            if (error.code === error.PERMISSION_DENIED)
-            {
-              console.log("not active");
-              let ip;
-              this.state.myip.then(res => {
-                ip = res;
-                console.log('hey');
-                axios
-                  .get(`http://ipinfo.io/${ip}?token=${ipinfo_token}`)
-                  .then(
-                    res => {
-                      console.log(res);
-                      loc.push(res.data.lon);
-                      loc.push(res.data.lat);
-                      resolve(loc);
-                    }
-                  )
-                  .catch(err => {
-                    // console.log(err.code);
-                  });
+  getlocalisation = async () => {
+    navigator.geolocation.getCurrentPosition(
+      function(position) {
+        const loc = {
+          long: position.coords.longitude,
+          lat: position.coords.latitude
+        }
+        console.log(loc);
+      },
+      (error) => {
+        if (error.code === error.PERMISSION_DENIED)
+        {
+          this.state.myip.then(ip => {
+            axios
+              .get(`http://ipinfo.io/${ip}?token=${ipinfo_token}`)
+              .then(
+                res => {
+                  const [long, lat] = res.data.loc.split(',');
+                  const location = {
+                    long: Number(long),
+                    lat: Number(lat),
+                    city: res.data.city,
+                    country: res.data.country
+                  };
+                  axios
+                    .post('/api/users/add/location', location, head)
+                    .catch(err => console.log(err));
+                  // console.log(location);
+                }
+              )
+              .catch(err => {
+                // console.log(err.code);
               });
-            }
-          }
-        );  
+          });
+        }
       }
-    )
-    return promise;
+    );  
   }
 
   onSubmit = async e => {
@@ -84,10 +82,10 @@ class Login extends Component {
     //move this to status 200
     this.props.user_state(true);
     //
-    await this.getlocalisation().then(res => {
+    this.getlocalisation()/*.then(res => {
       console.log(res);
       //route to update localisation
-    });
+    });*/
     const err = {
       username: "",
       pass: "",

@@ -4,7 +4,6 @@ const userModel = require(`${paths.MODELS}/userModel`);
 const validator = require(`${paths.HELPERS}/validator`);
 const mail = require(`${paths.HELPERS}/sendmail`);
 const token = require(`${paths.HELPERS}/token`);
-const upload = require(`${paths.HELPERS}/upload`);
 
 module.exports = {
     getAllUsers: async (req, response) => {
@@ -28,14 +27,15 @@ module.exports = {
         userModel
             .getUser(req.username)
             .then(results => {
-                let {lName, fName, username, email} = results.props;
-                results = Object.assign({}, {
+                let {lName, fName, username, email, country, city} = results.props;
+                results = {
                     username: username,
                     fName: fName,
                     lName: lName,
-                    email: email
-                });
-                console.log(results);
+                    email: email,
+                    country: country,
+                    city: city
+                };
                 if (results) {
                     response.json({
                         status: 200,
@@ -55,12 +55,14 @@ module.exports = {
         userModel
             .getUser(req.params.username)
             .then(results => {
-                let {lName, fName, username} = results.props;
-                results = Object.assign({}, {
+                let {lName, fName, username, country, city} = results.props;
+                results = {
                     username: username,
                     fName: fName,
-                    lName: lName
-                });
+                    lName: lName,
+                    country: country,
+                    city: city
+                };
                 if (results) {
                     response.json({
                         status: 200,
@@ -107,17 +109,19 @@ module.exports = {
     },
     addUser: async (req, response) => {
         const params = {
-            fName: req.body.fName ? req.body.fName.trim() : "",
-            lName: req.body.lName ? req.body.lName.trim() : "",
-            username: req.body.username ? req.body.username.trim() : "",
-            email: req.body.email ? req.body.email.trim() : "",
-            pass: req.body.pass ? req.body.pass : "",
-            cPass: req.body.cPass ? req.body.cPass : ""
+            fName: req.body.fName || "",
+            lName: req.body.lName || "",
+            username: req.body.username || "",
+            birthDate: req.body.birthDate || "",
+            email: req.body.email || "",
+            pass: req.body.pass || "",
+            cPass: req.body.cPass || ""
         };
         params.err = {
             fName: validator.firstName(params.fName),
             lName: validator.lastName(params.lName),
             username: validator.username(params.username),
+            birthDate: validator.birthDate(params.email),
             email: validator.email(params.email),
             pass: validator.password(params.pass),
             cPass: validator.confirmPassword(params.pass, params.cPass)
@@ -258,28 +262,36 @@ module.exports = {
             });
     },
     add: {
-        picture: (req, res) => {
-            upload((req, res, err) => {
-                if (!err) {
-                    if (!req.file) {
-                        res.status(404).json({
-                            status: 404,
-                            msg: "Image not found"
-                        });
-                    } else {
-                        userModel.add.picture({ username: req.username });
-                        res.status(200).json({
-                            status: 200,
-                            msg: "Image modified !"
-                        });
-                    }
-                } else if (!req.file) {
-                    res.status(400).json({
-                        status: 400,
-                        msg: err
-                    });
+        picture: (err, req, res) => {
+            const params = {
+                username: req.username,
+                filename: req.file,
+                isProfilePic: req.body.isProfilePic
+            };
+            // upload(req, res, (err) => {
+            //     if (err instanceof multer.MulterError) {
+            //         console.log(err.message);
+            //         res.status(400).json({
+            //             status: 400,
+            //             msg: err
+            //         });
+            //     } else if (err) {
+            //         console.log(err.message);
+            //     }
+                if (err) {
+                    console.log(err.message);
                 }
-            });
+                else {
+                    userModel.add.picture(params)
+                        .then(() => {
+                            res.status(200).json({
+                                status: 200,
+                                msg: "Image modified !"
+                            });
+                        })
+                        .catch(err => console.log(err));
+                }
+            // });
         },
         tag: (req, response) => {
             const params = {
@@ -299,6 +311,25 @@ module.exports = {
                     response.status(500).json({
                         status: 500,
                         msg: "Tag couldn't be added!"
+                    });
+                });
+        },
+        location: (req, response) => {
+            let params = Object.assign({}, req.body);
+            params.username = req.username;
+            userModel.add
+                .location(params)
+                .then(() => {
+                    response.json({
+                        status: 200,
+                        msg: "Location added successfully!"
+                    });
+                })
+                .catch(err => {
+                    console.log(err.message);
+                    response.status(500).json({
+                        status: 500,
+                        msg: "Location couldn't be added!"
                     });
                 });
         }

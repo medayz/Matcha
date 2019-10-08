@@ -36,6 +36,24 @@ module.exports = {
 			"A name start with a letter and can only contain letters or dashes" :
 			"";
 	},
+	birthDate: (birthDate) => {
+		if (!birthDate)
+			return "Please enter your birth date";
+
+		return "";
+	},
+	gender: (gender) => {
+		if (!gender)
+			return "Please enter your gender";
+
+		return ["Male", "Female", "Other"].includes(gender);
+	},
+	sexualPref: (sexualPref) => {
+		if (!sexualPref)
+			return "Please enter your sexual preference";
+
+		return ["Men", "Women", "Both"].includes(sexualPref);
+	},
 	password: (pwd) => {
 		if (!pwd)
 			return "Please enter a password";

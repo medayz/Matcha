@@ -68,7 +68,7 @@ module.exports = {
   add: {
     picture: async params => {
       await query.execute(
-        "MATCH (u:User {username: $username}) CREATE (u)-[:UPLOADED]->(p:Picture {link: $link, username: $username, date: $date})",
+        "MATCH (u:User {username: $username}) CREATE (u)-[:UPLOADED]->(p:Picture {name: $filename, date: date()})",
         params
       );
     },
@@ -76,6 +76,18 @@ module.exports = {
       await query.execute(
         "MATCH (u:User {username: $username}) MERGE (t:Tag {name: $name}) MERGE (u)-[:INTERESTED_IN]->(t);",
         params
+      );
+    },
+    location: async (params) => {
+      await query.execute(
+        "MATCH (u:User {username: $username}) SET u.longitude=$long, u.latitude=$lat, u.country=$country, u.city=$city;",
+        {
+          username: params.username || "",
+          long: params.long || null,
+          lat: params.lat || null,
+          country: params.country || "",
+          city: params.city || ""
+        }
       );
     }
   },

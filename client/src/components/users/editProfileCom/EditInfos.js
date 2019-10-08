@@ -135,7 +135,6 @@ export default class EditInfos extends Component {
     // this.setState({
       // username: user
     // });
-    console.log("testettset")
     await axios
       .get(`/api/users/get`)
       .then(res => {

@@ -1,17 +1,21 @@
+const paths = require("../../../config/paths");
 const usersController = require('../../../controllers/usersController');
+const upload = require(`${paths.MIDDLEWARES}/upload`);
 const express = require('express');
 const addRouter = express.Router();
 
 addRouter.use(express.json());
 
-// Add picture
 addRouter
     .route('/picture')
-    .post(usersController.add.picture);
+    .post(upload, usersController.add.picture);
 
-//	Add tag
 addRouter
     .route('/tag')
     .post(usersController.add.tag);
+
+addRouter
+    .route('/location')
+    .post(usersController.add.location);
 
 module.exports = addRouter;
