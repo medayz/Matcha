@@ -129,12 +129,6 @@ export default class EditInfos extends Component {
   };
 
   async componentWillMount() {
-    // const user = this.props.username;
-    
-    // this.calluserTags(this.state.user);
-    // this.setState({
-      // username: user
-    // });
     await axios
       .get(`/api/users/get`)
       .then(res => {

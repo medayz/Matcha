@@ -7,25 +7,86 @@ import LocationOnIcon from "@material-ui/icons/LocationOn";
 import FormLabel from "@material-ui/core/FormLabel";
 import FormControl from "@material-ui/core/FormControl";
 import FormGroup from "@material-ui/core/FormGroup";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Switch from "@material-ui/core/Switch";
 import Fjla from "../../backIndex.jpg";
+import axios from "axios";
+import Profileuser from './Profileuser';
+import { Redirect } from 'react-router';
+import Typography from '@material-ui/core/Typography';
+import Slider from '@material-ui/core/Slider';
 
 
 const pStyle = {
   marginTop: '5%',
 };
 
+const styleFilter = {
+  backgroundColor : 'white',
+  padding : '5%',
+  margin: '1%',
+  width : '253px'
+}
+
+const stylebtn = {
+  width: '100%',
+  margin: '0.3%',
+  marginTop: '3%'
+}
+
 class Matches extends Component {
+
+  state = {
+    redirect : false,
+    dataprofile : {},
+    agefilter: [0,100],
+    tagsFilter : [0],
+    distanceFilter : [0],
+    tokenErr : false
+  }
+
   changeSorting = () => {
     //alert("Sorting");
   };
 
-  handleChange = () => {};
+  toProfile = async (username) => {
+    
+    await axios
+    .get(`api/users/get/iouzzine`)
+    .then (res => {
+      console.log(res.data.data);
+      this.setState({dataprofile: res.data.data});
+    })
+    .catch (err => {
+      this.setState({tokenErr : true});
+    });
+    this.setState({redirect : true});
+  }
+
+  filterAge = (e, newValue) => {
+    this.setState({agefilter: newValue});
+  };
+
+  filterLocation = (e, newValue) => {
+    this.setState({distanceFilter : newValue});
+  };
+
+  filterTags = (e, newValue) => {
+    this.setState({tagsFilter: newValue});
+  };
+
+  filter = () => {
+    let obj = {
+      age : this.state.agefilter,
+      distance: this.state.distanceFilter[0],
+      tags: this.state.tagsFilter[0]
+    }
+    console.log(obj);
+  }
 
   render() {
     return (
       <div>
+        {this.state.tokenErr && <Redirect to="/login" />}
+        {this.state.redirect && <Redirect to={{pathname: `/profile/iouzzine`,state: {userprofile: this.state.dataprofile }}} Component={Profileuser} />}
         <div className="container">
           <div className="row" >
             <div className="col-md-1" />
@@ -49,54 +110,43 @@ class Matches extends Component {
             </div>
             <div className="col-md-2" />
             <div className="col-md-4">
-              <FormControl component="fieldset">
+              <FormControl component="fieldset" style={styleFilter}>
                 <FormLabel component="legend">Filter</FormLabel>
                 <FormGroup>
-                  <FormControlLabel
-                    control={
-                      <Switch
-                        checked={false}
-                        color="primary"
-                        onChange={this.handleChange()}
-                        value="age"
-                      />
-                    }
-                    label="Age"
+                  <Typography id="range-slider" gutterBottom>
+                    Age
+                  </Typography>
+                  <Slider
+
+                    value={this.state.agefilter}
+                    onChange={this.filterAge}
+                    valueLabelDisplay="auto"
+                    aria-labelledby="range-slider"
                   />
-                  <FormControlLabel
-                    control={
-                      <Switch
-                        checked={false}
-                        color="primary"
-                        onChange={this.handleChange()}
-                        value="rating"
-                      />
-                    }
-                    label="Rating"
+                  <Typography id="range-slider" gutterBottom>
+                    Distance
+                  </Typography>
+                  <Slider
+                    value={this.state.distanceFilter}
+                    onChange={this.filterLocation}
+                    valueLabelDisplay="auto"
+                    min={0}
+                    max={20}
+                    aria-labelledby="range-slider"
                   />
-                  <FormControlLabel
-                    control={
-                      <Switch
-                        checked={false}
-                        color="primary"
-                        onChange={this.handleChange()}
-                        value="location"
-                      />
-                    }
-                    label="Location"
-                  />
-                  <FormControlLabel
-                    control={
-                      <Switch
-                        checked={true}
-                        color="primary"
-                        onChange={this.handleChange()}
-                        value="tags"
-                      />
-                    }
-                    label="Tags"
+                  <Typography id="range-slider" gutterBottom>
+                    Tags
+                  </Typography>
+                  <Slider
+                    value={this.state.tagsFilter}
+                    onChange={this.filterTags}
+                    valueLabelDisplay="auto"
+                    min={0}
+                    max={10}
+                    aria-labelledby="range-slider"
                   />
                 </FormGroup>
+                <button className="btn btn-primary" onClick={this.filter} style={stylebtn}>Filter</button>
               </FormControl>
             </div>
           </div>
@@ -104,17 +154,17 @@ class Matches extends Component {
             <div className="col-md-4">
               <div className="card">
                 <img
-                  src={Fjla}
+                  src="https://cdn.intra.42.fr/users/large_iouzzine.jpg"
                   className="card-img-top"
                   height="200"
                   alt="..."
                 />
                 <div className="card-body">
-                  <h5 className="card-title">sfax telbsax</h5>
+                  <h5 className="card-title">Ismail ouzzine</h5>
                   <p className="card-text">
                     My biography
                   </p>
-                  <button className="btn btn-primary">See profile</button>
+                  <button className="btn btn-primary" onClick={() => this.toProfile("iouzzine")}>See profile</button>
                 </div>
               </div>
             </div>

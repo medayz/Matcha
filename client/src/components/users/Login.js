@@ -79,13 +79,10 @@ class Login extends Component {
 
   onSubmit = async e => {
     e.preventDefault();
-    //move this to status 200
-    this.props.user_state(true);
-    //
-    this.getlocalisation()/*.then(res => {
+    await this.getlocalisation().then(res => {
       console.log(res);
       //route to update localisation
-    });*/
+    });
     const err = {
       username: "",
       pass: "",
@@ -102,11 +99,11 @@ class Login extends Component {
           this.props.setUser(this.state.username);
           const backend = res.data;
           if (res.status === 200) {
+            this.props.user_state(true);
             this.setState({
               pass: "",
               errState: {}
             });
-            //this.clear();
             this.props.user_state(true);
             this.setState({ login: "done" });
           } else {

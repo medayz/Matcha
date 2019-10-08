@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import defaultProfilePic from "../../../images/default/boss.png";
 import { addPic } from "../../../helpers/addImg";
 
 export default class ProfilePic extends Component {
@@ -27,7 +26,7 @@ export default class ProfilePic extends Component {
         <div className="profile-sidebar">
           <div className="profile-userpic">
             <div className="row">
-              <img src={defaultProfilePic} className="img-responsive" alt="" />
+              <img src="https://cdn.intra.42.fr/users/large_cmarouan.jpg" className="img-responsive" alt="" />
             </div>
           </div>
           <div className="profile-usertitle">

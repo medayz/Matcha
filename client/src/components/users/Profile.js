@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import Avatar from "@material-ui/core/Avatar";
 import Fjla from "../../backIndex.jpg";
-import defaultProfilePic from "../../images/default/boss.png";
 import Account from "@material-ui/icons/AccountCircle";
 import Location from "@material-ui/icons/LocationCity";
 import Gender from "@material-ui/icons/SupervisedUserCircle";
@@ -14,6 +13,7 @@ import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
+import { Redirect } from "react-router";
 
 const sizeImg = {
   margin: 10,
@@ -24,7 +24,9 @@ const paddingImg = {};
 
 class Profile extends Component {
   state = {
-    user: {}
+    user: {},
+    tokenErr: false,
+    show: false
   };
 
   async componentWillMount() {
@@ -33,21 +35,26 @@ class Profile extends Component {
       if (res.data.data) {
         const user = res.data.data;
         this.setState({ user: user });
-        this.setState({ visible: true });
+        this.setState({ show: true });
       }
+    })
+    .catch(err => {
+      console.log("err");
+      this.setState({tokenErr : true});
     });
   }
   render() {
     return (
       <div>
-        <div className="container">
+        {this.state.tokenErr && <Redirect to="/login" />}
+        {this.state.show && <div className="container">
           <div className="row">
             <div className="col-md-2" />
             <div className="col-md-3">
               <center>
                 <Avatar
                   alt="Remy Sharp"
-                  src={defaultProfilePic}
+                  src="https://cdn.intra.42.fr/users/large_cmarouan.jpg"
                   style={sizeImg}
                 />
               </center>
@@ -95,8 +102,8 @@ class Profile extends Component {
               </List>
             </div>
           </div>
-        </div>
-        <div className="row">
+        </div>}
+         <div className="row">
           <div className="col-md-3" />
           <div className="col-md-7">
             <List>
