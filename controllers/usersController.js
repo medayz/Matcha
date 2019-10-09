@@ -27,7 +27,14 @@ module.exports = {
         userModel
             .getUser(req.username)
             .then(results => {
-                let {lName, fName, username, email, country, city} = results.props;
+                let {
+                    lName,
+                    fName,
+                    username,
+                    email,
+                    country,
+                    city
+                } = results.props;
                 results = {
                     username: username,
                     fName: fName,
@@ -45,17 +52,18 @@ module.exports = {
             })
             .catch(err => {
                 console.log(err.message);
-                response.status(500).json({
-                    status: 500,
-                    msg: "Error getting your personal info"
-                });
+                next(err);
+                // response.status(500).json({
+                //     status: 500,
+                //     msg: "Error getting your personal info"
+                // });
             });
     },
     getUserByUsername: (req, response) => {
         userModel
             .getUser(req.params.username)
             .then(results => {
-                let {lName, fName, username, country, city} = results.props;
+                let { lName, fName, username, country, city } = results.props;
                 results = {
                     username: username,
                     fName: fName,
@@ -223,9 +231,9 @@ module.exports = {
     logOut: async (req, response) => {
         req.session.destroy(function(err) {
             if (err) {
-              console.log(err);
+                console.log(err);
             } else {
-              response.clearCookie("session").sendStatus(200);
+                response.clearCookie("session").sendStatus(200);
             }
         });
     },
@@ -262,7 +270,7 @@ module.exports = {
             });
     },
     add: {
-        picture: (err, req, res) => {
+        picture: (req, res) => {
             const params = {
                 username: req.username,
                 filename: req.file,
@@ -278,19 +286,19 @@ module.exports = {
             //     } else if (err) {
             //         console.log(err.message);
             //     }
-                if (err) {
-                    console.log(err.message);
-                }
-                else {
-                    userModel.add.picture(params)
-                        .then(() => {
-                            res.status(200).json({
-                                status: 200,
-                                msg: "Image modified !"
-                            });
-                        })
-                        .catch(err => console.log(err));
-                }
+            if (err) {
+                console.log(err.message);
+            } else {
+                userModel.add
+                    .picture(params)
+                    .then(() => {
+                        res.status(200).json({
+                            status: 200,
+                            msg: "Image modified !"
+                        });
+                    })
+                    .catch(err => console.log(err));
+            }
             // });
         },
         tag: (req, response) => {
@@ -424,7 +432,10 @@ module.exports = {
                 .checkUserPwd(params)
                 .then(async result => {
                     try {
-                        if (!Object.values(params.err).filter(errMsg => errMsg).length) {
+                        if (
+                            !Object.values(params.err).filter(errMsg => errMsg)
+                                .length
+                        ) {
                             await userModel.edit.password(
                                 params.username,
                                 params.newPass
