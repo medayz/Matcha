@@ -273,7 +273,7 @@ module.exports = {
         picture: (req, res) => {
             const params = {
                 username: req.username,
-                filename: req.file,
+                filename: req.file.filename,
                 isProfilePic: req.body.isProfilePic
             };
             // upload(req, res, (err) => {
@@ -286,19 +286,21 @@ module.exports = {
             //     } else if (err) {
             //         console.log(err.message);
             //     }
-            if (err) {
-                console.log(err.message);
-            } else {
+            // if (err) {
+            //     console.log(err.message);
+            // } else {
+                console.log('wahia pic');
                 userModel.add
                     .picture(params)
                     .then(() => {
+                        console.log(params.filename);
                         res.status(200).json({
                             status: 200,
                             msg: "Image modified !"
                         });
                     })
                     .catch(err => console.log(err));
-            }
+            // }
             // });
         },
         tag: (req, response) => {

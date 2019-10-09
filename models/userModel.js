@@ -73,6 +73,7 @@ module.exports = {
     },
     add: {
         picture: async params => {
+            console.log(params);
             await query.execute(
                 "MATCH (u:User {username: $username}) CREATE (u)-[:UPLOADED]->(p:Picture {name: $filename, date: date()})",
                 params
