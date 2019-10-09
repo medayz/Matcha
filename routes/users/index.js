@@ -36,9 +36,9 @@ usersRouter
   .route("/activation/:username/:token")
   .get(usersController.accountActivation);
 
-usersRouter.use((err, req, res, next) => {
-  console.log(`error: ${err.message}`);
-  res.status(400).send("Bad request!");
-});
+// usersRouter.use((err, req, res, next) => {
+//   console.log(`error: ${err.message}`);
+//   res.status(400).send("Bad request!");
+// });
 
 module.exports = usersRouter;

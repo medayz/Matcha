@@ -10,22 +10,24 @@ const multer = require("multer");
 app.disable("x-powered-by");
 app.use(cors());
 
+app.use(express.static('public'));
+
 app.use(
-		session({
-				genid: function(req) {
-						return genuuid();
-				},
-				resave: false,
-				saveUninitialized: false,
-				secret: "testets",
-				cookie: {
-						secure: false,
-						httpOnly: true,
-						maxAge: 600000000
-				},
-				store: new FileStore(),
-				name: "session"
-		})
+	session({
+		genid: function(req) {
+				return genuuid();
+		},
+		resave: false,
+		saveUninitialized: false,
+		secret: "testets",
+		cookie: {
+				secure: false,
+				httpOnly: true,
+				maxAge: 600000000
+		},
+		store: new FileStore(),
+		name: "session"
+	})
 );
 
 app.use("/api", require("./routes"));
@@ -40,13 +42,16 @@ app.use((req, response, next) => {
 });
 
 app.use((err, req, response, next) => {
+	console.log('error handler');
 	const status = err.status || 500;
 	if (err instanceof multer.MulterError) {
 		console.log('multeeeeeeeer');
+	}	else {
+		console.log('laa');
 	}
 	response.status(status).json({
-			status: status,
-			msg: err.message
+		status: status,
+		msg: err.message
 	});
 });
 

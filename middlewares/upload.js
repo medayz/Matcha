@@ -9,11 +9,14 @@ const storage = multer.diskStorage({
 });
 
 function checkFileType(file, cb) {
+  console.log('ewa');
   const filetypes = /jpeg|jpg|png/;
   const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
   const mimetype = filetypes.test(file.mimetype);
-  if (mimetype && extname) return cb(null, true);
-  else cb("Error: Images Only!");
+  if (mimetype && extname)
+    return cb(null, true);
+  else
+    cb(new Error("Images Only!"));
 }
 
 const upload = multer({
@@ -24,4 +27,19 @@ const upload = multer({
   }
 }).single("profileImg");
 
-module.exports = upload;
+const uploadMiddleware = (req, res, next) => {
+	upload(req, res, (err) => {
+    if (err instanceof multer.MulterError) {
+      err.status = 400;
+      console.log('multer: ', err.message)
+		  next(err);
+    } else if (err) {
+      err.status = 400;
+      console.log('error: ', err.message)
+		  next(err);
+    }
+    next();
+	});
+}
+
+module.exports = uploadMiddleware;

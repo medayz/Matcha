@@ -8,7 +8,7 @@ export default class ProfilePic extends Component {
   }
   uploadProfileImg = async e => {
     let img = e.target.files[0];
-    if (img.name.match(/\.(jpg|jpeg|png)$/)) {
+    // if (img.name.match(/\.(jpg|jpeg|png)$/)) {
       var formData = new FormData();
       formData.append("profileImg", img);
       addPic(formData)
@@ -18,7 +18,7 @@ export default class ProfilePic extends Component {
         .catch(err => {
           console.log(err);
         });
-    }
+    // }
   };
   render() {
     return (
