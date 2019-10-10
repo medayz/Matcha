@@ -134,6 +134,7 @@ export default class EditInfos extends Component {
       .then(res => {
         if (res.data.data) {
           const user = res.data.data;
+          console.log(user);
           user.fName && this.setState({ fName: user.fName });
           user.lName && this.setState({ lName: user.lName });
           user.gender && this.setState({ gender: user.gender });
