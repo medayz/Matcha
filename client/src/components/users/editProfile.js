@@ -1,6 +1,4 @@
 import React, { Component } from "react";
-import noSnap from "../../images/default/icon.png";
-import deleteLogo from "../../images/default/delete.png";
 import addLogo from "../../images/default/plus.png";
 import axios from "axios";
 import EditInfos from "./editProfileCom/EditInfos";
@@ -8,14 +6,29 @@ import ProfilePic from "./editProfileCom/ProfilePic";
 import EditUsername from "./editProfileCom/EditUsername";
 import EditPassword from "./editProfileCom/EditPassword";
 import EditEmail from "./editProfileCom/EditEmail";
-import "./test.css";
+import "./edit.css";
 import { Redirect } from "react-router";
+import AddIcon from '@material-ui/icons/Add';
+import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
 
 const logoAdd = {
   width: "25%",
   height: "25%",
   paddingLeft: "2%"
 };
+
+const deletestyle= {
+  fontSize: '30px',
+  position: 'absolute',
+  color: 'red',
+  cursor: 'pointer'
+}
+
+const addstyle= {
+  fontSize: '50px',
+  marginTop: '8%',
+  float: 'left'
+}
 
 class EditProfile extends Component {
   constructor(props) {
@@ -59,6 +72,10 @@ class EditProfile extends Component {
     };
     console.log(Tags);
   };
+
+  deleteimg = () => {
+    console.log("bahlaoui will be deleted");
+  }
 
   async componentWillMount() {
     // const user = "hamid";
@@ -119,53 +136,10 @@ class EditProfile extends Component {
               <form>
                 <div className="row jjj">
                   <div className="card jj">
-                    <img src="https://cdn.intra.42.fr/users/large_mzahir.jpg" className="card-img-top" alt="..." />
-                    <center>
-                      <img src={deleteLogo} style={logoAdd} alt="..." />
-                      <img
-                        src={addLogo}
-                        onClick={this.uploadsnap}
-                        style={logoAdd}
-                        alt="..."
-                      />
-                    </center>
+                    <img src="https://cdn.intra.42.fr/users/large_ybahlaou.jpg" className="card-img-top" alt="..." />
+                    <DeleteOutlineIcon style={deletestyle} onClick={this.deleteimg}/>
                   </div>
-                  <div className="card jj">
-                    <img src="https://cdn.intra.42.fr/users/large_kmoussai.jpg" className="card-img-top" alt="..." />
-                    <center>
-                      <img src={deleteLogo} style={logoAdd} alt="..." />
-                      <img
-                        src={addLogo}
-                        onClick={this.uploadsnap}
-                        style={logoAdd}
-                        alt="..."
-                      />
-                    </center>
-                  </div>
-                  <div className="card jj">
-                    <img src="https://cdn.intra.42.fr/users/large_aalaoui-.jpg" className="card-img-top" alt="..." />
-                    <center>
-                      <img src={deleteLogo} style={logoAdd} alt="..." />
-                      <img
-                        src={addLogo}
-                        onClick={this.uploadsnap}
-                        style={logoAdd}
-                        alt="..."
-                      />
-                    </center>
-                  </div>
-                  <div className="card jj">
-                    <img src={noSnap} className="card-img-top" alt="..." />
-                    <center>
-                      <img src={deleteLogo} style={logoAdd} alt="..." />
-                      <img
-                        src={addLogo}
-                        onClick={this.uploadsnap}
-                        style={logoAdd}
-                        alt="..."
-                      />
-                    </center>
-                  </div>
+                  <AddIcon style={addstyle} color="primary" size="large"/>
                 </div>
                 <br />
                 <input
@@ -174,13 +148,7 @@ class EditProfile extends Component {
                   id="snapInput"
                   hidden
                 />
-                <div className="row">
-                  <div className="col">
-                    <button type="button" className="btn btn-primary">
-                      Save
-                    </button>
-                  </div>
-                </div>
+                
               </form>
             </div>
           </div>

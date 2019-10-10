@@ -144,6 +144,7 @@ export default class EditInfos extends Component {
           user.birthDate && this.setState({ birthDate: user.birthDate });
           this.setState({ visible: true });
           this.callTags();
+          this.calluserTags();
         }
       })
       .catch(err => {
