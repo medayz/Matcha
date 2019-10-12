@@ -356,7 +356,7 @@ export default class EditInfos extends Component {
                       value={tag.value}
                       onDelete={this.ondeleteTag}
                       onChange={this.handleChangeTag}
-                      className=""
+                      className="mr-1 mb-1"
                       color="primary"
                     />
                   );

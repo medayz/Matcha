@@ -7,6 +7,7 @@ const token = require(`${paths.HELPERS}/token`);
 
 module.exports = {
     getAllUsers: async (req, response) => {
+        console.log("hello");
         userModel
             .getAllUsers()
             .then(results => {

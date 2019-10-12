@@ -55,4 +55,38 @@ app.use((err, req, response, next) => {
 	});
 });
 
-app.listen(PORT, () => console.log(`running on port ${PORT}...`));
+var http = require('http').createServer(app);
+var io = require('socket.io')(http);
+
+var allUserSocket = [];
+
+function getHisSocket (user, all)
+{
+	var promise = new Promise (function (resolve, reject) {
+		var socket = all.filter(a => a.user === user);
+		resolve (socket[0]);
+	})
+	return promise;
+}
+
+io.on('connection', (socketa) =>{
+	console.log('a user is connected')
+	var  usersocket = {
+		idSocket : socketa.conn.id,
+		user : socketa.handshake.query['owner'],
+		socket :  socketa
+	}
+	allUserSocket.push(usersocket);
+	var mysocket = socketa;
+	mysocket.on('msg', async function (data) {
+		var msg = data;
+		var hisSocket = [];
+		await getHisSocket(msg.to, allUserSocket).then(res => {
+			hisSocket = res;
+		});
+		hisSocket.socket.emit('msg', msg);
+		mysocket.emit('msg', msg);
+	});
+})
+
+http.listen(PORT, () => console.log(`running on port ${PORT}...`));
