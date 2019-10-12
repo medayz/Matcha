@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import Header  from './components/Header';
 import Register  from './components/users/Register';
-// import Index  from './components/Index';
 import Login  from './components/users/Login';
 import editProfile  from './components/users/editProfile';
 import ConfirmAcc from './components/users/ConfirmAcc'
@@ -10,6 +9,7 @@ import Matches from './components/users/Matches'
 import Logout from './components/users/Logout'
 import Profileuser from './components/users/Profileuser'
 import Home from './components/Home'
+import Chats from './components/users/Chats'
 import { BrowserRouter as Router, Route, Switch} from 'react-router-dom'; 
 import { Provider } from 'react-redux'
 import store from './store'
@@ -30,6 +30,7 @@ class App extends Component {
             <Route exact path="/profile/:username" component={Profileuser}/>
             <Route exact path="/matches" component={Matches}/>
             <Route exact path="/logout" component={Logout}/>
+            <Route exact path="/chats" component={Chats}/>
           </Switch>
         </Router>
       </Provider> 

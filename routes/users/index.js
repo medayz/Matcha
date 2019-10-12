@@ -10,6 +10,9 @@ usersRouter.use("/delete", auth, require("./delete"));
 
 usersRouter.route("/get").get(auth, usersController.getPersonalInfos);
 
+//add just for chat we should change it by getting user matches
+usersRouter.route("/getAllUsers").get(usersController.getAllUsers);
+
 usersRouter.route("/isLoggedOn").get(auth, (req, res) => {
   res.send("logged");
 });
@@ -38,3 +41,5 @@ usersRouter
   .get(usersController.accountActivation);
 
 module.exports = usersRouter;
+
+
