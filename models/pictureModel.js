@@ -6,7 +6,7 @@ module.exports = {
         console.log('params', params);
         return await query
             .getAllSpecialNodes(
-                "MATCH (:User {username: $username})-[:UPLOADED]->(p:Picture) return collect({filename: p.name,ispp: p.profilePicture});",
+                "MATCH (:User {username: $username})-[:UPLOADED]->(p:Picture) return collect({filename: p.name,ispp: p.isProfilePicture});",
                 params
             );
     },

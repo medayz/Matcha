@@ -133,7 +133,7 @@ class Chats extends Component {
                                 <div style={scroll}>
                                     {this.state.conversation.map(msg => 
                                         <div>
-                                            {msg.from === this.state.to && <Chip label={msg.msg} style={{marginTop: '3%'}} color="primary" variant="outlined" />
+                                            {(msg.from === this.state.to && <Chip label={msg.msg} style={{marginTop: '3%'}} color="primary" variant="outlined" />)
                                                  || <Chip  label={msg.msg}  color="primary" style={mymsgStyle}/>}
                                             <br />
                                             <br />

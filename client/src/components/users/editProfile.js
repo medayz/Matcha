@@ -10,18 +10,48 @@ import EditEmail from "./editProfileCom/EditEmail";
 import { Redirect } from "react-router";
 import AddIcon from '@material-ui/icons/Add';
 import Picture from '../Picture';
-
-// const logoAdd = {
-//   width: "25%",
-//   height: "25%",
-//   paddingLeft: "2%"
-// };
+import { addPic } from "../../helpers/addImg";
 
 const addstyle= {
 	fontSize: '50px',
-	marginTop: '8%',
-	float: 'left'
+	float: 'right',
+	cursor: 'pointer'
 }
+
+const fileaddstyle= {
+	fontSize: '50px',
+	width: '100%',
+	float: 'right',
+	cursor: 'pointer'
+}
+
+class Alertmsgerror extends Component{
+
+	render () {
+	  return (
+		<div className="alert alert-warning alert-dismissible fade show" role="alert">
+		  Error image
+		  <button type="button" className="close" data-dismiss="alert" aria-label="Close">
+			<span aria-hidden="true">&times;</span>
+		  </button>
+		</div>
+	  )
+	}
+  }
+  
+  class Alertmsgsuccess extends Component{
+  
+	render () {
+	  return (
+		<div className="alert alert-success alert-dismissible fade show" role="alert">
+		  Image {this.props.action}
+		  <button type="button" className="close" data-dismiss="alert" aria-label="Close">
+			<span aria-hidden="true">&times;</span>
+		  </button>
+		</div>
+	  )
+	}
+  }
 
 class EditProfile extends Component {
 	constructor(props) {
@@ -39,7 +69,8 @@ class EditProfile extends Component {
 		msg2: "",
 		msg3: "",
 		tokenErr: false,
-		errState: {}
+		errState: {},
+		addlogo: true
 	};
 	clearErrorState = () => {
 		this.setState({ errState: {} });
@@ -51,10 +82,33 @@ class EditProfile extends Component {
 	uploadProfileImg = async e => {
 		let img = e.target.files[0];
 		if (img.name.match(/\.(jpg|jpeg|png)$/)) {
-			console.log(img);
-			const formData = new FormData();
-			formData.append("profileImg", img, img.name);
+		var formData = new FormData();
+		formData.append("profileImg", img);
+		formData.append("isProfilePic", false);
+		addPic(formData)
+			.then(({ data }) => {
+				console.log("hey");
+				this.setState({msguploadimage : data.status});
+				let imgs = this.state.pics;
+				imgs.push(data.img);
+				this.setState({pics : imgs});
+				console.log(this.state.pics.length);
+				if (this.state.pics.length === 4)
+					this.setState({addlogo : false});
+				this.setState({err : true});
+			})
+			.catch(err => {
+				console.log("hani hani");
+				console.log(err);
+				this.setState({err : false});
+			});
 		}
+		else
+			this.setState({err : false});
+		console.log(this.state.pics);
+		setTimeout(() => {
+		this.setState({err : 'not yet'});
+		}, 3000);
 	};
 
 	uploadsnap = () => {
@@ -69,11 +123,19 @@ class EditProfile extends Component {
 	};
 
 	deleteImg = (filename) => {
-		// e.preventDefault();
-		axios.post(
-			'/api/users/delete/picture',
-			{ filename }
-		);
+		axios
+		.post('/api/users/delete/picture',{ filename })
+		.then(res => {
+			let pics = this.state.pics;
+			this.setState({pics : pics.filter(img => img.filename !== filename)});
+			if (this.state.pics.length < 4)
+				this.setState({addlogo : true});
+			this.setState({err : "deleted"});
+		})
+		;
+		setTimeout(() => {
+			this.setState({err : 'not yet'});
+		}, 3000);
 	}
 
 	async UNSAFE_componentWillMount() {
@@ -83,12 +145,11 @@ class EditProfile extends Component {
 				const user = res.data.data;
 				user.username && this.setState({ username: user.username });
 				user.email && this.setState({ email: user.email });
-				this.setState({ visible: true });
 				let pics = await axios.get(`/api/pics/get/${user.username}`);
-				console.log(pics)
 				pics = pics.data.data;
-				this.setState({pics : pics.filter(img => !img.ispp)});
-				this.setState({pp : pics.filter(img => img.ispp)});
+				this.setState({pics : pics.filter(img => img.ispp === 'false')});
+				this.setState({pp : pics.filter(img => img.ispp === 'true')});
+				this.setState({ visible: true });
 			}
 		} catch(err) {
 			console.log(`ERROOR: ${err.message}`);
@@ -106,7 +167,7 @@ class EditProfile extends Component {
 				{this.state.tokenErr && <Redirect to="/login" />}
 				<div className="row profile">
 					<div className="col-md-3">
-					 {this.state.visible &&  <ProfilePic />}
+					 {this.state.visible &&  <ProfilePic pp={this.state.pp}/>}
 					</div>
 					<br />
 					<div className="col-md-9">
@@ -135,21 +196,27 @@ class EditProfile extends Component {
 				<br />
 				<div className="col-md-9">
 					<div className="profile-content">
+						{this.state.err === true && <Alertmsgsuccess action="uploaded"/>}
+						{this.state.err === false && <Alertmsgerror />}
+						{this.state.err === "deleted" && <Alertmsgsuccess action="deleted"/>}
 						<form>
 							<div className="row jjj">
 								{this.state.pics.map((img, index) => (
 									<Picture key={index} img={ img.filename } deleteImg={ () => this.deleteImg(img.filename) } />
 								))}
 							</div>
-							<AddIcon style={addstyle} color="primary" size="large"/>
-							<br />
-							<input
-								type="file"
-								ref={this.fileUpload}
-								id="snapInput"
-								hidden
-							/>
-							
+							{this.state.addlogo &&
+							<div className="upload-btn-wrapper">
+								<center>
+								<AddIcon style={addstyle} className="btn222" color="primary" size="large"/>
+								<input
+									style={fileaddstyle}
+									type="file"
+									name="myfile"
+									onChange={this.uploadProfileImg}
+								/>
+								</center>
+							</div>}
 						</form>
 					</div>
 				</div>
