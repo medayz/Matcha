@@ -47,7 +47,7 @@ app.use((err, req, response, next) => {
 	if (err instanceof multer.MulterError) {
 		console.log('multeeeeeeeer');
 	}	else {
-		console.log('laa');
+		console.log(err.message);
 	}
 	response.status(status).json({
 		status: status,

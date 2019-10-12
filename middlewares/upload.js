@@ -9,7 +9,6 @@ const storage = multer.diskStorage({
 });
 
 function checkFileType(file, cb) {
-  console.log('ewa');
   const filetypes = /jpeg|jpg|png/;
   const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
   const mimetype = filetypes.test(file.mimetype);

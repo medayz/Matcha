@@ -128,7 +128,7 @@ export default class EditInfos extends Component {
     this.setState({ gender: e.currentTarget.value });
   };
 
-  async componentWillMount() {
+  async UNSAFE_componentWillMount() {
     await axios
       .get(`/api/users/get`)
       .then(res => {

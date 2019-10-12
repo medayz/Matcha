@@ -37,7 +37,7 @@ export default class EditUsername extends Component {
     this.setState({ msg2: "" });
     this.setState({ visible: false });
   };
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     this.setState({ username: this.props.username });
   }
   render() {

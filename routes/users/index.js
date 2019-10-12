@@ -6,6 +6,7 @@ const auth = require(`${paths.MIDDLEWARES}/checkToken`);
 usersRouter.use(require("express").json());
 
 usersRouter.use("/add", auth, require("./add"));
+usersRouter.use("/delete", auth, require("./delete"));
 
 usersRouter.route("/get").get(auth, usersController.getPersonalInfos);
 
@@ -35,10 +36,5 @@ usersRouter.route("/auth").post(usersController.connect);
 usersRouter
   .route("/activation/:username/:token")
   .get(usersController.accountActivation);
-
-// usersRouter.use((err, req, res, next) => {
-//   console.log(`error: ${err.message}`);
-//   res.status(400).send("Bad request!");
-// });
 
 module.exports = usersRouter;

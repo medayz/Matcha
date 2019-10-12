@@ -1,9 +1,9 @@
-const paths = require("../../../config/paths");
-const usersController = require('../../../controllers/usersController');
-const uploadMiddleware = require(`${paths.MIDDLEWARES}/upload`);
-const imageValidator = require(`${paths.MIDDLEWARES}/imageValidator`);
 const express = require('express');
 const addRouter = express.Router();
+const paths = require("../../config/paths");
+const usersController = require(`${paths.CONTROLLERS}/usersController`);
+const uploadMiddleware = require(`${paths.MIDDLEWARES}/upload`);
+const imageValidator = require(`${paths.MIDDLEWARES}/imageValidator`);
 
 addRouter.use(express.json());
 

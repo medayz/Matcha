@@ -45,6 +45,7 @@ export default class ProfilePic extends Component {
      if (img.name.match(/\.(jpg|jpeg|png)$/)) {
       var formData = new FormData();
       formData.append("profileImg", img);
+      formData.append("isProfilePic", true);
       addPic(formData)
         .then(({ data }) => {
           this.setState({msguploadimage : data.status});
