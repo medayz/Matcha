@@ -2,22 +2,30 @@ const paths = require("../config/paths");
 const query = require(paths.LIBRARIES + "/database");
 
 module.exports = {
-    getAllTags: async () => {
-        return await query.getAllRows('MATCH (n:Tag) RETURN n;');
-    },
-    getTagByName: async (name) => {
-        return await query.getOneRow('MATCH (n:Tag { name: $name }) RETURN n;', {
-            name: name
-        });
-    },
-    filterTags: async (name) => {
-        return await query.getAllRows('MATCH (n:Tag) WHERE n.name =~ $name RETURN n;', {
-            name: `^${name}.*`
-        });
-    },
-    getTagsByUsername: async (username) => {
-        return await query.getAllRows('MATCH p=(u:User {username: $username})-[r:INTERESTED_IN]->(t:Tag) RETURN t', {
-            username: username
-        });
-    }
+	getAllTags: async () => {
+		return await query.getAllRows('MATCH (n:Tag) RETURN n;');
+	},
+	getTagByName: async (name) => {
+		return await query.getOneRow('MATCH (n:Tag { name: $name }) RETURN n;', {
+			name: name
+		});
+	},
+	filterTags: async (name) => {
+		return await query.getAllRows('MATCH (n:Tag) WHERE n.name =~ $name RETURN n;', {
+			name: `^${name}.*`
+		});
+	},
+	getTagsByUsername: async (username) => {
+		return await query.getAllRows('MATCH p=(u:User {username: $username})-[r:INTERESTED_IN]->(t:Tag) RETURN t', {
+			username: username
+		});
+	},
+	getUsersWithCommonTags: async (username) => {
+		return await query.getAllSpecialNodes(
+			"MATCH (:User {username: $username})-[]->(t:Tag)<-[]-(u:User) WITH count(DISTINCT t) AS c, u.username AS user RETURN collect({ntags: c, username: user})",
+			{
+				username: username
+			}
+		);
+	}
 };

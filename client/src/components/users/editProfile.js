@@ -69,7 +69,6 @@ class EditProfile extends Component {
 	};
 
 	deleteImg = (filename) => {
-		// e.preventDefault();
 		axios.post(
 			'/api/users/delete/picture',
 			{ filename }

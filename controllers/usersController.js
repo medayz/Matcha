@@ -2,6 +2,7 @@ const paths = require("../config/paths");
 const jwtHelper = require(`${paths.HELPERS}/jwtokens`);
 const userModel = require(`${paths.MODELS}/userModel`);
 const pictureModel = require(`${paths.MODELS}/pictureModel`);
+const tagModel = require(`${paths.MODELS}/tagModel`);
 const validator = require(`${paths.HELPERS}/validator`);
 const mail = require(`${paths.HELPERS}/sendmail`);
 const token = require(`${paths.HELPERS}/token`);
@@ -330,6 +331,16 @@ module.exports = {
 					});
 				});
 		}
+	},
+	filter: (req, response, next) => {
+		tagModel
+			.getUsersWithCommonTags(req.username)
+			.then(res => {
+				response.json({
+					status: 200,
+					data: res
+				});
+			}).catch(err => next("Something Went Wrong!"));
 	},
 	edit: {
 		infos: (req, response) => {
