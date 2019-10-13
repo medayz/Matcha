@@ -284,7 +284,8 @@ module.exports = {
 				await userModel.add.picture(params)
 				res.status(200).json({
 					status: 200,
-					msg: "Image modified !"
+					msg: "Image modified !",
+					img: params
 				});
 			}	catch(e) {
 				!e.message && (e.message = "Something Went Wrong!");

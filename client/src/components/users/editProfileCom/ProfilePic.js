@@ -38,7 +38,8 @@ export default class ProfilePic extends Component {
 
   state = {
     msguploadimage: '',
-    err: 'not yet'
+    err: 'not yet',
+    pp : this.props.pp
   }
   uploadProfileImg = async e => {
     let img = e.target.files[0];
@@ -48,6 +49,10 @@ export default class ProfilePic extends Component {
       formData.append("isProfilePic", true);
       addPic(formData)
         .then(({ data }) => {
+          let img = data.img;
+          let imgs = this.state.pp;
+          imgs[0] = img;
+          this.setState({pics : imgs});
           this.setState({msguploadimage : data.status});
           this.setState({err : true});
         })
@@ -63,15 +68,13 @@ export default class ProfilePic extends Component {
     }, 3000);
   };
 
-  
-
   render() {
     return (
       <div>
         <div className="profile-sidebar">
           <div className="profile-userpic">
             <div className="row">
-              <img src="https://cdn.intra.42.fr/users/large_kdaou.jpg" className="img-responsive" alt="" />
+              <img src={`/uploads/${this.state.pp[0].filename}`} className="img-responsive" alt="" />
             </div>
           </div>
           <div className="profile-usertitle">
