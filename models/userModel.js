@@ -71,6 +71,12 @@ module.exports = {
 			}
 		);
 	},
+	getUsersWithCommonTags: async (params) => {
+		return await query.getAllSpecialNodes(
+			"MATCH (u1:User {username: $username})-[]->(t:Tag)<-[]-(u2:User) WITH count(DISTINCT t) AS c, u2.username AS user, round(distance(u1.location, u2.location)/1000) AS dist, duration.between(date(u2.birthDate), date()).years AS age WHERE dist <= $distance AND age >= $ageMin AND age <= $ageMax RETURN collect({ntags: c, username: user, distance: dist, age: age})",
+			params
+		);
+	},
 	add: {
 		picture: async params => {
 			await query.execute(
@@ -86,7 +92,7 @@ module.exports = {
 		},
 		location: async params => {
 			await query.execute(
-				"MATCH (u:User {username: $username}) SET u.longitude=$long, u.latitude=$lat, u.country=$country, u.city=$city;",
+				"MATCH (u:User {username: $username}) SET u.location = point({longitude: $long, latitude: $lat}), u.country=$country, u.city=$city;",
 				{
 					username: params.username || "",
 					long: params.long || null,

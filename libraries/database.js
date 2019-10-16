@@ -25,8 +25,17 @@ async function getNodes(query, params) {
 }
 
 async function getSpecialNodes(query, params) {
-	const queryResult = await run(query, params);
-	const results = queryResult.records[0]._fields[0];
+	const	queryResult = await run(query, params);
+	let		results = queryResult.records[0]._fields[0];
+	try {
+		results.map(object => {
+			for (const key in object) {
+				object[key] = neo4j.isInt(object[key]) ?
+					object[key].toNumber() : object[key];
+			}
+		});
+	}
+	catch(e) {console.log(e);}
 	return results;
 }
 

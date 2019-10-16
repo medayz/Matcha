@@ -334,8 +334,14 @@ module.exports = {
 		}
 	},
 	filter: (req, response, next) => {
-		tagModel
-			.getUsersWithCommonTags(req.username)
+		const	params = {
+			username: req.username,
+			distance: req.body.distance || 10,
+			ageMin: req.body.ageMin || 18,
+			ageMax: req.body.ageMax || 25
+		};
+		userModel
+			.getUsersWithCommonTags(params)
 			.then(res => {
 				response.json({
 					status: 200,

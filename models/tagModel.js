@@ -19,13 +19,5 @@ module.exports = {
 		return await query.getAllRows('MATCH p=(u:User {username: $username})-[r:INTERESTED_IN]->(t:Tag) RETURN t', {
 			username: username
 		});
-	},
-	getUsersWithCommonTags: async (username) => {
-		return await query.getAllSpecialNodes(
-			"MATCH (:User {username: $username})-[]->(t:Tag)<-[]-(u:User) WITH count(DISTINCT t) AS c, u.username AS user RETURN collect({ntags: c, username: user})",
-			{
-				username: username
-			}
-		);
 	}
 };

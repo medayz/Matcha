@@ -22,7 +22,9 @@ usersRouter.route("/auth").post(usersController.connect);
 usersRouter
   .route("/activation/:username/:token")
   .get(usersController.accountActivation);
-usersRouter.use("/filter", auth, usersController.filter);
+usersRouter
+  .route("/filter")
+  .post(auth, usersController.filter);
 
 module.exports = usersRouter;
 
