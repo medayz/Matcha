@@ -26,6 +26,12 @@ usersRouter
   .route("/filter")
   .post(auth, usersController.filter);
 
+
+// like
+usersRouter.route("/like").post(auth, usersController.like);
+// stateOflike
+usersRouter.route("/stateOfLike").post(auth, usersController.stateOfLike);
+
 module.exports = usersRouter;
 
 

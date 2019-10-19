@@ -3,12 +3,39 @@ const query = require(paths.LIBRARIES + "/database");
 const password = require(paths.HELPERS + "/hashing");
 
 module.exports = {
+	likeUser: async (user1, user2) => {
+		return await query.getOneSpecialNodes(
+			"MATCH (u1:User {username: $user1}), (u2:User {username: $user2}) OPTIONAL MATCH (u1)-[l1:LIKES]->(u2) OPTIONAL MATCH (u2)-[l2:LIKES]->(u1) MERGE (u1)-[:LIKES]->(u2) RETURN collect({user1: l1, user2: l2});",
+			{
+				user1: user1,
+				user2: user2
+			}
+		);
+	},
+	disLikeUser: async (user1, user2) => {
+		return await query.execute(
+			"MATCH (u1:User {username: $user1}), (u2:User {username: $user2})  , (u1)-[l1:LIKES]->(u2) delete l1",
+			{
+				user1: user1,
+				user2: user2
+			}
+		);
+	},
+	stateOfLike: async (user1, user2) => {
+		return await query.getOneRow(
+			"MATCH (u1:User {username: $user1}), (u2:User {username: $user2})  , (u1)-[l1:LIKES]->(u2) return l1",
+			{
+				user1: user1,
+				user2: user2
+			}
+		);
+	},
 	getAllUsers: async () => {
 		return await query.getAllRows("MATCH (n:User) RETURN n;");
 	},
 	getUser: async user => {
 		return await query.getOneRow(
-			"MATCH (n:User {username: $name}) RETURN n;",
+			"MATCH (n:User {username: $name }) return n;",
 			{
 				name: user
 			}
