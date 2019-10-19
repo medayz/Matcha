@@ -17,8 +17,12 @@ usersRouter.route("/get/:username").get(usersController.getUserByUsername);
 usersRouter.route("/isLoggedOn").get(auth, (req, res) => res.send("logged"));
 usersRouter.route("/logout").get(usersController.logOut);
 
-usersRouter.route("/create").post(usersController.addUser);
-usersRouter.route("/auth").post(usersController.connect);
+usersRouter
+  .route("/create")
+  .post(usersController.addUser);
+usersRouter
+  .route("/auth")
+  .post(usersController.connect);
 usersRouter
   .route("/activation/:username/:token")
   .get(usersController.accountActivation);

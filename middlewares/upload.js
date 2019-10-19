@@ -2,7 +2,7 @@ const path = require("path");
 const multer = require("multer");
 
 const storage = multer.diskStorage({
-  destination: "./public/uploads/",
+  destination: "./public/userPics/",
   filename: function(req, file, cb) {
     cb(null, `IMG-${Date.now()}` + path.extname(file.originalname));
   }

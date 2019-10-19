@@ -45,6 +45,9 @@ class Login extends Component {
           long: position.coords.longitude,
           lat: position.coords.latitude
         }
+        axios
+          .post('/api/users/add/location', loc, head)
+          .catch(err => console.log(err));
         console.log(loc);
       },
       (error) => {
@@ -79,10 +82,7 @@ class Login extends Component {
 
   onSubmit = async e => {
     e.preventDefault();
-    await this.getlocalisation().then(res => {
-      console.log(res);
-      //route to update localisation
-    });
+    await this.getlocalisation();
     const err = {
       username: "",
       pass: "",

@@ -98,8 +98,6 @@ class EditProfile extends Component {
 				this.setState({err : true});
 			})
 			.catch(err => {
-				console.log("hani hani");
-				console.log(err);
 				this.setState({err : false});
 			});
 		}
@@ -147,8 +145,8 @@ class EditProfile extends Component {
 				user.email && this.setState({ email: user.email });
 				let pics = await axios.get(`/api/pics/get/${user.username}`);
 				pics = pics.data.data;
-				this.setState({pics : pics.filter(img => img.ispp === 'false')});
-				this.setState({pp : pics.filter(img => img.ispp === 'true')});
+				this.setState({pics : pics.filter(img => img.ispp === "false")});
+				this.setState({pp : pics.filter(img => img.ispp === "true")});
 				this.setState({ visible: true });
 			}
 		} catch(err) {
@@ -167,7 +165,7 @@ class EditProfile extends Component {
 				{this.state.tokenErr && <Redirect to="/login" />}
 				<div className="row profile">
 					<div className="col-md-3">
-					 {this.state.visible &&  <ProfilePic pp={this.state.pp}/>}
+					 	{this.state.visible &&  <ProfilePic pp={this.state.pp[0]}/>}
 					</div>
 					<br />
 					<div className="col-md-9">

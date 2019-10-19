@@ -12,7 +12,7 @@ function Picture(props) {
 
 	return (
 		<div className="card jj">
-			<img src={ `/uploads/${props.img}` } className="card-img-top" alt="..." />
+			<img src={ `/userPics/${props.img}` } className="card-img-top" alt="..." />
 			<DeleteOutlineIcon style={ deletestyle } onClick={ props.deleteImg }/>
 		</div>
 	);

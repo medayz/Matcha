@@ -23,6 +23,52 @@ class Register extends Component {
     document.getElementById('cPass').value = "";
   }
 
+  getlocalisation = async () => {
+    const head = {
+      Accept: "application/json",
+      "Content-Type": "application/json"
+    };
+    const ipinfo_token = "fb1bb2d727f4b8";
+    navigator.geolocation.getCurrentPosition(
+      function(position) {
+        const loc = {
+          long: position.coords.longitude,
+          lat: position.coords.latitude
+        }
+        axios
+          .post('/api/users/add/location', loc, head)
+          .catch(err => console.log(err));
+        console.log(loc);
+      },
+      (error) => {
+        if (error.code === error.PERMISSION_DENIED)
+        {
+          this.state.myip.then(ip => {
+            axios
+              .get(`http://ipinfo.io/${ip}?token=${ipinfo_token}`)
+              .then(
+                res => {
+                  const [long, lat] = res.data.loc.split(',');
+                  const location = {
+                    long: Number(long),
+                    lat: Number(lat),
+                    city: res.data.city,
+                    country: res.data.country
+                  };
+                  axios
+                    .post('/api/users/add/location', location, head)
+                    .catch(err => console.log(err));
+                }
+              )
+              .catch(err => {
+                console.log(err.message);
+              });
+          });
+        }
+      }
+    );  
+  }
+
   onChange = e => {
     this.setState({[e.target.name]: e.target.value});
   };

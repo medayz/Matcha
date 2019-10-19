@@ -65,13 +65,13 @@ class Header extends Component {
                   </Link>
                 </li>
               )}
-              {this.state.connected && (
+              {/*this.state.connected && (
                 <li className="nav-item">
                   <Link to={`/matches`} className="nav-link">
                     Matches
                   </Link>
                 </li>
-              )}
+              )*/}
               {this.state.connected && (
                 <li className="nav-item">
                   <Link to="/logout" className="nav-link">

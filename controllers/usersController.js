@@ -157,7 +157,7 @@ module.exports = {
 				receiver: params.email,
 				subject: "Confirm your e-mail address",
 				body: "message body goes here!",
-				html: "<h1>test html</h1><br>here's your token: " + tok
+				html: `<h1>You can activate your account from <a href="http:/localhost:3000/confirmAcc/${params.username}/${tok}">here</a></h1>`
 			}).catch(err => console.log(err));
 		} else {
 			response.status(400).json({
@@ -314,8 +314,13 @@ module.exports = {
 				});
 		},
 		location: (req, response) => {
-			let params = Object.assign({}, req.body);
-			params.username = req.username;
+			const params = {
+				username: req.username,
+				long: req.body.long || null,
+				lat: req.body.lat || null,
+				country: req.body.country || "",
+				city: req.body.city || ""
+			};
 			userModel.add
 				.location(params)
 				.then(() => {
@@ -341,13 +346,13 @@ module.exports = {
 			ageMax: req.body.ageMax || 25
 		};
 		userModel
-			.getUsersWithCommonTags(params)
+			.filterUsers(params)
 			.then(res => {
 				response.json({
 					status: 200,
 					data: res
 				});
-			}).catch(err => next("Something Went Wrong!"));
+			}).catch(err => {console.log(err); next("Something Went Wrong!");});
 	},
 	edit: {
 		infos: (req, response) => {
@@ -524,7 +529,7 @@ module.exports = {
 			userModel.delete
 				.picture(params)
 				.then(() => {
-					fs.unlinkSync(`${paths.PUBLIC}/uploads/${params.filename}`);
+					fs.unlinkSync(`${paths.PUBLIC}/userPics/${params.filename}`);
 					response.sendStatus(200);
 				})
 				.catch(err => next(err));

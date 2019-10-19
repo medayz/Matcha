@@ -74,7 +74,7 @@ export default class ProfilePic extends Component {
         <div className="profile-sidebar">
           <div className="profile-userpic">
             <div className="row">
-              <img src={`/uploads/${this.state.pp[0].filename}`} className="img-responsive" alt="" />
+              <img src={`/userPics/${this.state.pp.filename}`} className="img-responsive" alt="" />
             </div>
           </div>
           <div className="profile-usertitle">
