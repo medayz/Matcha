@@ -8,9 +8,6 @@ class Alertmsgerror extends Component{
     return (
       <div className="alert alert-warning alert-dismissible fade show" role="alert">
         Error image
-        <button type="button" className="close" data-dismiss="alert" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
       </div>
     )
   }
@@ -22,9 +19,6 @@ class Alertmsgsuccess extends Component{
     return (
       <div className="alert alert-success alert-dismissible fade show" role="alert">
         Image uploaded
-        <button type="button" className="close" data-dismiss="alert" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
       </div>
     )
   }

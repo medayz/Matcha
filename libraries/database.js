@@ -24,15 +24,24 @@ async function getNodes(query, params) {
 	return results;
 }
 
+function propsToInt(obj) {
+	let object = Object.assign({}, obj);
+	for (const key in object) {
+		if (neo4j.isInt(object[key])) {
+			object[key] = object[key].toNumber();
+		} else if (!(object[key] instanceof Array) && (object[key] instanceof Object)) {
+			object[key] = propsToInt(object[key]);
+		}
+	}
+	return object;
+}
+
 async function getSpecialNodes(query, params) {
 	const	queryResult = await run(query, params);
 	let		results = queryResult.records[0]._fields[0];
 	try {
-		results.map(object => {
-			for (const key in object) {
-				object[key] = neo4j.isInt(object[key]) ?
-					object[key].toNumber() : object[key];
-			}
+		results = results.map(object => {
+			return propsToInt(object)
 		});
 	}
 	catch(e) {console.log(e);}
@@ -41,7 +50,7 @@ async function getSpecialNodes(query, params) {
 
 module.exports = {
 	execute: async (query, params) => {
-		await getNodes(query, params);
+		await run(query, params);
 	},
 	getOneRow: async (query, params) => {
 		const results = await getNodes(query, params);
@@ -54,6 +63,10 @@ module.exports = {
 	getAllSpecialNodes : async (query, params) => {
 		const results = await getSpecialNodes(query, params);
 		return results;
+	},
+	getOneSpecialNodes : async (query, params) => {
+		const results = await getSpecialNodes(query, params);
+		return results[0];
 	},
 	rowCount: async (query, params) => {
 		const results = await getNodes(query, params);

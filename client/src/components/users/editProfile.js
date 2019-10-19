@@ -31,9 +31,6 @@ class Alertmsgerror extends Component{
 	  return (
 		<div className="alert alert-warning alert-dismissible fade show" role="alert">
 		  Error image
-		  <button type="button" className="close" data-dismiss="alert" aria-label="Close">
-			<span aria-hidden="true">&times;</span>
-		  </button>
 		</div>
 	  )
 	}
@@ -45,9 +42,6 @@ class Alertmsgerror extends Component{
 	  return (
 		<div className="alert alert-success alert-dismissible fade show" role="alert">
 		  Image {this.props.action}
-		  <button type="button" className="close" data-dismiss="alert" aria-label="Close">
-			<span aria-hidden="true">&times;</span>
-		  </button>
 		</div>
 	  )
 	}
@@ -145,8 +139,9 @@ class EditProfile extends Component {
 				user.email && this.setState({ email: user.email });
 				let pics = await axios.get(`/api/pics/get/${user.username}`);
 				pics = pics.data.data;
-				this.setState({pics : pics.filter(img => img.ispp === "false")});
-				this.setState({pp : pics.filter(img => img.ispp === "true")});
+				console.log(pics);
+				this.setState({pics : pics.filter(img => !img.ispp)});
+				this.setState({pp : pics.filter(img => img)});
 				this.setState({ visible: true });
 			}
 		} catch(err) {

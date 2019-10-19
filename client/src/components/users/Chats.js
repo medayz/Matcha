@@ -82,28 +82,31 @@ class Chats extends Component {
         console.log(this.state.conversation);
     }
 
+    mapOnChats = (chat) => {
+        let promise = new Promise(function (resolve, reject){
+            let res = chat.map(c => {
+                return (c.props.user2);
+            });
+            resolve(res);
+        });
+        return (promise);
+    }
+
     async componentDidMount () {
-        await axios
-        .get('/api/users/get')
-        .then ( res => {
-            //console.log(res.data.data.username);
-            this.setState({from : res.data.data.username})
-            console.log("hey");
+        axios
+        .get('/api/chats/get/hamid')
+        .then ( async (res) => {
+            console.log(res);
+            await this.mapOnChats(res.data.data).then(res => {
+                this.setState({usernames : res});
+            });
+
             this.setState({socket : io(':1337', {query: `owner=${this.state.from}`})})
         })
         .catch(err => {
             console.log(err);
         })
-        await axios
-        .get('/api/users/getAllUsers')
-        .then ( res => {
-             this.getusernames(res.data.data).then(res => {
-                this.setState({usernames : res});
-            });
-        })
-        .catch(err => {
-            console.log(err);
-        })
+        
         this.state.socket.on('msg', (data) => {
             let allmsg = this.state.conversation;
             allmsg.push(data);

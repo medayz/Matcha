@@ -21,7 +21,7 @@ module.exports = {
         });
     },
     deleteChat: (user1, user2) => {
-        query.execute('MATCH (c:Chat)-[r:CONTAINS]->(m:Message) WHERE (:User {username: $user1})-[:PARTICIPATED_IN]->(c)<-[:PARTICIPATED_IN]-(:User {username: $user2}) RETURN r, m, c;', {
+        query.execute('MATCH (n:User {username: $name1})-[p1:PARTICIPATE_IN]->(c)<-[p2:PARTICIPATE_IN]-(u:User {username: $name2}) delete p1,p2,c;', {
             name1: user1,
             name2: user2
         });
