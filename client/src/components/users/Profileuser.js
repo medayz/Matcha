@@ -57,33 +57,22 @@ class Profileuser extends Component {
   }
 
   async componentDidMount() {
-    await axios
-    .get(`/api/users/get/${this.state.user}`)
-    .then(res => {
-        this.setState({data: res.data.data});
-    })
-    .catch(err => {
-        console.log(err);
-    })
-    getUserTags(this.state.user).then(res => {
-        this.setState({tags: res.data.data});
-    });
-    let pics = await axios.get(`/api/pics/get/${this.state.user}`);
-    pics = pics.data.data;
-    this.setState({pics : pics.filter(img => !img.ispp)});
-    this.setState({pp : pics.filter(img => img.ispp)});
-
-    let user = {
-        to: this.state.user
-    };
-    await axios
-    .post('/api/users/stateOfLike', user)
-    .then(res => {
-        this.setState({like : res.data.like});
-    })
-    .catch();
-
-    this.setState({ visible: true });
+	try {
+        let res = await axios.get(`/api/users/get/${this.state.user}`);
+		this.setState({data: res.data.data});
+		res = await getUserTags(this.state.user);
+		this.setState({tags: res.data.data});
+		let pics = await axios.get(`/api/pics/get/${this.state.user}`);
+		pics = pics.data.data;
+		this.setState({pics : pics.filter(img => !img.ispp)});
+		this.setState({pp : pics.filter(img => img.ispp)});
+		let user = { to: this.state.user };
+		res = await axios.post('/api/users/stateOfLike', user)
+		this.setState({like : res.data.like});
+		this.setState({ visible: true });
+	} catch(err) {
+		console.log(err.message);
+	}
   }
 
   render() {

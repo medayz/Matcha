@@ -21,7 +21,7 @@ const stylebtn = {
 class Filters extends Component {
 	state = {
 		ageFilter: [18, 25],
-		tagsFilter : 2,
+		tagsFilter : 1,
 		distanceFilter : 10,
 	}
 
@@ -46,7 +46,7 @@ class Filters extends Component {
 					<Slider
 						value={this.state.ageFilter}
 						onChange={this.filterAge}
-						min={0}
+						min={18}
 						max={55}
 						valueLabelDisplay="auto"
 						aria-labelledby="range-slider"
@@ -63,7 +63,7 @@ class Filters extends Component {
 						value={this.state.tagsFilter}
 						onChange={this.filterTags}
 						valueLabelDisplay="auto"
-						min={0}
+						min={1}
 						max={10}
 						aria-labelledby="continuous-slider"
 					/>

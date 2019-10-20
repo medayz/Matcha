@@ -20,7 +20,7 @@ function SuggestionCard(props) {
                         <span style={propsStyle}>Distance: </span>{props.distance} Km<br />
                         <span style={propsStyle}>Common tags: </span>{props.ntags} tags<br />
                     </p>
-                    <button className="btn btn-primary" onClick={() => props.toProfile("iouzzine")}>See profile</button>
+                    <button className="btn btn-primary" onClick={props.toProfile}>See profile</button>
                 </div>
             </div>
         </div>

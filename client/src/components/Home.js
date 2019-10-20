@@ -1,20 +1,10 @@
 import React, { Component } from "react";
-import BottomNavigation from "@material-ui/core/BottomNavigation";
-import BottomNavigationAction from "@material-ui/core/BottomNavigationAction";
-import RestoreIcon from "@material-ui/icons/Restore";
-import FavoriteIcon from "@material-ui/icons/Favorite";
-import LocationOnIcon from "@material-ui/icons/LocationOn";
-import FormLabel from "@material-ui/core/FormLabel";
 import axios from "axios";
 import Profileuser from './users/Profileuser';
 import SuggestionCard from './SuggestionCard';
 import Filters from './Filters';
+import Sort from './Sort';
 import { Redirect } from 'react-router';
-
-
-const pStyle = {
-	marginTop: '5%',
-};
 
 class Home extends Component {
 
@@ -26,23 +16,19 @@ class Home extends Component {
 	}
 
 	changeSorting = () => {
-		//alert("Sorting");
-	};
-
-	getSuggestions = (filters) => {
-		
+		alert("Sorting");
 	};
 
 	toProfile = async (username) => {
-		axios.get(`api/users/get/iouzzine`)
+		console.log('hbkrelke: ',username);
+		axios.get(`/api/users/get/${username}`)
 			.then (res => {
-				console.log(res.data.data);
 				this.setState({dataprofile: res.data.data});
+				this.setState({redirect : true});
 			})
 			.catch (err => {
 				this.setState({tokenErr : true});
 			});
-		this.setState({redirect : true});
 	}
 
 	filter = (filtersState) => {
@@ -55,7 +41,6 @@ class Home extends Component {
 		axios
 			.post('/api/users/filter', filters)
 			.then(res => {
-				console.log(res.data.data);
 				this.setState({ suggestions: res.data.data });
 			})
 			.catch(err => console.log(err));
@@ -65,32 +50,16 @@ class Home extends Component {
 		return (
 			<div>
 				{this.state.tokenErr && <Redirect to="/login" />}
-				{this.state.redirect && <Redirect to={{pathname: `/profile/iouzzine`,state: {userprofile: this.state.dataprofile }}} Component={Profileuser} />}
+				{this.state.redirect && <Redirect to={
+					{
+						pathname: `/profile/${this.state.dataprofile.username}`,
+						state: {userprofile: this.state.dataprofile }
+					}
+				} Component={Profileuser} />}
 				<div className="container">
 					<div className="row" >
 						<div className="col-md-1" />
-						<div className="col-md-5" style={pStyle}>
-						<div className="row">
-							<FormLabel component="legend">Sort By</FormLabel>
-						</div>
-						<div className="row">
-							<BottomNavigation
-								value="SortBar"
-								onChange={this.changeSorting}
-								showLabels
-							>
-							<BottomNavigationAction label="Tags" icon={<RestoreIcon />} />
-							<BottomNavigationAction
-								label="Rating"
-								icon={<FavoriteIcon />}
-							/>
-							<BottomNavigationAction
-								label="Geographic"
-								icon={<LocationOnIcon />}
-							/>
-							</BottomNavigation>
-						</div>
-						</div>
+						<Sort changeSorting={this.changeSorting} />
 						<div className="col-md-2" />
 						<div className="col-md-4">
 							<Filters filterFunction={this.filter}/>
@@ -105,6 +74,7 @@ class Home extends Component {
 								age={suggestion.age}
 								ntags={suggestion.ntags}
 								distance={suggestion.distance}
+								toProfile={() => this.toProfile(suggestion.username)}
 							/>
 						))}
 					</div>
