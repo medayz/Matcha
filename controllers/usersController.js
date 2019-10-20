@@ -10,6 +10,11 @@ const token = require(`${paths.HELPERS}/token`);
 const fs = require('fs');
 
 module.exports = {
+	whoami: async (req, response) => {
+		response.status(200).json({
+			user: req.username
+		});
+	},
 	getAllUsers: async (req, response) => {
 		userModel
 			.getAllUsers()

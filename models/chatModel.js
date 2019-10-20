@@ -3,8 +3,14 @@ const query = require(`${paths.LIBRARIES}/database`);
 
 module.exports = {
     getUserChats: async (username) => {
-        return await query.getAllRows('MATCH (n:User {username: $name})-[:PARTICIPATE_IN]->(c:Chat) RETURN c;', {
+        return await query.getAllSpecialNodes('MATCH (:User {username: $name})-[]->(c:Chat)<-[]-(u:User) RETURN collect({date: c.dateLastMsg, time: c.timeLastMsg, name: u.username})', {
             name: username
+        });
+    },
+    getMessages: async (sender, receiver) => {
+        return await query.getAllRows('MATCH (:User {username: $sender})-[]->(c:Chat)<-[]-(:User {username: $receiver}) MATCH (c)-[:CONTAINS]->(m) RETURN m;', {
+            sender: sender,
+            receiver: receiver
         });
     },
     addChat: (user1, user2) => {
@@ -14,7 +20,7 @@ module.exports = {
         });
     },
     addMessage: (msg) => {
-        query.execute('MATCH (u1:User {username: $name1})-[:PARTICIPATE_IN]->(c)<-[:PARTICIPATE_IN]-(u2:User {username: $name2}) CREATE (c)-[:CONTAINS]->(m:Message {date: date(), time: time(), sender: u1.username, body: $body})', {
+        query.execute('MATCH (u1:User {username: $name1})-[:PARTICIPATE_IN]->(c)<-[:PARTICIPATE_IN]-(u2:User {username: $name2}) CREATE (c)-[:CONTAINS]->(m:Message {date: date(), time: time(), sender: u1.username, receiver: u2.username,body: $body})', {
             name1: msg.sender,
             name2: msg.receiver,
             body: msg.body

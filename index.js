@@ -7,6 +7,9 @@ const genuuid = require("uuid");
 const FileStore = require("session-file-store")(session);
 const multer = require("multer");
 
+const paths = require("./config/paths");
+const chatsModel = require(`${paths.MODELS}/chatModel`);
+
 app.disable("x-powered-by");
 app.use(cors());
 
@@ -62,10 +65,13 @@ var allUserSocket = [];
 
 function getHisSocket (user, all)
 {
+	//console.log(all[0].idSocket);
+	all.reverse();
 	var promise = new Promise (function (resolve, reject) {
 		var socket = all.filter(a => a.user === user);
 		resolve (socket[0]);
 	})
+	all.reverse();
 	return promise;
 }
 
@@ -76,16 +82,28 @@ io.on('connection', (socketa) =>{
 		user : socketa.handshake.query['owner'],
 		socket :  socketa
 	}
+	//console.log(usersocket);
 	allUserSocket.push(usersocket);
 	var mysocket = socketa;
 	mysocket.on('msg', async function (data) {
 		var msg = data;
+		console.log(msg);
 		var hisSocket = [];
 		await getHisSocket(msg.to, allUserSocket).then(res => {
 			hisSocket = res;
+			let message = {
+				sender: msg.from,
+				receiver: msg.to,
+				body: msg.msg, 
+				date: msg.date
+			}
+			if (hisSocket !== undefined)
+				hisSocket.socket.emit('msg', message);
+			chatsModel.addMessage(message);
+			mysocket.emit('msg', message);
+			
 		});
-		hisSocket.socket.emit('msg', msg);
-		mysocket.emit('msg', msg);
+		
 	});
 })
 

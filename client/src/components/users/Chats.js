@@ -53,64 +53,107 @@ class Chats extends Component {
         this.setState({ [e.target.name]: e.target.value });
     };
 
-    getusernames = (users) => {
-        let usernames = [];
-        let promise = new Promise(function (resolve, reject) {
-            usernames = users.map(u => {
-                return u.props.username;
-            })
-            resolve(usernames);
-        })
-        return promise;
-    }
-
-    switchconv = (user) => {
-        console.log(user);
-        this.setState({conversation : []})
-        this.setState({to : user});
-    }
-
-    sendmsg = () => {
-        let obj = {
-            from : this.state.from,
-            to : this.state.to,
-            date: new Date(),
-            msg: this.state.msg
-        }
-        console.log(obj)
-        this.state.socket.emit('msg', obj);
-        console.log(this.state.conversation);
-    }
-
     mapOnChats = (chat) => {
-        let promise = new Promise(function (resolve, reject){
+        let promise = new Promise((resolve, reject) => {
             let res = chat.map(c => {
-                return (c.props.user2);
+                return c.name
             });
             resolve(res);
         });
         return (promise);
     }
 
+    mapOnMsgs = (msg) => {
+        let msgJson;
+        let promise = new Promise((resolve, reject) => {
+            msgJson = msg.map((m) => {
+                let obj = {
+                    sender: m.props.sender,
+                    receiver: m.props.receiver,
+                    body: m.props.body,
+                    date: m.props.date,
+                }
+                return (obj);
+            });
+            resolve(msgJson);  
+        });
+        return promise;
+    }
+
+    switchconv = async (user) => {
+        this.setState({conversation : []})
+        this.setState({to : user});
+        await axios.get(`/api/chats/getConversation/${this.state.from}/${user}`)
+        .then(res => {
+            this.mapOnMsgs(res.data.data).then(res => {
+                let conv = res;
+                conv = conv.reverse();
+                this.setState({conversation : conv});
+            });
+            
+        })
+        .catch(err => {
+            console.log(err);
+        })
+    }
+
+    sendmsg = async () => {
+        let obj = {
+            from : this.state.from,
+            to : this.state.to,
+            date: new Date(),
+            msg: this.state.msg
+        }
+        if (obj.msg.length > 0)
+        {
+            obj.msg = obj.msg.trim();
+            if (obj.msg)
+            {
+                this.state.socket.emit('msg', obj);
+                await axios.get(`/api/chats/getConversation/${this.state.from}/${this.state.to}`)
+                .then(res => {
+                    this.mapOnMsgs(res.data.data).then(res => {
+                        let conv = res;
+                        conv = conv.reverse();
+                        this.setState({conversation : conv});
+                    });
+                    this.setState({ msg: "" });
+                })
+                .catch(err => {
+                    console.log(err);
+                })
+                this.setState({msg : ""});
+
+            }
+        }
+        
+    }
+
     async componentDidMount () {
-        axios
-        .get('/api/chats/get/hamid')
+        await axios.get('/api/users/whoami')
+        .then(res => {
+            this.setState({
+                from : res.data.user
+            })
+        })
+        await axios
+        .get(`/api/chats/get/${this.state.from}`)
         .then ( async (res) => {
-            console.log(res);
             await this.mapOnChats(res.data.data).then(res => {
                 this.setState({usernames : res});
             });
-
             this.setState({socket : io(':1337', {query: `owner=${this.state.from}`})})
         })
         .catch(err => {
             console.log(err);
         })
-        
         this.state.socket.on('msg', (data) => {
             let allmsg = this.state.conversation;
             allmsg.push(data);
-            this.setState({conversation : allmsg});
+            if ((allmsg[0].sender === this.state.to) || (allmsg[0].receiver === this.state.to))
+                this.setState({conversation : allmsg});
+            else
+                this.setState({conversation : []});
         });
     }
 
@@ -134,11 +177,11 @@ class Chats extends Component {
                                     </ul>
                                 </div>
                                 <div style={scroll}>
-                                    {this.state.conversation.map(msg => 
-                                        <div>
-                                            {(msg.from === this.state.to
-                                                && <Chip label={msg.msg} style={{marginTop: '3%'}} color="primary" variant="outlined" />)
-                                                || <Chip  label={msg.msg}  color="primary" style={mymsgStyle}/>}
+                                    {this.state.conversation.map((msg, index) => 
+                                        <div key={index}>
+                                            {(msg.receiver === this.state.from
+                                                && <Chip label={msg.body} style={{marginTop: '3%'}} color="primary" variant="outlined" />)
+                                                || <Chip  label={msg.body}  color="primary" style={mymsgStyle}/>}
                                             <br />
                                             <br />
                                         </div>    
@@ -152,6 +195,7 @@ class Chats extends Component {
                                         label="Message"
                                         margin="dense"
                                         name="msg"
+                                        value={this.state.msg}
                                         onChange={this.onChange}
                                     />
                                     <SendIcon style={sendstyle} size='large' onClick={this.sendmsg} color="primary"/>

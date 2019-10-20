@@ -35,7 +35,7 @@ usersRouter
 usersRouter.route("/like").post(auth, usersController.like);
 // stateOflike
 usersRouter.route("/stateOfLike").post(auth, usersController.stateOfLike);
+// who am i route 
+usersRouter.route("/whoami").get(auth, usersController.whoami);
 
 module.exports = usersRouter;
-
-
