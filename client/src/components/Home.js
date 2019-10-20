@@ -45,9 +45,15 @@ class Home extends Component {
 		this.setState({redirect : true});
 	}
 
-	filter = (filters) => {
+	filter = (filtersState) => {
+		const filters = {
+			distance: filtersState.distanceFilter,
+			tags: filtersState.tagsFilter,
+			ageMin: filtersState.ageFilter[0],
+			ageMax: filtersState.ageFilter[1]
+		};
 		axios
-			.post('/api/users/filter')
+			.post('/api/users/filter', filters)
 			.then(res => {
 				console.log(res.data.data);
 				this.setState({ suggestions: res.data.data });

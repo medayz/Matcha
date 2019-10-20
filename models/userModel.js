@@ -100,7 +100,7 @@ module.exports = {
 	},
 	filterUsers: async (params) => {
 		return await query.getAllSpecialNodes(
-			"MATCH (u1:User {username: $username})-[]->(t:Tag)<-[]-(u2:User) WITH count(DISTINCT t) AS c, round(distance(u1.location, u2.location)/1000) AS dist, duration.between(date(u2.birthDate), date()).years AS age, u2.username AS name WHERE dist <= $distance AND age >= $ageMin AND age <= $ageMax MATCH (u2)-[]->(p:Picture {isProfilePicture: 'true'}) RETURN collect({ntags: c, username: name, pic: p.name, distance: dist, age: age})",
+			"MATCH (u1:User {username: $username})-[]->(t:Tag)<-[]-(u2:User) WITH count(DISTINCT t) AS c, round(distance(u1.location, u2.location)/1000) AS dist, duration.between(date(u2.birthDate), date()).years AS age, u2.username AS name WHERE dist <= $distance AND age >= $ageMin AND age <= $ageMax AND c >= $tags MATCH (u2)-[]->(p:Picture {isProfilePicture: 'true'}) RETURN collect({ntags: c, username: name, pic: p.name, distance: dist, age: age})",
 			params
 		);
 	},

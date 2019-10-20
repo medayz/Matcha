@@ -20,13 +20,13 @@ const stylebtn = {
 
 class Filters extends Component {
 	state = {
-		agefilter: [18, 25],
+		ageFilter: [18, 25],
 		tagsFilter : 2,
 		distanceFilter : 10,
 	}
 
 	filterAge = (e, newValue) => {
-		this.setState({agefilter: newValue});
+		this.setState({ageFilter: newValue});
 	};
 
 	filterLocation = (e, newValue) => {
@@ -44,7 +44,7 @@ class Filters extends Component {
 				<FormGroup>
 					<Typography id="range-slider" gutterBottom>Age</Typography>
 					<Slider
-						value={this.state.agefilter}
+						value={this.state.ageFilter}
 						onChange={this.filterAge}
 						min={0}
 						max={55}

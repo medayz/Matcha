@@ -344,7 +344,8 @@ module.exports = {
 			username: req.username,
 			distance: req.body.distance || 10,
 			ageMin: req.body.ageMin || 18,
-			ageMax: req.body.ageMax || 25
+			ageMax: req.body.ageMax || 25,
+			tags: req.body.tags || 2
 		};
 		userModel
 			.filterUsers(params)
