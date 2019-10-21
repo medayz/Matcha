@@ -51,7 +51,19 @@ class Home extends Component {
 			.then(res => {
 				this.setState({ suggestions: res.data.data });
 			})
-			.catch(err => console.log(err));
+			.catch(err => {
+				this.setState({tokenErr : true});
+			});
+	}
+
+	async componentDidMount () {
+		await axios.get('/api/users/whoami')
+        .then(res => {
+            
+        })
+        .catch(err => {
+            this.setState({tokenErr : true});
+        })
 	}
 
 	render() {

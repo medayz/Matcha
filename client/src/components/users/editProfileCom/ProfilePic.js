@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { addPic } from "../../../helpers/addImg";
-import axios from "axios";
 
 
 class Alertmsgerror extends Component{

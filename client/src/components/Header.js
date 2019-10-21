@@ -4,23 +4,18 @@ import "./../css/profile.css";
 import { connect } from 'react-redux';
 import axios from 'axios';
 import { user_state } from "../actions/connected";
+import { Redirect } from "react-router-dom";
 
 class Header extends Component {
 
   state = {
     connected: false,
-    whoami: ""
+    whoami: "",
+    show: false,
+    toLogin: false,
   };
 
   async componentDidMount () {
-      await axios
-        .get("/api/users/isLoggedOn")
-        .then(res => {
-            this.props.user_state(true);
-            })
-        .catch(err => {
-          this.props.user_state(false);
-          })
       await axios.get('/api/users/whoami')
         .then(res => {
           this.setState({
@@ -30,6 +25,17 @@ class Header extends Component {
         .catch(er => {
           
         })
+      await axios
+        .get("/api/users/isLoggedOn")
+        .then(res => {
+            this.props.user_state(true);
+            })
+        .catch(err => {
+          this.props.user_state(false);
+          this.setState({toLogin : true})
+          })
+      console.log(this.state.whoami);
+      this.setState({show : true});
   }
 
   componentDidUpdate () {
@@ -40,8 +46,12 @@ class Header extends Component {
 
   render() {
     return (
+      
       <nav className="navbar navbar-expand-sm navbar-dark bg-primary mb-3 py-0">
+      {this.state.toLogin && <Redirect to={`/login`} />}
+      {this.state.show &&
         <div className="container">
+          
           <Link to="/" className="navbar-brand">
             Matcha
           </Link>
@@ -98,7 +108,7 @@ class Header extends Component {
               )}
             </ul>
           </div>
-        </div>
+        </div>}
       </nav>
     );
   }

@@ -69,7 +69,10 @@ class Profileuser extends Component {
 
   async componentDidMount() {
 	try {
-        let res = await axios.get(`/api/users/get/${this.state.user}`);
+        let res = await axios.get(`/api/users/get/${this.state.user}`)
+                    .catch(er => {
+                    this.setState({redirect: true});    
+                });
 		this.setState({data: res.data.data});
 		res = await getUserTags(this.state.user);
 		this.setState({tags: res.data.data});

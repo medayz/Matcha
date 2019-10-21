@@ -5,8 +5,7 @@ import Chip from '@material-ui/core/Chip';
 import TextField from '@material-ui/core/TextField';
 import SendIcon from '@material-ui/icons/Send';
 import io from 'socket.io-client';
-import Avatar from '@material-ui/core/Avatar';
-import Grid from '@material-ui/core/Grid';
+import { Redirect } from "react-router-dom";
 
 const iconstyle = {
     float: 'right',
@@ -57,7 +56,8 @@ class Chats extends Component {
         to: "Choose a conversation",
         from: "",
         conversation : [],
-        socket : ''
+        socket : '',
+        redirect: false
     }
 
     onChange = async e => {
@@ -149,39 +149,36 @@ class Chats extends Component {
                 from : res.data.user
             })
         })
-        /*let pics = await axios.get(`/api/pics/get/${this.state.from}`);
-		pics = pics.data.data;
-        this.setState({pp : pics.filter(img => img.ispp === "true")});*/
+        .catch(err => {
+            this.setState({redirect : true});
+        })
         await axios
         .get(`/api/chats/get/${this.state.from}`)
         .then ( async (res) => {
             await this.mapOnChats(res.data.data).then(res => {
                 this.setState({usernames : res});
             });
-            this.setState({socket : io(':1337', {query: `owner=${this.state.from}`})})
+            this.setState({socket : io(':1337', {query: `owner=${this.state.from}`})});
+            this.state.socket.on('msg', (data) => {
+                let allmsg = this.state.conversation;
+                allmsg.push(data);
+                if ((allmsg[0].sender === this.state.to) || (allmsg[0].receiver === this.state.to))
+                    this.setState({conversation : allmsg});
+                else
+                    this.setState({conversation : []});
+            });
         })
         .catch(err => {
-            console.log(err);
+            this.setState({redirect : true});
         })
-        this.state.socket.on('msg', (data) => {
-            let allmsg = this.state.conversation;
-            allmsg.push(data);
-            if ((allmsg[0].sender === this.state.to) || (allmsg[0].receiver === this.state.to))
-                this.setState({conversation : allmsg});
-            else
-                this.setState({conversation : []});
-        });
-        /*
-        
-                                    <span style={{float : "right"}}>{u}</span> 
-                                    <NavigateNextIcon onClick={(e) => this.switchconv(u)} style={iconstyle} />
-        */
-        //<Avatar alt="profilepic" src={`/userPics/${this.state.pp[0].filename}`} />
+        //<span style={styleDate}>{msg.time.hour.low}:{msg.time.minute.low}</span>
     }
 
     render() {
         return (
             <div className="container-fluid">
+                {this.state.redirect && <Redirect to={`/login`} />}
+                {!this.state.redirect &&
                 <div className="row">
                     <div className="col-md-4">
                         <div className="card" style={{margin : '20px'}}>
@@ -215,7 +212,7 @@ class Chats extends Component {
                                         <div key={index}>
                                             {(msg.receiver === this.state.from
                                                 && <div><Chip label={msg.body} style={{marginTop: '3%'}} color="primary" variant="outlined" /> </div>)
-                                                || <div><span style={styleDate}>{msg.time.hour.low}:{msg.time.minute.low}</span><Chip  label={msg.body}  color="primary" style={mymsgStyle}/></div>}
+                                                || <div><Chip  label={msg.body}  color="primary" style={mymsgStyle}/></div>}
                                             <br />
                                             <br />
                                         </div>    
@@ -238,7 +235,7 @@ class Chats extends Component {
                             </div>
                         </div>
                     </div>
-                </div>
+                </div>}
             </div>
         );
   } 
