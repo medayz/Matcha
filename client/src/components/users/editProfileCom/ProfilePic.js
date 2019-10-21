@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { addPic } from "../../../helpers/addImg";
+import axios from "axios";
 
 
 class Alertmsgerror extends Component{
@@ -36,18 +37,20 @@ export default class ProfilePic extends Component {
     pp : this.props.pp
   }
   uploadProfileImg = async e => {
-    let img = e.target.files[0];
+     let img = e.target.files[0];
      if (img.name.match(/\.(jpg|jpeg|png)$/)) {
       var formData = new FormData();
       formData.append("profileImg", img);
       formData.append("isProfilePic", true);
-      addPic(formData)
+      await addPic(formData)
         .then(({ data }) => {
-          let img = data.img;
+          /*axios.post("/api/users/delete/picture")
+          .then(res => {})
+          .catch(err => {});*/
           let imgs = this.state.pp;
-          imgs[0] = img;
-          this.setState({pics : imgs});
+          imgs.filename = data.img.filename;
           this.setState({msguploadimage : data.status});
+          this.setState({pp : imgs});
           this.setState({err : true});
         })
         .catch(err => {

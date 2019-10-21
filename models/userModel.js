@@ -52,7 +52,7 @@ module.exports = {
 	addUser: async newUser => {
 		newUser.pass = await password.hash(newUser.pass);
 		await query.execute(
-			"CREATE (u:User {emailToken: $emailToken, lName: $lName, activated: $active, fName: $fName, email: $email, username: $username, pwd: $pwd})-[:UPLOADED]->(:Picture {name: 'default.png', isProfilePicture: true, date: date()})",
+			"CREATE (u:User {emailToken: $emailToken, lName: $lName, activated: $active, fName: $fName, email: $email, username: $username, pwd: $pwd})-[:UPLOADED]->(:Picture {name: 'default.png', isProfilePicture: 'true', date: date()})",
 			{
 				fName: newUser.fName,
 				lName: newUser.lName,
@@ -100,7 +100,7 @@ module.exports = {
 	},
 	filterUsers: async (params) => {
 		return await query.getAllSpecialNodes(
-			"MATCH (u1:User {username: $username})-[]->(t:Tag)<-[]-(u2:User)-[]->(p:Picture {`isProfilePicture`: true}) WITH count(DISTINCT t) AS c, round(distance(u1.location, u2.location)/1000) AS dist, duration.between(date(u2.birthDate), date()).years AS age, u2.username AS name, p.name AS pp WHERE dist <= $distance AND age >= $ageMin AND age <= $ageMax AND c >= $tags RETURN collect({ntags: c, username: name, pic: pp, distance: dist, age: age})",
+			"MATCH (u1:User {username: $username})-[]->(t:Tag)<-[]-(u2:User)-[]->(p:Picture {`isProfilePicture`: 'true'}) WITH count(DISTINCT t) AS c, round(distance(u1.location, u2.location)/1000) AS dist, duration.between(date(u2.birthDate), date()).years AS age, u2.username AS name, p.name AS pp WHERE dist <= $distance AND age >= $ageMin AND age <= $ageMax AND c >= $tags RETURN collect({ntags: c, username: name, pic: pp, distance: dist, age: age})",
 			params
 		);
 	},
@@ -171,7 +171,7 @@ module.exports = {
 	delete: {
 		picture: async (params) => {
 			await query.execute(
-				"MATCH (u:User {username: $username})-[r:UPLOADED]->(p) WHERE p.name=$filename DELETE r, p",
+				"MATCH (u:User {username: $username})-[r:UPLOADED {}]->(p:Picture {isProfilePicture: 'true'}) DELETE r,p",
 				params
 			);
 		},

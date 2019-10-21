@@ -287,7 +287,14 @@ module.exports = {
 					const err = new Error("You can't upload more than 4 pictures");
 					err.status = 400;
 				}
-				await userModel.add.picture(params);
+				if (params.isProfilePic === "true")
+				{
+					let deleteObj = {
+						username: req.username
+					}
+					await userModel.delete.picture(deleteObj);
+				}
+				await userModel.add.picture(params)
 				res.status(200).json({
 					status: 200,
 					msg: "Image modified !",
@@ -530,8 +537,7 @@ module.exports = {
 	delete: {
 		picture: async (req, response, next) => {
 			const params = {
-				username: req.username || "",
-				filename: req.body.filename || ""
+				username: req.username
 			};
 			userModel.delete
 				.picture(params)
@@ -577,26 +583,23 @@ module.exports = {
 	like : async (req, response) =>  {
 		let user1 = req.username;
 		let user2 = req.body.to;
-		userModel.likeUser(user1, user2)
-		.then((res) => {
+		await userModel.likeUser(user1, user2)
+		.then( (res) => {
 			let ResUser1 = res.user1;
 			let ResUser2 = res.user2;
 			if (ResUser1 === null)
 			{
 				if (ResUser2 !== null)
-				{
-					chatModel.addChat(user1,user2).catch(err => {});
-				}
+					 chatModel.addChat(user1,user2).catch(err => {});
 				response.status(200).json({
 					status: 200,
 					like: true
-				});
+				});	
 			}
 			else
 			{
 				userModel.disLikeUser(user1, user2)
 					.then(res => {
-						
 						response.status(200).json({
 							status: 200,
 							like: false

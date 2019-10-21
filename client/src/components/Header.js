@@ -8,11 +8,12 @@ import { user_state } from "../actions/connected";
 class Header extends Component {
 
   state = {
-    connected: false
+    connected: false,
+    whoami: ""
   };
 
-  componentDidMount () {
-      axios
+  async componentDidMount () {
+      await axios
         .get("/api/users/isLoggedOn")
         .then(res => {
             this.props.user_state(true);
@@ -20,6 +21,15 @@ class Header extends Component {
         .catch(err => {
           this.props.user_state(false);
           })
+      await axios.get('/api/users/whoami')
+        .then(res => {
+          this.setState({
+              whoami : res.data.user
+          })
+        })
+        .catch(er => {
+          
+        })
   }
 
   componentDidUpdate () {
@@ -53,8 +63,15 @@ class Header extends Component {
               )}
               {this.state.connected && (
                 <li className="nav-item">
-                  <Link to={`/profile/users/`} className="nav-link">
+                  <Link to={`/profile/${this.state.whoami}`} className="nav-link">
                     profile
+                  </Link>
+                </li>
+              )}
+              {this.state.connected && (
+                <li className="nav-item">
+                  <Link to={'/chats'} className="nav-link">
+                    Chat
                   </Link>
                 </li>
               )}

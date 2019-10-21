@@ -81,12 +81,11 @@ class EditProfile extends Component {
 		formData.append("isProfilePic", false);
 		addPic(formData)
 			.then(({ data }) => {
-				console.log("hey");
 				this.setState({msguploadimage : data.status});
 				let imgs = this.state.pics;
+				data.img.isProfilePic = false;
 				imgs.push(data.img);
 				this.setState({pics : imgs});
-				console.log(this.state.pics.length);
 				if (this.state.pics.length === 4)
 					this.setState({addlogo : false});
 				this.setState({err : true});
@@ -97,7 +96,6 @@ class EditProfile extends Component {
 		}
 		else
 			this.setState({err : false});
-		console.log(this.state.pics);
 		setTimeout(() => {
 		this.setState({err : 'not yet'});
 		}, 3000);
@@ -139,9 +137,8 @@ class EditProfile extends Component {
 				user.email && this.setState({ email: user.email });
 				let pics = await axios.get(`/api/pics/get/${user.username}`);
 				pics = pics.data.data;
-				console.log(pics);
-				this.setState({pics : pics.filter(img => !img.ispp)});
-				this.setState({pp : pics.filter(img => img)});
+				this.setState({pics : pics.filter(img => img.ispp === "false")});
+				this.setState({pp : pics.filter(img => img.ispp === "true")});
 				this.setState({ visible: true });
 			}
 		} catch(err) {
