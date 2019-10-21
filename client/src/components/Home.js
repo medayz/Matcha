@@ -13,14 +13,22 @@ class Home extends Component {
 		dataprofile : {},
 		suggestions: [],
 		tokenErr : false
-	}
+	};
 
-	changeSorting = () => {
-		alert("Sorting");
+	changeSorting = (e, sortingCriteria) => {
+
+		if (!sortingCriteria) return null;
+		const sortFuncs = {
+			tags: (a, b) => b.ntags - a.ntags,
+			distance: (a, b) => a.distance - b.distance,
+			age: (a, b) => a.age - b.age
+		};
+		this.setState({
+			suggestions: this.state.suggestions.sort(sortFuncs[sortingCriteria]).slice()
+		});
 	};
 
 	toProfile = async (username) => {
-		console.log('hbkrelke: ',username);
 		axios.get(`/api/users/get/${username}`)
 			.then (res => {
 				this.setState({dataprofile: res.data.data});
@@ -59,7 +67,7 @@ class Home extends Component {
 				<div className="container">
 					<div className="row" >
 						<div className="col-md-1" />
-						<Sort changeSorting={this.changeSorting} />
+							<Sort changeSorting={this.changeSorting} />
 						<div className="col-md-2" />
 						<div className="col-md-4">
 							<Filters filterFunction={this.filter}/>

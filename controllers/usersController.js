@@ -287,7 +287,7 @@ module.exports = {
 					const err = new Error("You can't upload more than 4 pictures");
 					err.status = 400;
 				}
-				await userModel.add.picture(params)
+				await userModel.add.picture(params);
 				res.status(200).json({
 					status: 200,
 					msg: "Image modified !",
