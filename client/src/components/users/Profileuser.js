@@ -15,9 +15,12 @@ import BlockIcon from '@material-ui/icons/Block';
 import ReportIcon from '@material-ui/icons/Report';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import FavoriteIcon from '@material-ui/icons/Favorite';
+import SettingsIcon from '@material-ui/icons/Settings';
 import AssignmentIcon from '@material-ui/icons/Assignment';
 import { Carousel } from 'react-responsive-carousel';
 import "react-responsive-carousel/lib/styles/carousel.min.css";
+//import { runInThisContext } from 'vm';
+import { Redirect } from "react-router-dom";
 
 const avatarcss = {
     width: '140px',
@@ -41,15 +44,23 @@ class Profileuser extends Component {
     pp: {},
     pics: {},
     like: true,
+    whoami: "",
+    redirect: false
+  }
+
+  toEditProfile = () => {
+      this.setState({redirect : true});
   }
 
   like = async () => {
     let user = {
         to: this.state.user
     };
+    console.log("outside");
     await axios
     .post('/api/users/like', user)
     .then(res => {
+        console.log("inside");
         let like = res.data.like;
         this.setState({like : like});
     })
@@ -64,20 +75,28 @@ class Profileuser extends Component {
 		this.setState({tags: res.data.data});
 		let pics = await axios.get(`/api/pics/get/${this.state.user}`);
 		pics = pics.data.data;
-		this.setState({pics : pics.filter(img => !img.ispp)});
-		this.setState({pp : pics.filter(img => img.ispp)});
+		this.setState({pics : pics.filter(img =>  img.ispp === "false")});
+		this.setState({pp : pics.filter(img => img.ispp === "true")});
 		let user = { to: this.state.user };
 		res = await axios.post('/api/users/stateOfLike', user)
 		this.setState({like : res.data.like});
-		this.setState({ visible: true });
+        this.setState({ visible: true });
+        await axios.get('/api/users/whoami')
+        .then(res => {
+            this.setState({
+                whoami : res.data.user
+            })
+        })
 	} catch(err) {
 		console.log(err.message);
-	}
+    }
+    console.log(this.state.pics)
   }
 
   render() {
     return (
         <div className="container-fluid">
+            {this.state.redirect && <Redirect to={`/profile/edit`} />}
             {
                 this.state.visible &&
                     <div className="row profile">
@@ -91,13 +110,14 @@ class Profileuser extends Component {
                                             <Avatar style={avatarcss} alt="Remy Sharp" src={ `/userPics/${this.state.pp[0].filename}` } />
                                             <br />
                                             <Chip
-                                                label={`${this.state.data.fName} ${this.state.data.lName}`}
+                                                label={`${this.state.user}`}
                                                 color="primary"
                                                 deleteIcon={<DoneIcon />}
                                                 variant="outlined"
                                                 style={{marginTop : '2%', color : "#007bff", borderColor: "#007bff"}}
                                             />
                                             <br /><br />
+                                            {this.state.user !== this.state.whoami &&
                                             <div className="row">
                                                 <div className="col-md-4">
                                                 {!this.state.like
@@ -113,7 +133,18 @@ class Profileuser extends Component {
                                                     <ReportIcon style={{color : "#dc3545", cursor : 'pointer'}}/>
                                                 </div>
                                                 
-                                            </div>
+                                            </div>}
+                                            {this.state.user === this.state.whoami && 
+                                                <div className="row">
+                                                    <div className="col-md-4">
+                                                    </div>
+                                                    <div className="col-md-4">
+                                                        <SettingsIcon onClick={this.toEditProfile} style={{color : "#007bff", cursor : 'pointer'}}/>
+                                                    </div>
+                                                    <div className="col-md-4">
+                                                    </div>
+                                                </div>
+                                            }
                                         </center>
                                     </div>
                                     <div className="col-md-1" />
@@ -173,7 +204,7 @@ class Profileuser extends Component {
                                 <Carousel width="500px">
                                     {this.state.pics.map((p,index) => 
                                         <div key={index}>
-                                            <img src={`/userPics/${p.filename}`}/>
+                                            <img src={`/userPics/${p.filename}`} alt=""/>
                                             <p className="legend">Legend 1</p>
                                         </div>
                                     )}

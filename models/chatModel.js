@@ -13,8 +13,8 @@ module.exports = {
             receiver: receiver
         });
     },
-    addChat: (user1, user2) => {
-        query.execute('MATCH (u1:User {username: $name1}), (u2:User {username: $name2}) CREATE (u1)-[:PARTICIPATE_IN]->(c:Chat {dateLastMsg: date(), timeLastMsg: time(), user1: $name1, user2: $name2})<-[:PARTICIPATE_IN]-(u2);', {
+    addChat: async (user1, user2) => {
+        await query.execute('MATCH (u1:User {username: $name1}), (u2:User {username: $name2}) CREATE (u1)-[:PARTICIPATE_IN]->(c:Chat {dateLastMsg: date(), timeLastMsg: time(), user1: $name1, user2: $name2})<-[:PARTICIPATE_IN]-(u2);', {
             name1: user1,
             name2: user2
         });

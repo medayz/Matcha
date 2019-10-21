@@ -5,6 +5,8 @@ import Chip from '@material-ui/core/Chip';
 import TextField from '@material-ui/core/TextField';
 import SendIcon from '@material-ui/icons/Send';
 import io from 'socket.io-client';
+import Avatar from '@material-ui/core/Avatar';
+import Grid from '@material-ui/core/Grid';
 
 const iconstyle = {
     float: 'right',
@@ -20,6 +22,8 @@ const scroll = {
     marginTop: '1%'
 
 }
+
+
 
 const styleinput = {
     width: '85%'
@@ -37,6 +41,13 @@ const sendstyle = {
 const convstyle= {
     backgroundColor: 'white',
     padding: '1%'
+}
+
+const styleDate = {
+    float: 'right',
+    fontSize: 'x-small',
+    marginTop: '1%',
+    marginLeft: '1%'
 }
 
 class Chats extends Component {
@@ -72,6 +83,7 @@ class Chats extends Component {
                     receiver: m.props.receiver,
                     body: m.props.body,
                     date: m.props.date,
+                    time: m.props.time
                 }
                 return (obj);
             });
@@ -89,6 +101,7 @@ class Chats extends Component {
                 let conv = res;
                 conv = conv.reverse();
                 this.setState({conversation : conv});
+                
             });
             
         })
@@ -136,6 +149,9 @@ class Chats extends Component {
                 from : res.data.user
             })
         })
+        /*let pics = await axios.get(`/api/pics/get/${this.state.from}`);
+		pics = pics.data.data;
+        this.setState({pp : pics.filter(img => img.ispp === "true")});*/
         await axios
         .get(`/api/chats/get/${this.state.from}`)
         .then ( async (res) => {
@@ -155,20 +171,38 @@ class Chats extends Component {
             else
                 this.setState({conversation : []});
         });
+        /*
+        
+                                    <span style={{float : "right"}}>{u}</span> 
+                                    <NavigateNextIcon onClick={(e) => this.switchconv(u)} style={iconstyle} />
+        */
+        //<Avatar alt="profilepic" src={`/userPics/${this.state.pp[0].filename}`} />
     }
 
     render() {
         return (
             <div className="container-fluid">
                 <div className="row">
-                    <div className="col-md-3">
+                    <div className="col-md-4">
                         <div className="card" style={{margin : '20px'}}>
                             <ul className="list-group list-group-flush">
-                                {this.state.usernames.map(u => <li key={u} className="list-group-item">{u} <NavigateNextIcon onClick={(e) => this.switchconv(u)} style={iconstyle} /></li>)}
+                                {this.state.usernames.map(u => 
+                                <li key={u} className="list-group-item"> 
+                                
+                                    <div className="row">
+                                        <div className="col-md-10">
+                                            <span style={{float : "left"}}>{u}</span> 
+                                        </div>
+                                        <div className="col-md-2">
+                                            <NavigateNextIcon onClick={(e) => this.switchconv(u)} style={iconstyle} />
+                                        </div>
+                                    </div>
+                                
+                                </li>)}
                             </ul>
                         </div>
                     </div>
-                    <div className="col-md-8">
+                    <div className="col-md-7">
                         <div>
                             <div style={convstyle}>
                                 <div className="card" >
@@ -180,8 +214,8 @@ class Chats extends Component {
                                     {this.state.conversation.map((msg, index) => 
                                         <div key={index}>
                                             {(msg.receiver === this.state.from
-                                                && <Chip label={msg.body} style={{marginTop: '3%'}} color="primary" variant="outlined" />)
-                                                || <Chip  label={msg.body}  color="primary" style={mymsgStyle}/>}
+                                                && <div><Chip label={msg.body} style={{marginTop: '3%'}} color="primary" variant="outlined" /> </div>)
+                                                || <div><span style={styleDate}>{msg.time.hour.low}:{msg.time.minute.low}</span><Chip  label={msg.body}  color="primary" style={mymsgStyle}/></div>}
                                             <br />
                                             <br />
                                         </div>    
