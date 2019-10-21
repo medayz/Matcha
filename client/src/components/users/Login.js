@@ -58,7 +58,7 @@ class Login extends Component {
               .get(`http://ipinfo.io/${ip}?token=${ipinfo_token}`)
               .then(
                 res => {
-                  const [long, lat] = res.data.loc.split(',');
+                  const [lat, long] = res.data.loc.split(',');
                   const location = {
                     long: Number(long),
                     lat: Number(lat),
@@ -68,11 +68,10 @@ class Login extends Component {
                   axios
                     .post('/api/users/add/location', location, head)
                     .catch(err => console.log(err));
-                  // console.log(location);
                 }
               )
               .catch(err => {
-                // console.log(err.code);
+                console.log(err.message);
               });
           });
         }
