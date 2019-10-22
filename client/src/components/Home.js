@@ -5,7 +5,6 @@ import SuggestionCard from './SuggestionCard';
 import Filters from './Filters';
 import Sort from './Sort';
 import { Redirect } from 'react-router';
-import { btnColor } from "../css/styleClasses";
 
 class Home extends Component {
 

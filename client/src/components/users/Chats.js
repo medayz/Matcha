@@ -42,13 +42,6 @@ const convstyle= {
     padding: '1%'
 }
 
-const styleDate = {
-    float: 'right',
-    fontSize: 'x-small',
-    marginTop: '1%',
-    marginLeft: '1%'
-}
-
 class Chats extends Component {
     state = {
         msg: [],

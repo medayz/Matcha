@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Chip from '@material-ui/core/Chip';
-import DoneIcon from '@material-ui/icons/Done';
 import axios from 'axios';
 import { getUserTags } from "../../helpers/getUserTags";
 import Divider from "@material-ui/core/Divider";
@@ -10,7 +9,6 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 import Location from "@material-ui/icons/LocationCity";
-//import Gender from "@material-ui/icons/SupervisedUserCircle";
 import BlockIcon from '@material-ui/icons/Block';
 import ReportIcon from '@material-ui/icons/Report';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
@@ -19,7 +17,6 @@ import SettingsIcon from '@material-ui/icons/Settings';
 import AssignmentIcon from '@material-ui/icons/Assignment';
 import { Carousel } from 'react-responsive-carousel';
 import "react-responsive-carousel/lib/styles/carousel.min.css";
-//import { runInThisContext } from 'vm';
 import { Redirect } from "react-router-dom";
 import { writeColor, iconColor, likeColor, avatarColor } from "../../css/styleClasses";
 
@@ -28,12 +25,6 @@ const avatarcss = {
     height: '140px',
     maxWidth: '140px',
     maxHeight: '140px',
-}
-
-const cssName = {
-    fontStyle: 'initial',
-    fontFamily: "-webkit-body",
-    color: '#007bff'
 }
 
 class Profileuser extends Component {

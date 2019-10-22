@@ -4,7 +4,7 @@ import FormGroup from "@material-ui/core/FormGroup";
 import FormLabel from "@material-ui/core/FormLabel";
 import Typography from '@material-ui/core/Typography';
 import Slider from '@material-ui/core/Slider';
-import { btnColor, filterColor } from "../css/styleClasses";
+import { filterColor } from "../css/styleClasses";
 
 const styleFilter = {
 	backgroundColor : 'white',
