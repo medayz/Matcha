@@ -198,7 +198,7 @@ class EditProfile extends Component {
 							{this.state.addlogo &&
 							<div className="upload-btn-wrapper">
 								<center>
-								<AddIcon style={addstyle} className="btn222" color="primary" size="large"/>
+								<AddIcon style={addstyle} className="btn222" size="large"/>
 								<input
 									style={fileaddstyle}
 									type="file"

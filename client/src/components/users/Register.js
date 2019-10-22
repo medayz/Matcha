@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import RegisterInput from './RegisterInput';
 import axios from 'axios';
+import { btnColor } from "../../css/styleClasses";
 
 class Register extends Component {
   state = {
@@ -152,73 +153,79 @@ class Register extends Component {
     <div className="container">
         
         <br />
-        <form id="form1" onSubmit={this.onSubmit}>
-          {this.state.registred === 'done' && <div className="alert alert-primary" role="alert"> you will receive an email to confirm your account before you sign in </div>}
-          {this.state.registred === '500' && <div className="alert alert-primary" role="alert"> Unsuccesful registration, please retry! </div>}
-          <br />
-          <RegisterInput 
-              label="First Name"
-              type="text"
-              name="fName"
-              id="firstName"
-              placeholder="Enter first name"
-              err={this.state.errState.fName}
-              value={this.state.fName}
-              onChange={this.onChange}
-          />
-          <RegisterInput 
-              label="Last Name"
-              type="text"
-              name="lName"
-              id="lastName"
-              placeholder="Enter last name"
-              err={this.state.errState.lName}
-              value={this.state.lName}
-              onChange={this.onChange}
-          />
-          <RegisterInput 
-              label="Username"
-              type="text"
-              name="username"
-              id="username"
-              placeholder="Enter username"
-              err={this.state.errState.username}
-              value={this.state.username}
-              onChange={this.onChange}
-          />
-          <RegisterInput 
-              label="Email"
-              type="email"
-              name="email"
-              id="email"
-              placeholder="Enter email"
-              err={this.state.errState.email}
-              value={this.state.email}
-              onChange={this.onChange}
-          />
-          <RegisterInput 
-              label="Password"
-              type="password"
-              name="pass"
-              id="pass"
-              placeholder="Enter password"
-              err={this.state.errState.pass}
-              onChange={this.onChange}
-              value={this.state.pass}
-          />
-          <RegisterInput 
-              label="Confirm password"
-              type="password"
-              name="cPass"
-              id="cPass"
-              placeholder="Confirm password"
-              err={this.state.errState.cPass}
-              onChange={this.onChange}
-              value={this.state.cPass}
-          />
-          <br />
-          <button type="submit" className="btn btn-primary">Submit</button>
-        </form>
+        <div className="row">
+          <div className="col-md-3"></div>
+          <div className="col-md-6">
+            <form id="form1" onSubmit={this.onSubmit}>
+              {this.state.registred === 'done' && <div className="alert alert-primary" role="alert"> you will receive an email to confirm your account before you sign in </div>}
+              {this.state.registred === '500' && <div className="alert alert-primary" role="alert"> Unsuccesful registration, please retry! </div>}
+              <br />
+              <RegisterInput 
+                  label="First Name"
+                  type="text"
+                  name="fName"
+                  id="firstName"
+                  placeholder="Enter first name"
+                  err={this.state.errState.fName}
+                  value={this.state.fName}
+                  onChange={this.onChange}
+              />
+              <RegisterInput 
+                  label="Last Name"
+                  type="text"
+                  name="lName"
+                  id="lastName"
+                  placeholder="Enter last name"
+                  err={this.state.errState.lName}
+                  value={this.state.lName}
+                  onChange={this.onChange}
+              />
+              <RegisterInput 
+                  label="Username"
+                  type="text"
+                  name="username"
+                  id="username"
+                  placeholder="Enter username"
+                  err={this.state.errState.username}
+                  value={this.state.username}
+                  onChange={this.onChange}
+              />
+              <RegisterInput 
+                  label="Email"
+                  type="email"
+                  name="email"
+                  id="email"
+                  placeholder="Enter email"
+                  err={this.state.errState.email}
+                  value={this.state.email}
+                  onChange={this.onChange}
+              />
+              <RegisterInput 
+                  label="Password"
+                  type="password"
+                  name="pass"
+                  id="pass"
+                  placeholder="Enter password"
+                  err={this.state.errState.pass}
+                  onChange={this.onChange}
+                  value={this.state.pass}
+              />
+              <RegisterInput 
+                  label="Confirm password"
+                  type="password"
+                  name="cPass"
+                  id="cPass"
+                  placeholder="Confirm password"
+                  err={this.state.errState.cPass}
+                  onChange={this.onChange}
+                  value={this.state.cPass}
+              />
+              <br />
+              <button type="submit" className="btn" style={btnColor}>Submit</button>
+            </form>
+          </div>
+          <div className="col-md-3"></div>
+        </div>
     </div>
     );
   } 

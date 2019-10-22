@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import RegisterInput from "../RegisterInput";
 import axios from "axios";
+import { btnColor } from "../../../css/styleClasses";
 
 export default class EditUsername extends Component {
   state = {
@@ -65,7 +66,7 @@ export default class EditUsername extends Component {
                 <br />
                 <div className="row">
                   <div className="col">
-                    <button type="submit" className="btn btn-primary">
+                    <button type="submit" className="btn" style={btnColor}>
                       Save
                     </button>
                   </div>

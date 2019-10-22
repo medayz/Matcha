@@ -590,8 +590,6 @@ module.exports = {
 		.then( async (res) => {
 			let ResUser1 = res.user1;
 			let ResUser2 = res.user2;
-			//console.log(ResUser1);
-			//console.log(ResUser2);
 			if (ResUser1 === null)
 			{
 				if (ResUser2 !== null)
@@ -603,14 +601,13 @@ module.exports = {
 			}
 			else
 			{
-				await userModel.disLikeUser(user1, user2)
-					.then(res => {
-						response.status(200).json({
-							status: 200,
-							like: false
-						});
-					})
+				await userModel.disLikeUser(user1, user2);
+				await chatModel.deleteChatRelation(user1,user2);
 				await chatModel.deleteChat(user1,user2);
+				response.status(200).json({
+					status: 200,
+					like: false
+				});
 			}
 		})
 		.catch(err => {

@@ -4,6 +4,7 @@ import FormGroup from "@material-ui/core/FormGroup";
 import FormLabel from "@material-ui/core/FormLabel";
 import Typography from '@material-ui/core/Typography';
 import Slider from '@material-ui/core/Slider';
+import { btnColor, filterColor } from "../css/styleClasses";
 
 const styleFilter = {
 	backgroundColor : 'white',
@@ -15,7 +16,9 @@ const styleFilter = {
 const stylebtn = {
 	width: '100%',
 	margin: '0.3%',
-	marginTop: '3%'
+	marginTop: '3%',
+	backgroundColor: '#ff59fa',
+    color: 'white'
 }
 
 class Filters extends Component {
@@ -48,6 +51,7 @@ class Filters extends Component {
 						onChange={this.filterAge}
 						min={18}
 						max={55}
+						style={filterColor}
 						valueLabelDisplay="auto"
 						aria-labelledby="range-slider"
 					/>
@@ -57,19 +61,21 @@ class Filters extends Component {
 						onChange={this.filterLocation}
 						valueLabelDisplay="auto"
 						aria-labelledby="continuous-slider"
+						style={filterColor}
 					/>
 					<Typography id="continuous-slider" gutterBottom>Tags</Typography>
 					<Slider
 						value={this.state.tagsFilter}
 						onChange={this.filterTags}
 						valueLabelDisplay="auto"
+						style={filterColor}
 						min={1}
 						max={10}
 						aria-labelledby="continuous-slider"
 					/>
 				</FormGroup>
 				<button
-					className="btn btn-primary"
+					className="btn"
 					onClick={() => this.props.filterFunction(this.state)}
 					style={stylebtn}
 					>

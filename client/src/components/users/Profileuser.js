@@ -21,6 +21,7 @@ import { Carousel } from 'react-responsive-carousel';
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 //import { runInThisContext } from 'vm';
 import { Redirect } from "react-router-dom";
+import { writeColor, iconColor, likeColor, avatarColor } from "../../css/styleClasses";
 
 const avatarcss = {
     width: '140px',
@@ -114,26 +115,24 @@ class Profileuser extends Component {
                                             <br />
                                             <Chip
                                                 label={`${this.state.user}`}
-                                                color="primary"
-                                                deleteIcon={<DoneIcon />}
                                                 variant="outlined"
-                                                style={{marginTop : '2%', color : "#007bff", borderColor: "#007bff"}}
+                                                style={avatarColor}
                                             />
                                             <br /><br />
                                             {this.state.user !== this.state.whoami &&
                                             <div className="row">
                                                 <div className="col-md-4">
                                                 {!this.state.like
-                                                    && <FavoriteBorderIcon onClick={this.like} style={{color : "#007bff", cursor : 'pointer'}}/>}
+                                                    && <FavoriteBorderIcon onClick={this.like} style={likeColor}/>}
                                                 {this.state.like
-                                                    && <FavoriteIcon onClick={this.like} style={{color : "#007bff", cursor : 'pointer'}}/>
+                                                    && <FavoriteIcon onClick={this.like} style={likeColor}/>
                                                 }
                                                 </div>
                                                 <div className="col-md-4">
-                                                    <BlockIcon style={{color : "#dc3545", cursor : 'pointer'}}/>
+                                                    <BlockIcon style={iconColor}/>
                                                 </div>
                                                 <div className="col-md-4">
-                                                    <ReportIcon style={{color : "#dc3545", cursor : 'pointer'}}/>
+                                                    <ReportIcon style={iconColor}/>
                                                 </div>
                                                 
                                             </div>}
@@ -142,7 +141,7 @@ class Profileuser extends Component {
                                                     <div className="col-md-4">
                                                     </div>
                                                     <div className="col-md-4">
-                                                        <SettingsIcon onClick={this.toEditProfile} style={{color : "#007bff", cursor : 'pointer'}}/>
+                                                        <SettingsIcon onClick={this.toEditProfile} style={likeColor}/>
                                                     </div>
                                                     <div className="col-md-4">
                                                     </div>
@@ -154,7 +153,7 @@ class Profileuser extends Component {
                                     <div className="col-md-7">
                                         <br />
                                         <center>
-                                            <h2 style={cssName}>
+                                            <h2 style={writeColor}>
                                                 {this.state.data.fName}&nbsp;{this.state.data.lName}
                                             </h2>
                                         </center>

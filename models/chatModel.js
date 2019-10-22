@@ -26,8 +26,14 @@ module.exports = {
             body: msg.body
         });
     },
+    deleteChatRelation: (user1, user2) => {
+        query.execute('MATCH (n:User {username: $name1})-[p1:PARTICIPATE_IN]->(c)<-[p2:PARTICIPATE_IN]-(u:User {username: $name2}) delete p1,p2;', {
+            name1: user1,
+            name2: user2
+        });
+    },
     deleteChat: (user1, user2) => {
-        query.execute('MATCH (n:User {username: $name1})-[p1:PARTICIPATE_IN]->(c)<-[p2:PARTICIPATE_IN]-(u:User {username: $name2}) delete p1,p2,c;', {
+        query.execute('MATCH (c1:Chat {user1: $user1, user2: $user2}), (c2:Chat {user1: $user2, user2: $user1}) delete c1,c2;', {
             name1: user1,
             name2: user2
         });

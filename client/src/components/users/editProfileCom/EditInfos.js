@@ -7,6 +7,7 @@ import axios from "axios";
 import { getAllTags } from "../../../helpers/getAllTags";
 import { getUserTags } from "../../../helpers/getUserTags";
 import { addTags } from "../../../helpers/addTags";
+import { btnColor, tagsColor } from "../../../css/styleClasses";
 
 const tagsErrorStyle = {
   color: "red"
@@ -357,7 +358,7 @@ export default class EditInfos extends Component {
                       onDelete={this.ondeleteTag}
                       onChange={this.handleChangeTag}
                       className="mr-1 mb-1"
-                      color="primary"
+                      style={tagsColor}
                     />
                   );
                 })}{" "}
@@ -366,7 +367,7 @@ export default class EditInfos extends Component {
             <br />
             <div className="row">
               <div className="col">
-                <button type="submit" className="btn btn-primary">
+                <button type="submit" className="btn" style={btnColor}>
                   Save{" "}
                 </button>{" "}
               </div>{" "}
