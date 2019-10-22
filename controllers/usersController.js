@@ -281,6 +281,8 @@ module.exports = {
 				filename: req.file.filename,
 				isProfilePic: req.body.isProfilePic
 			};
+			
+
 			try {
 				const npics = await pictureModel.countUserPics(params.username);
 				if (npics === 4) {
@@ -290,9 +292,9 @@ module.exports = {
 				if (params.isProfilePic === "true")
 				{
 					let deleteObj = {
-						username: req.username
+						username: req.username,
 					}
-					await userModel.delete.picture(deleteObj);
+					await userModel.delete.pictureProf(deleteObj);
 				}
 				await userModel.add.picture(params)
 				res.status(200).json({
@@ -537,7 +539,8 @@ module.exports = {
 	delete: {
 		picture: async (req, response, next) => {
 			const params = {
-				username: req.username
+				username: req.username || "",
+				filename: req.body.filename || ""
 			};
 			userModel.delete
 				.picture(params)

@@ -171,7 +171,13 @@ module.exports = {
 	delete: {
 		picture: async (params) => {
 			await query.execute(
-				"MATCH (u:User {username: $username})-[r:UPLOADED {}]->(p:Picture {isProfilePicture: 'true'}) DELETE r,p",
+				"MATCH (u:User {username: $username})-[r:UPLOADED {}]->(p:Picture {name: $filename})  delete r,p",
+				params
+			);
+		},
+		pictureProf: async (params) => {
+			await query.execute(
+				"MATCH (u:User {username: $username})-[r:UPLOADED {}]->(p:Picture {isProfilePicture: 'true'})  delete r,p",
 				params
 			);
 		},
