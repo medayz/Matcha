@@ -15,16 +15,15 @@ class Header extends Component {
     toLogin: false,
   };
 
+  logout = () => {
+    axios
+      .get('/api/users/logout')
+      .then(res => this.props.user_state(false));
+    this.setState({whoami: ""});
+    this.setState({toLogin: true}); 
+  }
+  
   async componentDidMount () {
-      await axios.get('/api/users/whoami')
-        .then(res => {
-          this.setState({
-              whoami : res.data.user
-          })
-        })
-        .catch(er => {
-          
-        })
       await axios
         .get("/api/users/isLoggedOn")
         .then(res => {
@@ -38,10 +37,23 @@ class Header extends Component {
       this.setState({show : true});
   }
 
-  componentDidUpdate () {
+  async componentDidUpdate () {
+
     let stateuser = this.props.userState;
     if (stateuser !== this.state.connected)
+    {
+      axios.get('/api/users/whoami')
+        .then(res => {
+          this.setState({
+              whoami : res.data.user
+          });
+        })
+        .catch(err => {
+          console.log(err.message);
+        });
       this.setState({connected : stateuser});
+      console.log("did Update");
+    }
   }
 
   render() {
@@ -100,10 +112,10 @@ class Header extends Component {
                 </li>
               )*/}
               {this.state.connected && (
-                <li className="nav-item">
-                  <Link to="/logout" className="nav-link">
+                <li className="nav-item" onClick={this.logout}>
+                  <Link to={`/login`} className="nav-link">
                     Logout
-                  </Link>
+                  </Link> 
                 </li>
               )}
             </ul>

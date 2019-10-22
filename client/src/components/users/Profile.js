@@ -30,7 +30,6 @@ class Profile extends Component {
   };
 
   async UNSAFE_componentWillMount() {
-    // const user = "hamid";
     await axios.get(`/api/users/get`).then(res => {
       if (res.data.data) {
         const user = res.data.data;

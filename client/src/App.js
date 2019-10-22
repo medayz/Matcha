@@ -5,7 +5,7 @@ import Login  from './components/users/Login';
 import editProfile  from './components/users/editProfile';
 import ConfirmAcc from './components/users/ConfirmAcc'
 import Profile from './components/users/Profile'
-import Logout from './components/users/Logout'
+// import Logout from './components/users/Logout'
 import Profileuser from './components/users/Profileuser'
 import Home from './components/Home'
 import Chats from './components/users/Chats'
@@ -27,7 +27,7 @@ class App extends Component {
             <Route exact path="/confirmAcc/:username/:token" component={ConfirmAcc}/>
             <Route exact path="/profile/users/" component={Profile}/>
             <Route exact path="/profile/:username" component={Profileuser}/>
-            <Route exact path="/logout" component={Logout}/>
+            <Route exact path="/logout" component={Login}/>
             <Route exact path="/chats" component={Chats}/>
           </Switch>
         </Router>
