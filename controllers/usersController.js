@@ -42,7 +42,14 @@ module.exports = {
 					username,
 					email,
 					country,
-					city
+					city,
+					activated,
+					bio,
+					gender,
+					sexualPref,
+					birthDate,
+					userRegion,
+					userCountry
 				} = results.props;
 				results = {
 					username: username,
@@ -50,7 +57,14 @@ module.exports = {
 					lName: lName,
 					email: email,
 					country: country,
-					city: city
+					city: city,
+					activated: activated,
+					bio: bio,
+					gender: gender,
+					sexualPref: sexualPref,
+					birthDate: birthDate,
+					userRegion: userRegion,
+					userCountry: userCountry
 				};
 				if (results) {
 					response.json({
@@ -68,13 +82,19 @@ module.exports = {
 		userModel
 			.getUser(req.params.username)
 			.then(results => {
-				let { lName, fName, username, country, city } = results.props;
+				let { lName, fName, username, country, city, userRegion, userCountry, sexualPref, gender, birthDate, bio  } = results.props;
 				results = {
 					username: username,
 					fName: fName,
 					lName: lName,
 					country: country,
-					city: city
+					city: city,
+					userRegion: userRegion,
+					userCountry: userCountry,
+					sexualPref: sexualPref,
+					gender: gender,
+					birthDate: birthDate,
+					bio: bio
 				};
 				if (results) {
 					response.json({
@@ -380,12 +400,15 @@ module.exports = {
 					? req.body.sexualPref.trim()
 					: "",
 				bio: req.body.bio ? req.body.bio.trim() : "",
-				birthDate: req.body.birthDate
+				birthDate: req.body.birthDate,
+				userCountry: req.body.userCountry ? req.body.userCountry.trim() : "",
+				userRegion: req.body.userRegion ? req.body.userRegion.trim() : ""
 			};
 			params.err = {
 				fName: validator.firstName(params.fName),
 				lName: validator.lastName(params.lName)
 			};
+			console.log(params);
 			if (!Object.values(params.err).filter(obj => obj !== "").length) {
 				userModel.edit
 					.infos(req.username, params)

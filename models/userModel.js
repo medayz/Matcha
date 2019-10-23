@@ -127,7 +127,7 @@ module.exports = {
 	edit: {
 		infos: async (username, newInfos) => {
 			await query.execute(
-				"MATCH (u:User {username: $username}) SET u.lName = $lName, u.fName = $fName, u.gender = $gender, u.sexualPref = $sexualPref, u.bio = $bio, u.birthDate = $birthDate;",
+				"MATCH (u:User {username: $username}) SET u.userRegion = $userRegion, u.userCountry = $userCountry, u.lName = $lName, u.fName = $fName, u.gender = $gender, u.sexualPref = $sexualPref, u.bio = $bio, u.birthDate = $birthDate;",
 				{
 					username: username,
 					fName: newInfos.fName,
@@ -135,7 +135,9 @@ module.exports = {
 					gender: newInfos.gender,
 					sexualPref: newInfos.sexualPref,
 					bio: newInfos.bio,
-					birthDate: newInfos.birthDate
+					birthDate: newInfos.birthDate,
+					userRegion: newInfos.userRegion,
+					userCountry: newInfos.userCountry
 				}
 			);
 		},

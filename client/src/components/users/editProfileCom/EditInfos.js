@@ -8,10 +8,17 @@ import { getAllTags } from "../../../helpers/getAllTags";
 import { getUserTags } from "../../../helpers/getUserTags";
 import { addTags } from "../../../helpers/addTags";
 import { btnColor, tagsColor } from "../../../css/styleClasses";
+import { CountryDropdown, RegionDropdown, CountryRegionData } from 'react-country-region-selector';
 
 const tagsErrorStyle = {
   color: "red"
 };
+
+const regionStyle = {
+    width: "100%",
+    height: "34px",
+    backgroundColor: "white"
+}
 
 export default class EditInfos extends Component {
   state = {
@@ -29,7 +36,10 @@ export default class EditInfos extends Component {
     options: [],
     optionsUser: [],
     tagsExit: "",
-    visible: false
+    visible: false,
+    genderArr: ["Male", "Female", "Other"],
+    country: '',
+    region: ''
   };
 
   onChange = e => {
@@ -117,6 +127,14 @@ export default class EditInfos extends Component {
     console.log("tag will be deleted");
   };
 
+  selectCountry (val) {
+    this.setState({ country: val });
+  }
+ 
+  selectRegion (val) {
+    this.setState({ region: val });
+  }
+
   handleBirthday = e => {
     this.setState({ birthDate: e.currentTarget.value });
   };
@@ -129,13 +147,17 @@ export default class EditInfos extends Component {
     this.setState({ gender: e.currentTarget.value });
   };
 
+  handleSexual = e => {
+    this.setState({ sexualPref: e.currentTarget.value });
+  }
+
   async UNSAFE_componentWillMount() {
     await axios
       .get(`/api/users/get`)
       .then(res => {
         if (res.data.data) {
           const user = res.data.data;
-          //console.log(user);
+          console.log(user);
           user.fName && this.setState({ fName: user.fName });
           user.lName && this.setState({ lName: user.lName });
           user.gender && this.setState({ gender: user.gender });
@@ -143,6 +165,8 @@ export default class EditInfos extends Component {
           user.bio && this.setState({ bio: user.bio });
           user.sexualPref && this.setState({ sexualPref: user.sexualPref });
           user.birthDate && this.setState({ birthDate: user.birthDate });
+          user.userRegion && this.setState({region: user.userRegion});
+          user.userCountry && this.setState({country: user.userCountry});
           this.setState({ visible: true });
           this.callTags();
           this.calluserTags();
@@ -164,7 +188,9 @@ export default class EditInfos extends Component {
       activeLocation: this.state.activeLocation,
       bio: this.state.bio,
       birthDate: this.state.birthDate,
-      sexualPref: this.state.sexualPref
+      sexualPref: this.state.sexualPref,
+      userCountry: this.state.country,
+      userRegion: this.state.region
     };
     console.log(usr);
     if (usr.activeLocation === "1") usr.activeLocation = true;
@@ -236,31 +262,34 @@ export default class EditInfos extends Component {
             <br />
             <div className="row">
               <div className="col">
-                <label> Gender </label>{" "}
+                <label> *Gender </label>{" "}
                 <select
                   id="gender"
-                  defaultValue={this.state.gender}
+                  value={this.state.gender}
                   onChange={this.handleGender}
                   className="form-control"
                 >
-                  <option value="Male"> Male </option>{" "}
-                  <option value="Female"> Female </option>{" "}
-                  <option value="Other"> Other </option>{" "}
+                  {this.state.genderArr.map((gen, index) => 
+                    <option value={gen} key={index} disabled={gen === this.state.gender ? true : false}> {gen} </option>
+                  )}
                 </select>{" "}
               </div>{" "}
               <div className="col">
                 {" "}
                 {this.state.visible !== "" && (
-                  <RegisterInput
-                    label="sexualPref"
-                    type="text"
-                    name="sexualPref"
-                    id="sexualPref"
-                    value={this.state.sexualPref}
-                    placeholder="Enter your sexualPref"
-                    err={this.state.errState.sexualPref}
-                    onChange={this.onChange}
-                  />
+                  <div>
+                    <label> You are looking for </label>
+                    <select
+                      id="sexualPref"
+                      value={this.state.sexualPref}
+                      onChange={this.handleSexual}
+                      className="form-control"
+                    >
+                      {this.state.genderArr.map((gen, index) => 
+                        <option value={gen} key={index} disabled={gen === this.state.sexualPref ? true : false}> {gen} </option>
+                      )}
+                    </select>
+                  </div>
                 )}{" "}
               </div>{" "}
             </div>{" "}
@@ -269,28 +298,36 @@ export default class EditInfos extends Component {
               <div className="col">
                 {" "}
                 {this.state.visible !== "" && (
-                  <RegisterInput
-                    label="Location"
-                    type="text"
-                    name="location"
-                    id="location"
-                    value={this.state.location}
-                    placeholder="Enter your location"
-                    err={this.state.errState.location}
-                    onChange={this.onChange}
-                  />
+                  <div className="row">
+                    <div className="col-md-6"> 
+                      <label> *Choose your Country </label>
+                      <CountryDropdown
+                        style={regionStyle}
+                        value={this.state.country}
+                        onChange={(val) => this.selectCountry(val)} />
+                    </div>
+                    <div className="col-md-6">
+                      <label> *Choose your Region </label>
+                      <RegionDropdown
+                        style={regionStyle}
+                        country={this.state.country}
+                        value={this.state.region}
+                        onChange={(val) => this.selectRegion(val)} />
+                    </div>
+                  </div>
                 )}{" "}
               </div>{" "}
             </div>{" "}
             <br />
             <div className="row">
-              <div className="col">
+              <div className="col-md-12">
                 <label>
-                  <small> Your birthDay </small> {this.state.birthDate}{" "}
+                  <small> *Your birth Date </small> {this.state.birthDate}{" "}
                 </label>{" "}
                 <br />{" "}
                 {this.state.visible !== "" && (
                   <TextField
+                    style={{width : '100%'}}
                     id="date"
                     type="date"
                     onChange={this.handleBirthday}
@@ -300,18 +337,6 @@ export default class EditInfos extends Component {
                     }}
                   />
                 )}{" "}
-              </div>{" "}
-              <div className="col">
-                <label> Active location </label>{" "}
-                <select
-                  onChange={this.handleActiveNotif}
-                  id="activeNotf"
-                  defaultValue={""}
-                  className="form-control"
-                >
-                  <option value="1"> True </option>{" "}
-                  <option value="0"> False </option>{" "}
-                </select>{" "}
               </div>{" "}
             </div>{" "}
             <br />

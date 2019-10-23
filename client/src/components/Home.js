@@ -12,7 +12,10 @@ class Home extends Component {
 		redirect : false,
 		dataprofile : {},
 		suggestions: [],
-		tokenErr : false
+		tokenErr : false,
+		user: {},
+		whoami: "",
+		redirectToEdit: false
 	};
 
 	changeSorting = (e, sortingCriteria) => {
@@ -57,19 +60,29 @@ class Home extends Component {
 	}
 
 	async componentDidMount () {
-		await axios.get('/api/users/whoami')
-        .then(res => {
-            
+		axios.get('/api/users/whoami')
+        .then(async res => {
+			this.setState({whoami: res.data.user});
+			//console.log(res);
+			res = await axios.get(`/api/users/get/${this.state.whoami}`)
+                    .catch(er => {
+                    this.setState({redirect: true});    
+			});
+			this.setState({data: res.data.data});
+			if (this.state.data.birthDate === "" || this.state.data.gender === "" ||
+        		this.state.data.userCountry === undefined || this.state.data.userCountry === undefined)
+                this.setState({redirectToEdit: true});
         })
         .catch(err => {
             this.setState({tokenErr : true});
-        })
+		})
 	}
 
 	render() {
 		return (
 			<div>
 				{this.state.tokenErr && <Redirect to="/login" />}
+				{this.state.redirectToEdit && <Redirect to="/profile/edit" />}
 				{this.state.redirect && <Redirect to={
 					{
 						pathname: `/profile/${this.state.dataprofile.username}`,

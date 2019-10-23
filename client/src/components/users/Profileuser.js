@@ -19,6 +19,7 @@ import { Carousel } from 'react-responsive-carousel';
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Redirect } from "react-router-dom";
 import { writeColor, iconColor, likeColor, avatarColor } from "../../css/styleClasses";
+import CakeIcon from '@material-ui/icons/Cake';
 
 const avatarcss = {
     width: '140px',
@@ -64,7 +65,9 @@ class Profileuser extends Component {
         let res = await axios.get(`/api/users/get/${this.state.user}`)
                     .catch(er => {
                     this.setState({redirect: true});    
-                });
+        });
+        console.log(res.data.data);
+        
 		this.setState({data: res.data.data});
 		res = await getUserTags(this.state.user);
 		this.setState({tags: res.data.data});
@@ -85,6 +88,9 @@ class Profileuser extends Component {
 	} catch(err) {
 		console.log(err.message);
     }
+    if (this.state.user === this.state.whoami && (this.state.data.birthDate === "" || this.state.data.gender === "" ||
+        this.state.data.userCountry === undefined || this.state.data.userCountry === undefined))
+                this.setState({redirect: true});
     console.log(this.state.pics)
   }
 
@@ -109,6 +115,8 @@ class Profileuser extends Component {
                                                 variant="outlined"
                                                 style={avatarColor}
                                             />
+                                            <br/><br/>
+                                            <span style={{fontWeight: "600"}}>{this.state.data.bio}</span>
                                             <br /><br />
                                             {this.state.user !== this.state.whoami &&
                                             <div className="row">
@@ -153,12 +161,36 @@ class Profileuser extends Component {
                                             <ListItem>
                                             <ListItemAvatar>
                                                 <Avatar>
+                                                <CakeIcon />
+                                                </Avatar>
+                                            </ListItemAvatar>
+                                            <ListItemText
+                                                primary="Gender"
+                                                secondary={`${this.state.data.gender} `}
+                                            />
+                                            </ListItem>
+                                            <Divider variant="inset" component="li" />
+                                            <ListItem>
+                                            <ListItemAvatar>
+                                                <Avatar>
                                                 <Location />
                                                 </Avatar>
                                             </ListItemAvatar>
                                             <ListItemText
                                                 primary="Location"
-                                                secondary={`${this.state.data.city} `}
+                                                secondary={`${this.state.data.userCountry}, ${this.state.data.userRegion}`}
+                                            />
+                                            </ListItem>
+                                            <Divider variant="inset" component="li" />
+                                            <ListItem>
+                                            <ListItemAvatar>
+                                                <Avatar>
+                                                <CakeIcon />
+                                                </Avatar>
+                                            </ListItemAvatar>
+                                            <ListItemText
+                                                primary="Birth Date"
+                                                secondary={`${this.state.data.birthDate} `}
                                             />
                                             </ListItem>
                                             <Divider variant="inset" component="li" />
