@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import "./../css/profile.css";
 import { connect } from 'react-redux';
 import axios from 'axios';
+import Notifications from './Notifications'
 import { user_state } from "../actions/connected";
 import { Redirect } from "react-router-dom";
 
@@ -52,7 +53,6 @@ class Header extends Component {
           console.log(err.message);
         });
       this.setState({connected : stateuser});
-      console.log("did Update");
     }
   }
 
@@ -83,6 +83,7 @@ class Header extends Component {
                   </Link>
                 </li>
               )}
+              {this.state.connected && <Notifications />}
               {this.state.connected && (
                 <li className="nav-item">
                   <Link to={`/profile/${this.state.whoami}`} className="nav-link">

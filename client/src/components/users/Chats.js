@@ -117,27 +117,23 @@ class Chats extends Component {
             date: new Date(),
             msg: this.state.msg
         }
+        obj.msg = obj.msg.trim();
         if (obj.msg.length > 0)
         {
-            obj.msg = obj.msg.trim();
-            if (obj.msg)
-            {
-                this.state.socket.emit('msg', obj);
-                await axios.get(`/api/chats/getConversation/${this.state.from}/${this.state.to}`)
-                .then(res => {
-                    this.mapOnMsgs(res.data.data).then(res => {
-                        let conv = res;
-                        conv = conv.reverse();
-                        this.setState({conversation : conv});
-                    });
-                    this.setState({ msg: "" });
-                })
-                .catch(err => {
-                    console.log(err);
-                })
-                this.setState({msg : ""});
-
-            }
+            this.state.socket.emit('msg', obj);
+            await axios.get(`/api/chats/getConversation/${this.state.from}/${this.state.to}`)
+            .then(res => {
+                this.mapOnMsgs(res.data.data).then(res => {
+                    let conv = res;
+                    conv = conv.reverse();
+                    this.setState({conversation : conv});
+                });
+                this.setState({ msg: "" });
+            })
+            .catch(err => {
+                console.log(err);
+            })
+            this.setState({msg : ""});
         }
         
     }
@@ -170,7 +166,7 @@ class Chats extends Component {
         })
         .catch(err => {
             this.setState({redirect : true});
-        })
+        });
         //<span style={styleDate}>{msg.time.hour.low}:{msg.time.minute.low}</span>
     }
 
