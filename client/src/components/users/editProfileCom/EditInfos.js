@@ -8,7 +8,7 @@ import { getAllTags } from "../../../helpers/getAllTags";
 import { getUserTags } from "../../../helpers/getUserTags";
 import { addTags } from "../../../helpers/addTags";
 import { btnColor, tagsColor } from "../../../css/styleClasses";
-import { CountryDropdown, RegionDropdown, CountryRegionData } from 'react-country-region-selector';
+import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
 
 const tagsErrorStyle = {
   color: "red"
@@ -18,6 +18,10 @@ const regionStyle = {
     width: "100%",
     height: "34px",
     backgroundColor: "white"
+}
+
+const red = {
+  color : "red"
 }
 
 export default class EditInfos extends Component {
@@ -38,6 +42,7 @@ export default class EditInfos extends Component {
     tagsExit: "",
     visible: false,
     genderArr: ["Male", "Female", "Other"],
+    sexual: ["Male", "Female"],
     country: '',
     region: ''
   };
@@ -225,6 +230,8 @@ export default class EditInfos extends Component {
   render() {
     return (
       <div>
+        <small style={red}>Fields with "*" are required</small>
+        <br />
         <div className="profile-content">
           <form onSubmit={this.editInfo}>
             <div className="row">
@@ -262,7 +269,7 @@ export default class EditInfos extends Component {
             <br />
             <div className="row">
               <div className="col">
-                <label> *Gender </label>{" "}
+                <label>  <span style={red}>*</span>Gender </label>{" "}
                 <select
                   id="gender"
                   value={this.state.gender}
@@ -278,14 +285,14 @@ export default class EditInfos extends Component {
                 {" "}
                 {this.state.visible !== "" && (
                   <div>
-                    <label> You are looking for </label>
+                    <label>  <span style={red}>*</span>You are looking for </label>
                     <select
                       id="sexualPref"
                       value={this.state.sexualPref}
                       onChange={this.handleSexual}
                       className="form-control"
                     >
-                      {this.state.genderArr.map((gen, index) => 
+                      {this.state.sexual.map((gen, index) => 
                         <option value={gen} key={index} disabled={gen === this.state.sexualPref ? true : false}> {gen} </option>
                       )}
                     </select>
@@ -300,14 +307,14 @@ export default class EditInfos extends Component {
                 {this.state.visible !== "" && (
                   <div className="row">
                     <div className="col-md-6"> 
-                      <label> *Choose your Country </label>
+                      <label> <span style={red}>*</span>Choose your Country </label>
                       <CountryDropdown
                         style={regionStyle}
                         value={this.state.country}
                         onChange={(val) => this.selectCountry(val)} />
                     </div>
                     <div className="col-md-6">
-                      <label> *Choose your Region </label>
+                      <label>  <span style={red}>*</span>Choose your Region </label>
                       <RegionDropdown
                         style={regionStyle}
                         country={this.state.country}
@@ -322,7 +329,7 @@ export default class EditInfos extends Component {
             <div className="row">
               <div className="col-md-12">
                 <label>
-                  <small> *Your birth Date </small> {this.state.birthDate}{" "}
+                  <small> <span style={red}>*</span>Your birth Date </small> {this.state.birthDate}{" "}
                 </label>{" "}
                 <br />{" "}
                 {this.state.visible !== "" && (
@@ -359,7 +366,7 @@ export default class EditInfos extends Component {
             <br />
             <div className="row">
               <div className="col">
-                <label> Add tags </label>{" "}
+                <label>  <span style={red}>*</span>Add tags <small style={red}>(At least one tag)</small></label>{" "}
                 <CreatableSelect
                   isClearable
                   onChange={this.onChangeTags}

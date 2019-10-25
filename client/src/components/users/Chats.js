@@ -4,8 +4,9 @@ import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 import Chip from '@material-ui/core/Chip';
 import TextField from '@material-ui/core/TextField';
 import SendIcon from '@material-ui/icons/Send';
-import io from 'socket.io-client';
 import { Redirect } from "react-router-dom";
+import { connect } from 'react-redux';
+import { user_socket } from "../../actions/socket";
 
 const iconstyle = {
     float: 'right',
@@ -143,7 +144,7 @@ class Chats extends Component {
             })
         })
         .catch(err => {
-            this.setState({redirect : true});
+            this.setState({redirect: true});
         })
         await axios
         .get(`/api/chats/get/${this.state.from}`)
@@ -151,7 +152,7 @@ class Chats extends Component {
             await this.mapOnChats(res.data.data).then(res => {
                 this.setState({usernames : res});
             });
-            this.setState({socket : io(':1337', {query: `owner=${this.state.from}`})});
+            this.setState({socket : this.props.userSocket});
             this.state.socket.on('msg', (data) => {
                 let allmsg = this.state.conversation;
                 allmsg.push(data);
@@ -164,7 +165,6 @@ class Chats extends Component {
         .catch(err => {
             this.setState({redirect : true});
         })
-        //<span style={styleDate}>{msg.time.hour.low}:{msg.time.minute.low}</span>
     }
 
     render() {
@@ -234,4 +234,10 @@ class Chats extends Component {
   } 
 }
 
-export default Chats;
+const mapStateToProps = (state) => {
+    return {
+      userSocket: state.socket
+    }
+}
+
+export default connect(mapStateToProps, {user_socket})(Chats);

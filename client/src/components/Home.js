@@ -68,8 +68,11 @@ class Home extends Component {
                     .catch(er => {
                     this.setState({redirect: true});    
 			});
+			let pics = await axios.get(`/api/pics/get/${this.state.whoami}`);
+			pics = pics.data.data;
+			this.setState({pics : pics.filter(img =>  img.ispp === "false")});
 			this.setState({data: res.data.data});
-			if (this.state.data.birthDate === "" || this.state.data.gender === "" ||
+			if (this.state.pics.length === 0 || this.state.data.birthDate === "" || this.state.data.gender === "" ||
         		this.state.data.userCountry === undefined || this.state.data.userCountry === undefined)
                 this.setState({redirectToEdit: true});
         })

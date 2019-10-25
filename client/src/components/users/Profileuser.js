@@ -20,12 +20,30 @@ import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Redirect } from "react-router-dom";
 import { writeColor, iconColor, likeColor, avatarColor } from "../../css/styleClasses";
 import CakeIcon from '@material-ui/icons/Cake';
+import WcIcon from '@material-ui/icons/Wc';
+import SearchIcon from '@material-ui/icons/Search';
+import RadioButtonCheckedIcon from '@material-ui/icons/RadioButtonChecked';
+import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
 
 const avatarcss = {
     width: '140px',
     height: '140px',
     maxWidth: '140px',
     maxHeight: '140px',
+}
+
+const offline = {
+    color: 'red',
+    height: '20px'
+}
+
+const pinkColor = {
+    color : "#ff3fff"
+}
+
+const online = {
+    color: 'green',
+    height: '20px'
 }
 
 class Profileuser extends Component {
@@ -38,7 +56,8 @@ class Profileuser extends Component {
     pics: {},
     like: true,
     whoami: "",
-    redirect: false
+    redirect: false,
+    online: true
   }
 
   toEditProfile = () => {
@@ -61,13 +80,15 @@ class Profileuser extends Component {
   }
 
   async componentDidMount() {
+    console.log(this.props);
+
 	try {
         let res = await axios.get(`/api/users/get/${this.state.user}`)
                     .catch(er => {
                     this.setState({redirect: true});    
         });
         console.log(res.data.data);
-        
+    //request l socket to check if is connect /true / false
 		this.setState({data: res.data.data});
 		res = await getUserTags(this.state.user);
 		this.setState({tags: res.data.data});
@@ -85,13 +106,13 @@ class Profileuser extends Component {
                 whoami : res.data.user
             })
         })
+        console.log(this.state);
 	} catch(err) {
 		console.log(err.message);
     }
     if (this.state.user === this.state.whoami && (this.state.data.birthDate === "" || this.state.data.gender === "" ||
         this.state.data.userCountry === undefined || this.state.data.userCountry === undefined))
                 this.setState({redirect: true});
-    console.log(this.state.pics)
   }
 
   render() {
@@ -152,8 +173,11 @@ class Profileuser extends Component {
                                     <div className="col-md-7">
                                         <br />
                                         <center>
+                                            
                                             <h2 style={writeColor}>
-                                                {this.state.data.fName}&nbsp;{this.state.data.lName}
+                                            {this.state.online && <RadioButtonCheckedIcon style={online}/>} 
+                                            {!this.state.online && <RadioButtonUncheckedIcon style={offline}/>} 
+                                            {this.state.data.fName}&nbsp;{this.state.data.lName}
                                             </h2>
                                         </center>
                                         <List>
@@ -161,7 +185,7 @@ class Profileuser extends Component {
                                             <ListItem>
                                             <ListItemAvatar>
                                                 <Avatar>
-                                                <CakeIcon />
+                                                <WcIcon style={pinkColor}/>
                                                 </Avatar>
                                             </ListItemAvatar>
                                             <ListItemText
@@ -173,7 +197,7 @@ class Profileuser extends Component {
                                             <ListItem>
                                             <ListItemAvatar>
                                                 <Avatar>
-                                                <Location />
+                                                <Location style={pinkColor}/>
                                                 </Avatar>
                                             </ListItemAvatar>
                                             <ListItemText
@@ -185,7 +209,7 @@ class Profileuser extends Component {
                                             <ListItem>
                                             <ListItemAvatar>
                                                 <Avatar>
-                                                <CakeIcon />
+                                                <CakeIcon style={pinkColor}/>
                                                 </Avatar>
                                             </ListItemAvatar>
                                             <ListItemText
@@ -197,7 +221,19 @@ class Profileuser extends Component {
                                             <ListItem>
                                             <ListItemAvatar>
                                                 <Avatar>
-                                                <AssignmentIcon />
+                                                <SearchIcon style={pinkColor}/>
+                                                </Avatar>
+                                            </ListItemAvatar>
+                                            <ListItemText
+                                                primary="Looking for"
+                                                secondary={`${this.state.data.sexualPref} `}
+                                            />
+                                            </ListItem>
+                                            <Divider variant="inset" component="li" />
+                                            <ListItem>
+                                            <ListItemAvatar>
+                                                <Avatar>
+                                                <AssignmentIcon style={pinkColor}/>
                                                 </Avatar>
                                             </ListItemAvatar>
                                             <ListItemText
