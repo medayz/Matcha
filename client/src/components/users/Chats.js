@@ -10,7 +10,7 @@ import { Redirect } from "react-router-dom";
 const iconstyle = {
     float: 'right',
     cursor: 'pointer',
-    color: '#4590ff',
+    color: '#ff59fa',
 }
 
 const scroll = {
@@ -22,31 +22,24 @@ const scroll = {
 
 }
 
-
-
 const styleinput = {
     width: '85%'
 }
 
 const mymsgStyle = {
-    float: 'right'
+    float: 'right',
+    color: 'white',
+    backgroundColor: '#ff59fa'
 }
 
 const sendstyle = {
-    color : 'blue',
+    color : '#ff59fa',
     margin: '4%'
 }
 
 const convstyle= {
     backgroundColor: 'white',
     padding: '1%'
-}
-
-const styleDate = {
-    float: 'right',
-    fontSize: 'x-small',
-    marginTop: '1%',
-    marginLeft: '1%'
 }
 
 class Chats extends Component {
@@ -207,8 +200,8 @@ class Chats extends Component {
                                     {this.state.conversation.map((msg, index) => 
                                         <div key={index}>
                                             {(msg.receiver === this.state.from
-                                                && <div><Chip label={msg.body} style={{marginTop: '3%'}} color="primary" variant="outlined" /> </div>)
-                                                || <div><Chip  label={msg.body}  color="primary" style={mymsgStyle}/></div>}
+                                                && <div><Chip label={msg.body} style={{marginTop: '3%', borderColor: '#ff59fa', color: '#ff59fa'}}  variant="outlined" /> </div>)
+                                                || <div><Chip  label={msg.body} style={mymsgStyle}/></div>}
                                             <br />
                                             <br />
                                         </div>    

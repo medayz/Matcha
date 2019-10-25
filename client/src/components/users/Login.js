@@ -9,6 +9,7 @@ import { user_state } from "../../actions/connected";
 import { Redirect } from "react-router-dom";
 import profile from "./ConfirmAcc";
 import publicIp from "public-ip";
+import { btnColor } from "../../css/styleClasses";
 
 const head = {
   Accept: "application/json",
@@ -135,41 +136,49 @@ class Login extends Component {
   render() {
     return (
       <div className="container">
+      <div className="row">
+        <div className="col-md-4">
+        </div>
+        <div className="col-md-4">
         {this.state.errState.active && (
-          <div className="alert alert-primary" role="alert">
-            {" "}
-            {this.state.errState.active}{" "}
-          </div>
-        )}
-        <Alert />
-        <form id="Login" onSubmit={this.onSubmit}>
-          <RegisterInput
-            label="Username"
-            type="text"
-            name="username"
-            id="username"
-            placeholder="Enter username"
-            err={this.state.errState.username}
-            value={this.state.username}
-            onChange={this.onChange}
-          />
-          <RegisterInput
-            label="Password"
-            type="password"
-            name="pass"
-            id="pass"
-            placeholder="Enter password"
-            err={this.state.errState.pass}
-            value={this.state.pass}
-            onChange={this.onChange}
-          />
-          {this.state.login === "done" && (
-            <Redirect to={`/profile/edit`} Component={profile} />
+            <div className="alert alert-primary" role="alert">
+              {" "}
+              {this.state.errState.active}{" "}
+            </div>
           )}
-          <button type="submit" className="btn btn-primary">
-            Login
-          </button>
-        </form>
+          <Alert />
+          <form id="Login" onSubmit={this.onSubmit}>
+            <RegisterInput
+              label="Username"
+              type="text"
+              name="username"
+              id="username"
+              placeholder="Enter username"
+              err={this.state.errState.username}
+              value={this.state.username}
+              onChange={this.onChange}
+            />
+            <RegisterInput
+              label="Password"
+              type="password"
+              name="pass"
+              id="pass"
+              placeholder="Enter password"
+              err={this.state.errState.pass}
+              value={this.state.pass}
+              onChange={this.onChange}
+            />
+            {this.state.login === "done" && (
+              <Redirect to={`/profile/edit`} Component={profile} />
+            )}
+            <button type="submit" className="btn" style={btnColor}>
+              Login
+            </button>
+          </form>
+        </div>
+        <div className="col-md-4">
+        </div>
+        </div>
       </div>
     );
   }

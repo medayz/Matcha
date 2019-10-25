@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Chip from '@material-ui/core/Chip';
-import DoneIcon from '@material-ui/icons/Done';
 import axios from 'axios';
 import { getUserTags } from "../../helpers/getUserTags";
 import Divider from "@material-ui/core/Divider";
@@ -10,7 +9,6 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 import Location from "@material-ui/icons/LocationCity";
-//import Gender from "@material-ui/icons/SupervisedUserCircle";
 import BlockIcon from '@material-ui/icons/Block';
 import ReportIcon from '@material-ui/icons/Report';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
@@ -19,20 +17,15 @@ import SettingsIcon from '@material-ui/icons/Settings';
 import AssignmentIcon from '@material-ui/icons/Assignment';
 import { Carousel } from 'react-responsive-carousel';
 import "react-responsive-carousel/lib/styles/carousel.min.css";
-//import { runInThisContext } from 'vm';
 import { Redirect } from "react-router-dom";
+import { writeColor, iconColor, likeColor, avatarColor } from "../../css/styleClasses";
+import CakeIcon from '@material-ui/icons/Cake';
 
 const avatarcss = {
     width: '140px',
     height: '140px',
     maxWidth: '140px',
     maxHeight: '140px',
-}
-
-const cssName = {
-    fontStyle: 'initial',
-    fontFamily: "-webkit-body",
-    color: '#007bff'
 }
 
 class Profileuser extends Component {
@@ -72,7 +65,9 @@ class Profileuser extends Component {
         let res = await axios.get(`/api/users/get/${this.state.user}`)
                     .catch(er => {
                     this.setState({redirect: true});    
-                });
+        });
+        console.log(res.data.data);
+        
 		this.setState({data: res.data.data});
 		res = await getUserTags(this.state.user);
 		this.setState({tags: res.data.data});
@@ -93,6 +88,9 @@ class Profileuser extends Component {
 	} catch(err) {
 		console.log(err.message);
     }
+    if (this.state.user === this.state.whoami && (this.state.data.birthDate === "" || this.state.data.gender === "" ||
+        this.state.data.userCountry === undefined || this.state.data.userCountry === undefined))
+                this.setState({redirect: true});
     console.log(this.state.pics)
   }
 
@@ -114,26 +112,26 @@ class Profileuser extends Component {
                                             <br />
                                             <Chip
                                                 label={`${this.state.user}`}
-                                                color="primary"
-                                                deleteIcon={<DoneIcon />}
                                                 variant="outlined"
-                                                style={{marginTop : '2%', color : "#007bff", borderColor: "#007bff"}}
+                                                style={avatarColor}
                                             />
+                                            <br/><br/>
+                                            <span style={{fontWeight: "600"}}>{this.state.data.bio}</span>
                                             <br /><br />
                                             {this.state.user !== this.state.whoami &&
                                             <div className="row">
                                                 <div className="col-md-4">
                                                 {!this.state.like
-                                                    && <FavoriteBorderIcon onClick={this.like} style={{color : "#007bff", cursor : 'pointer'}}/>}
+                                                    && <FavoriteBorderIcon onClick={this.like} style={likeColor}/>}
                                                 {this.state.like
-                                                    && <FavoriteIcon onClick={this.like} style={{color : "#007bff", cursor : 'pointer'}}/>
+                                                    && <FavoriteIcon onClick={this.like} style={likeColor}/>
                                                 }
                                                 </div>
                                                 <div className="col-md-4">
-                                                    <BlockIcon style={{color : "#dc3545", cursor : 'pointer'}}/>
+                                                    <BlockIcon style={iconColor}/>
                                                 </div>
                                                 <div className="col-md-4">
-                                                    <ReportIcon style={{color : "#dc3545", cursor : 'pointer'}}/>
+                                                    <ReportIcon style={iconColor}/>
                                                 </div>
                                                 
                                             </div>}
@@ -142,7 +140,7 @@ class Profileuser extends Component {
                                                     <div className="col-md-4">
                                                     </div>
                                                     <div className="col-md-4">
-                                                        <SettingsIcon onClick={this.toEditProfile} style={{color : "#007bff", cursor : 'pointer'}}/>
+                                                        <SettingsIcon onClick={this.toEditProfile} style={likeColor}/>
                                                     </div>
                                                     <div className="col-md-4">
                                                     </div>
@@ -154,11 +152,23 @@ class Profileuser extends Component {
                                     <div className="col-md-7">
                                         <br />
                                         <center>
-                                            <h2 style={cssName}>
+                                            <h2 style={writeColor}>
                                                 {this.state.data.fName}&nbsp;{this.state.data.lName}
                                             </h2>
                                         </center>
                                         <List>
+                                            <Divider variant="inset" component="li" />
+                                            <ListItem>
+                                            <ListItemAvatar>
+                                                <Avatar>
+                                                <CakeIcon />
+                                                </Avatar>
+                                            </ListItemAvatar>
+                                            <ListItemText
+                                                primary="Gender"
+                                                secondary={`${this.state.data.gender} `}
+                                            />
+                                            </ListItem>
                                             <Divider variant="inset" component="li" />
                                             <ListItem>
                                             <ListItemAvatar>
@@ -168,7 +178,19 @@ class Profileuser extends Component {
                                             </ListItemAvatar>
                                             <ListItemText
                                                 primary="Location"
-                                                secondary={`${this.state.data.city} `}
+                                                secondary={`${this.state.data.userCountry}, ${this.state.data.userRegion}`}
+                                            />
+                                            </ListItem>
+                                            <Divider variant="inset" component="li" />
+                                            <ListItem>
+                                            <ListItemAvatar>
+                                                <Avatar>
+                                                <CakeIcon />
+                                                </Avatar>
+                                            </ListItemAvatar>
+                                            <ListItemText
+                                                primary="Birth Date"
+                                                secondary={`${this.state.data.birthDate} `}
                                             />
                                             </ListItem>
                                             <Divider variant="inset" component="li" />

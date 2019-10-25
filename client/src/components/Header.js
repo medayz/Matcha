@@ -6,6 +6,7 @@ import axios from 'axios';
 import Notifications from './Notifications'
 import { user_state } from "../actions/connected";
 import { Redirect } from "react-router-dom";
+import {navBar} from "../css/styleClasses";
 
 class Header extends Component {
 
@@ -59,16 +60,18 @@ class Header extends Component {
   render() {
     return (
       
-      <nav className="navbar navbar-expand-sm navbar-dark bg-primary mb-3 py-0">
+      <nav style={navBar} className="navbar navbar-expand-sm navbar-dark mb-3 py-0">
       {this.state.toLogin && <Redirect to={`/login`} />}
       {this.state.show &&
         <div className="container">
-          
           <Link to="/" className="navbar-brand">
             Matcha
           </Link>
-          <div>
-            <ul className="navbar-nav mr-auto">
+          <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span className="navbar-toggler-icon"></span>
+          </button>
+          <div  className="collapse navbar-collapse" id="navbarNav">
+            <ul className="navbar-nav ml-auto">
               {!this.state.connected && (
                 <li className="nav-item">
                   <Link to="/login" className="nav-link">

@@ -1,5 +1,5 @@
 body {
-    background: #F1F3FA;
+    background: #fde4ff;
   }
   
   /* Profile container */
@@ -10,7 +10,7 @@ body {
   /* Profile sidebar */
   .profile-sidebar {
     padding: 20px 0 10px 0;
-    background: #fff;
+    background: #fee9ff;
   }
   
   .profile-userpic img {
@@ -114,5 +114,5 @@ body {
   /* Profile Content */
   .profile-content {
     padding: 20px;
-    background: #fff;
+    background: #fee9ff;
   }
