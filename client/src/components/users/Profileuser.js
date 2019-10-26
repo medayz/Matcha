@@ -24,6 +24,8 @@ import WcIcon from '@material-ui/icons/Wc';
 import SearchIcon from '@material-ui/icons/Search';
 import RadioButtonCheckedIcon from '@material-ui/icons/RadioButtonChecked';
 import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
+import { connect } from 'react-redux';
+import { user_socket } from "../../actions/socket";
 
 const avatarcss = {
     width: '140px',
@@ -57,7 +59,8 @@ class Profileuser extends Component {
     like: true,
     whoami: "",
     redirect: false,
-    online: true
+    online: false,
+    socket: [],
   }
 
   toEditProfile = () => {
@@ -80,15 +83,14 @@ class Profileuser extends Component {
   }
 
   async componentDidMount() {
-    console.log(this.props);
-
+    //console.log(this.props);
+    let socket = this.props.userSocket;
 	try {
         let res = await axios.get(`/api/users/get/${this.state.user}`)
                     .catch(er => {
                     this.setState({redirect: true});    
         });
         console.log(res.data.data);
-    //request l socket to check if is connect /true / false
 		this.setState({data: res.data.data});
 		res = await getUserTags(this.state.user);
 		this.setState({tags: res.data.data});
@@ -106,6 +108,20 @@ class Profileuser extends Component {
                 whoami : res.data.user
             })
         })
+        if (this.state.user === this.state.whoami)
+            this.setState({online : true});
+        else
+        {
+            this.setState({socket: socket});
+            this.state.socket.on('isOnline', (data) => {
+                if (data === true)
+                    this.setState({online : true});
+                else
+                    this.setState({online : false});
+            });
+			this.state.socket.emit('isOnline', this.state.user);
+            
+        }
         console.log(this.state);
 	} catch(err) {
 		console.log(err.message);
@@ -280,4 +296,10 @@ class Profileuser extends Component {
   } 
 }
 
-export default (Profileuser);
+const mapStateToProps = (state) => {
+    return {
+      userSocket: state.socket
+    }
+}
+
+export default connect(mapStateToProps, {user_socket})(Profileuser);

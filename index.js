@@ -66,9 +66,21 @@ app.use((err, req, response, next) => {
 
 var allUserSocket = [];
 
+function search(obj, user) {
+    return obj.user === user;
+}
+
+function removeHisSocket(user, all)
+{
+	let promise = new Promise(function (resolve, reject){
+		var sockets = all.filter(a => a.user != user);
+		resolve(sockets);
+	})
+	return (promise);
+}
+
 function getHisSocket (user, all)
 {
-	//console.log(all[0].idSocket);
 	all.reverse();
 	var promise = new Promise (function (resolve, reject) {
 		var socket = all.filter(a => a.user === user);
@@ -98,12 +110,10 @@ io.on('connection', (socketa) =>{
 		user : socketa.handshake.query['owner'],
 		socket :  socketa
 	}
-	//console.log(usersocket);
 	allUserSocket.push(usersocket);
 	var mysocket = socketa;
 	mysocket.on('msg', async function (data) {
 		var msg = data;
-		console.log(msg);
 		var hisSocket = [];
 		await getHisSocket(msg.to, allUserSocket).then(res => {
 			hisSocket = res;
@@ -117,9 +127,24 @@ io.on('connection', (socketa) =>{
 				hisSocket.socket.emit('msg', message);
 			chatsModel.addMessage(message);
 			mysocket.emit('msg', message);
-			
 		});
-		
+	});
+
+	mysocket.on('isOnline', async function (data) {
+		await getHisSocket(data, allUserSocket).then(res => {
+			hisSocket = res;
+			if (hisSocket !== undefined)
+				mysocket.emit('isOnline', true);
+			else
+				mysocket.emit('isOnline', false);
+		});
+	});
+
+	mysocket.on('ForceDisconnect', async function (data){
+		removeHisSocket(data, allUserSocket)
+			.then(res => {
+				allUserSocket = res;
+		}).catch(err => {});
 	});
 })
 
