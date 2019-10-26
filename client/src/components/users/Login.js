@@ -5,11 +5,13 @@ import Alert from "../layout/Alert";
 import { connect } from "react-redux";
 import { setAlert } from "../../actions/alert";
 import { setUser } from "../../actions/user";
+import { user_socket } from "../../actions/socket";
 import { user_state } from "../../actions/connected";
 import { Redirect } from "react-router-dom";
 import profile from "./ConfirmAcc";
 import publicIp from "public-ip";
 import { btnColor } from "../../css/styleClasses";
+import io from 'socket.io-client';
 
 const head = {
   Accept: "application/json",
@@ -99,12 +101,14 @@ class Login extends Component {
           this.props.setUser(this.state.username);
           const backend = res.data;
           if (res.status === 200) {
-            this.props.user_state(true);
             this.setState({
               pass: "",
               errState: {}
             });
             this.props.user_state(true);
+            let socket = io(':1337', {query: `owner=${this.state.username}`});
+            this.props.user_socket(socket);
+            console.log(this.props);
             this.setState({ login: "done" });
           } else {
             if (backend.data.err.username !== "")
@@ -186,5 +190,5 @@ class Login extends Component {
 
 export default connect(
   null,
-  { setAlert, setUser , user_state }
+  {setAlert, setUser, user_state, user_socket}
 )(Login);

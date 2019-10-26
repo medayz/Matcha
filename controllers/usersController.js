@@ -215,9 +215,9 @@ module.exports = {
 						const token = jwtHelper.getToken({
 							username: params.username
 						});
-						req.session.token = token;
+						// req.session.token = token;
 						response
-							// .cookie("token", token, { httpOnly: true })
+							.cookie("token", token, { httpOnly: true })
 							.sendStatus(200);
 					})
 					.catch(err => {
@@ -252,15 +252,8 @@ module.exports = {
 				data: params
 			});
 		}
-	},
-	logOut: async (req, response) => {
-		req.session.destroy(function(err) {
-			if (err) {
-				console.log(err);
-			} else {
-				response.clearCookie("session").sendStatus(200);
-			}
-		});
+	}, logOut: async (req, response) => {
+		response.clearCookie("token").sendStatus(200);
 	},
 	accountActivation: async (req, response) => {
 		userModel

@@ -12,6 +12,10 @@ import AddIcon from '@material-ui/icons/Add';
 import Picture from '../Picture';
 import { addPic } from "../../helpers/addImg";
 
+const red = {
+	color : "red"
+}
+
 const addstyle= {
 	fontSize: '50px',
 	float: 'right',
@@ -186,6 +190,8 @@ class EditProfile extends Component {
 				<br />
 				<div className="col-md-9">
 					<div className="profile-content">
+						<small style={red}>*You should have at least one picture</small>
+							
 						{this.state.err === true && <Alertmsgsuccess action="uploaded"/>}
 						{this.state.err === false && <Alertmsgerror />}
 						{this.state.err === "deleted" && <Alertmsgsuccess action="deleted"/>}

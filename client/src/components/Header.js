@@ -5,8 +5,10 @@ import { connect } from 'react-redux';
 import axios from 'axios';
 import Notifications from './Notifications'
 import { user_state } from "../actions/connected";
+import { user_socket } from "../actions/socket";
 import { Redirect } from "react-router-dom";
 import {navBar} from "../css/styleClasses";
+import io from 'socket.io-client';
 
 class Header extends Component {
 
@@ -15,12 +17,16 @@ class Header extends Component {
     whoami: "",
     show: false,
     toLogin: false,
+    socket: {}
   };
 
   logout = () => {
     axios
       .get('/api/users/logout')
-      .then(res => this.props.user_state(false));
+      .then(res => {
+        this.props.user_state(false);
+        this.props.user_socket({});
+      });
     this.setState({whoami: ""});
     this.setState({toLogin: true}); 
   }
@@ -30,9 +36,14 @@ class Header extends Component {
         .get("/api/users/isLoggedOn")
         .then(res => {
             this.props.user_state(true);
+            let socket = io(':1337', {query: `owner=${this.state.username}`});
+            this.setState({socket : socket});
+            this.props.user_socket(socket);
             })
         .catch(err => {
           this.props.user_state(false);
+          if (this.props.userSocket !== {})
+            this.props.user_socket({});
           this.setState({toLogin : true})
           })
       console.log(this.state.whoami);
@@ -42,6 +53,7 @@ class Header extends Component {
   async componentDidUpdate () {
 
     let stateuser = this.props.userState;
+    let statesocket = this.props.userSocket;
     if (stateuser !== this.state.connected)
     {
       axios.get('/api/users/whoami')
@@ -49,6 +61,8 @@ class Header extends Component {
           this.setState({
               whoami : res.data.user
           });
+          if (this.state.socket !== statesocket)
+            this.setState({socket : statesocket});
         })
         .catch(err => {
           console.log(err.message);
@@ -134,8 +148,9 @@ class Header extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    userState: state.connected
+    userState: state.connected,
+    userSocket: state.socket
   }
 }
 
-export default connect(mapStateToProps, {user_state})(Header);
+export default connect(mapStateToProps, {user_state, user_socket})(Header);

@@ -1,6 +1,12 @@
 import React, { Component } from "react";
 import { addPic } from "../../../helpers/addImg";
 
+const avatarcss = {
+  width: '140px',
+  height: '140px',
+  maxWidth: '140px',
+  maxHeight: '140px',
+}
 
 class Alertmsgerror extends Component{
 
@@ -70,7 +76,7 @@ export default class ProfilePic extends Component {
         <div className="profile-sidebar">
           <div className="profile-userpic">
             <div className="row">
-              <img src={`/userPics/${this.state.pp.filename}`} className="img-responsive" alt="" />
+              <img src={`/userPics/${this.state.pp.filename}`} style={avatarcss} className="img-responsive" alt="" />
             </div>
           </div>
           <div className="profile-usertitle">
