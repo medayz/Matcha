@@ -20,23 +20,35 @@ class Header extends Component {
   };
 
   logout = () => {
+    let statesocket = this.props.userSocket;
+    //console.log(statesocket);
     axios
       .get('/api/users/logout')
       .then(res => {
+        console.log(this.state);
+        statesocket.emit('ForceDisconnect', this.state.whoami);
         this.props.user_state(false);
         this.props.user_socket({});
+        this.setState({whoami: ""});
+        this.setState({toLogin: true});
       });
-    this.setState({whoami: ""});
-    this.setState({toLogin: true}); 
   }
   
   async componentDidMount () {
       await axios
         .get("/api/users/isLoggedOn")
-        .then(res => {
+        .then(async res => {
+            await axios.get('/api/users/whoami')
+            .then(res => {
+              this.setState({
+                  whoami : res.data.user
+              });
+            })
+            .catch(err => {
+              console.log(err.message);
+            });
             this.props.user_state(true);
-            let socket = io(':1337', {query: `owner=${this.state.username}`});
-            this.setState({socket : socket});
+            let socket = io(':1337', {query: `owner=${this.state.whoami}`});
             this.props.user_socket(socket);
             })
         .catch(err => {
@@ -45,14 +57,12 @@ class Header extends Component {
             this.props.user_socket({});
           this.setState({toLogin : true})
           })
-      console.log(this.state.whoami);
       this.setState({show : true});
   }
 
   async componentDidUpdate () {
 
     let stateuser = this.props.userState;
-    let statesocket = this.props.userSocket;
     if (stateuser !== this.state.connected)
     {
       axios.get('/api/users/whoami')
@@ -60,14 +70,11 @@ class Header extends Component {
           this.setState({
               whoami : res.data.user
           });
-          if (this.state.socket !== statesocket)
-            this.setState({socket : statesocket});
         })
         .catch(err => {
           console.log(err.message);
         });
       this.setState({connected : stateuser});
-      console.log("did Update");
     }
   }
 
