@@ -11,7 +11,7 @@ import { user_socket } from "../../actions/socket";
 const iconstyle = {
     float: 'right',
     cursor: 'pointer',
-    color: '#ff59fa',
+    color: 'rgb(95, 89, 255)',
 }
 
 const scroll = {
@@ -30,7 +30,7 @@ const styleinput = {
 const mymsgStyle = {
     float: 'right',
     color: 'white',
-    backgroundColor: '#ff59fa',
+    backgroundColor: 'rgb(78, 103, 222)',
     marginTop: '3%'
 }
 
@@ -40,7 +40,7 @@ const sendstyle = {
 }
 
 const convstyle= {
-    backgroundColor: 'white',
+    backgroundColor: '#ffffff0d',
     padding: '1%'
 }
 
@@ -180,7 +180,7 @@ class Chats extends Component {
                                 
                                     <div className="row">
                                         <div className="col-md-10">
-                                            <span style={{float : "left"}}>{u}</span> 
+                                            <span style={{float : "left", color:'black'}}>{u}</span> 
                                         </div>
                                         <div className="col-md-2">
                                             <NavigateNextIcon onClick={(e) => this.switchconv(u)} style={iconstyle} />
@@ -196,14 +196,14 @@ class Chats extends Component {
                             <div style={convstyle}>
                                 <div className="card" >
                                     <ul className="list-group list-group-flush">
-                                        <li className="list-group-item">{this.state.to}</li>
+                                        <li className="list-group-item" style={{color:'black'}}>{this.state.to}</li>
                                     </ul>
                                 </div>
                                 <div style={scroll}>
                                     {this.state.conversation.map((msg, index) => 
                                         <div key={index}>
                                             {(msg.receiver === this.state.from
-                                                && <div><Chip label={msg.body} style={{marginTop: '3%', borderColor: '#ff59fa', color: '#ff59fa'}}  variant="outlined" /> </div>)
+                                                && <div><Chip label={msg.body} style={{marginTop: '3%', borderColor: 'rgb(217, 255, 8)', color: 'rgb(217, 255, 8)'}}  variant="outlined" /> </div>)
                                                 || <div><Chip  label={msg.body} style={mymsgStyle}/></div>}
                                             <br />
                                             <br />

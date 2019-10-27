@@ -12,6 +12,7 @@ import profile from "./ConfirmAcc";
 import publicIp from "public-ip";
 import { btnColor } from "../../css/styleClasses";
 import io from 'socket.io-client';
+import '../../css/login.css';
 
 const head = {
   Accept: "application/json",
@@ -136,11 +137,8 @@ class Login extends Component {
         });
     } else return;
   };
-
-  render() {
-    return (
-      <div className="container">
-      <div className="row">
+/*
+<div className="row">
         <div className="col-md-4">
         </div>
         <div className="col-md-4">
@@ -183,6 +181,78 @@ class Login extends Component {
         <div className="col-md-4">
         </div>
         </div>
+*/
+  render() {
+    return (
+      <div className="container">
+          <div class="login-wrap">
+              {this.state.errState.active && (
+                <div className="alert alert-primary" role="alert">
+                  {" "}
+                  {this.state.errState.active}{" "}
+                </div>
+              )}
+              <Alert />
+              <div class="login-html">
+              <form id="Login" onSubmit={this.onSubmit}>
+                <input id="tab-1" type="radio" name="tab" class="sign-in" checked /><label for="tab-1" class="tab">Sign In</label>
+                <input id="tab-2" type="radio" name="tab" class="for-pwd" /><label for="tab-2" class="tab">Forgot Password</label>
+                <div class="login-form">
+                  <div class="sign-in-htm">
+                    <div class="group">
+                      <label for="user" class="label">Username or Email</label>
+                      <RegisterInput
+                        label=""
+                        type="text"
+                        name="username"
+                        id="username"
+                        className="input"
+                        placeholder="Enter username"
+                        err={this.state.errState.username}
+                        value={this.state.username}
+                        onChange={this.onChange}
+                      />
+                    </div>
+                    <div class="group">
+                      <label for="pass" class="label">Password</label>
+                      <RegisterInput
+                        label=""
+                        type="password"
+                        name="pass"
+                        id="pass"
+                        className="input"
+                        placeholder="Enter password"
+                        err={this.state.errState.pass}
+                        value={this.state.pass}
+                        onChange={this.onChange}
+                      />
+                    </div>
+                    <div class="group">
+                      {this.state.login === "done" && (
+                        <Redirect to={`/profile/edit`} Component={profile} />
+                      )}
+                      <button type="submit" className="button">
+                        Login
+                      </button>
+                    </div>
+                    <div class="hr"></div>
+                  </div>
+                  <div class="for-pwd-htm">
+                    <div class="group">
+                      <label for="user" class="label">Username or Email</label>
+                      <input id="user" type="text" class="input" />
+                    </div>
+                   <div class="group">
+                      <input type="submit" class="button" value="Reset Password" />
+                    </div>
+                    <div class="hr"></div>
+                  </div>
+                </div>
+                </form>
+              </div>
+          </div>
+
+      
       </div>
     );
   }

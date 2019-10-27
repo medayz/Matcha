@@ -17,7 +17,7 @@ const stylebtn = {
 	width: '100%',
 	margin: '0.3%',
 	marginTop: '3%',
-	backgroundColor: '#ff59fa',
+	backgroundColor: 'rgb(39, 0, 255)',
     color: 'white'
 }
 
@@ -45,7 +45,7 @@ class Filters extends Component {
 			<FormControl component="fieldset" style={styleFilter}>
 				<FormLabel component="legend">Filter</FormLabel>
 				<FormGroup>
-					<Typography id="range-slider" gutterBottom>Age</Typography>
+					<Typography id="range-slider" style={{color: "black"}} gutterBottom>Age</Typography>
 					<Slider
 						value={this.state.ageFilter}
 						onChange={this.filterAge}
@@ -55,7 +55,7 @@ class Filters extends Component {
 						valueLabelDisplay="auto"
 						aria-labelledby="range-slider"
 					/>
-					<Typography id="continuous-slider" gutterBottom>Distance</Typography>
+					<Typography id="continuous-slider" style={{color: "black"}} gutterBottom>Distance</Typography>
 					<Slider
 						value={this.state.distanceFilter}
 						onChange={this.filterLocation}
@@ -63,7 +63,7 @@ class Filters extends Component {
 						aria-labelledby="continuous-slider"
 						style={filterColor}
 					/>
-					<Typography id="continuous-slider" gutterBottom>Tags</Typography>
+					<Typography id="continuous-slider" style={{color: "black"}} gutterBottom>Tags</Typography>
 					<Slider
 						value={this.state.tagsFilter}
 						onChange={this.filterTags}

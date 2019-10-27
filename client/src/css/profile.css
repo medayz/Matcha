@@ -1,5 +1,9 @@
 body {
-    background: #fde4ff;
+    margin:0;
+    background:url(https://hdqwalls.com/download/material-design-4k-2048x1152.jpg) fixed;
+    background-size: cover;
+    font:600 16px/18px 'Open Sans',sans-serif;
+    color: white;
   }
   
   /* Profile container */
@@ -10,7 +14,7 @@ body {
   /* Profile sidebar */
   .profile-sidebar {
     padding: 20px 0 10px 0;
-    background: #fee9ff;
+    background:#ffffff0b;
   }
   
   .profile-userpic img {
@@ -114,5 +118,5 @@ body {
   /* Profile Content */
   .profile-content {
     padding: 20px;
-    background: #fee9ff;
+    background: #ffffff0d;
   }

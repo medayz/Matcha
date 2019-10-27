@@ -1,23 +1,23 @@
 export const navBar = {
-    backgroundColor: '#ff59fa'
+    backgroundColor: 'hsl(214, 83%, 50%)'
 }
 
 export const btnColor = {
-    backgroundColor: '#ff59fa',
+    backgroundColor: 'rgb(0, 138, 255)',
     color: 'white'
 }
 
 export const tagsColor = {
-    backgroundColor: 'rgb(255, 159, 252)',
+    backgroundColor: 'rgb(64, 101, 132)',
     color: 'white'
 }
 
 export const writeColor = {
-    color : "#ff59fa"
+    color : "black"
 }
 
 export const likeColor = {
-    color : "#ff59fa",
+    color : "rgb(39, 0, 255)",
     cursor : 'pointer'
 }
 
@@ -27,11 +27,11 @@ export const iconColor = {
 }
 
 export const filterColor = {
-    color: '#ff59fa',
+    color: 'rgb(39, 0, 255)',
 }
 
 export const avatarColor = {
     marginTop : '2%', 
-    color : "#ff59fa", 
-    borderColor: "#ff59fa"
+    color : "rgb(39, 0, 255)", 
+    borderColor: "rgb(39, 0, 255)"
 }

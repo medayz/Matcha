@@ -40,7 +40,7 @@ const offline = {
 }
 
 const pinkColor = {
-    color : "#ff3fff"
+    color : "rgb(39, 0, 255)"
 }
 
 const online = {

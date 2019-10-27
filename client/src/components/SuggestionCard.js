@@ -7,7 +7,7 @@ const propsStyle = {
 
 function SuggestionCard(props) {
     return (
-        <div className="col-md-4">
+        <div className="col-md-4" style={{color: "black"}}>
             <div className="card">
                 <img
                     src={`userPics/${props.img}`}
