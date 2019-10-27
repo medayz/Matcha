@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import "./../css/profile.css";
 import { connect } from 'react-redux';
 import axios from 'axios';
+import Notifications from './Notifications'
 import { user_state } from "../actions/connected";
 import { user_socket } from "../actions/socket";
 import { Redirect } from "react-router-dom";
@@ -53,7 +54,7 @@ class Header extends Component {
             })
         .catch(err => {
           this.props.user_state(false);
-          if (this.props.userSocket !== [])
+          if (this.props.userSocket !== {})
             this.props.user_socket({});
           this.setState({toLogin : true})
           })
@@ -107,6 +108,7 @@ class Header extends Component {
                   </Link>
                 </li>
               )}
+              {this.state.connected && <Notifications />}
               {this.state.connected && (
                 <li className="nav-item">
                   <Link to={`/profile/${this.state.whoami}`} className="nav-link">

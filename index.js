@@ -2,36 +2,41 @@ const express = require("express");
 const app = express();
 const PORT = process.env.PORT || 1337;
 const cors = require("cors");
-const session = require("express-session");
-const genuuid = require("uuid");
-const FileStore = require("session-file-store")(session);
+const cookie = require('cookie');
+const cookieParser = require('cookie-parser');
+// const session = require("express-session");
+// const genuuid = require("uuid");
+// const FileStore = require("session-file-store")(session);
 const multer = require("multer");
-
 const paths = require("./config/paths");
+const jwtHelper = require(`${paths.HELPERS}/jwtokens`);
 const chatsModel = require(`${paths.MODELS}/chatModel`);
+var http = require('http').createServer(app);
+var io = require('socket.io')(http);
 
 app.disable("x-powered-by");
 app.use(cors());
+app.use(cookieParser());
 
 app.use(express.static('public'));
 
-app.use(
-	session({
-		genid: function(req) {
-				return genuuid();
-		},
-		resave: false,
-		saveUninitialized: false,
-		secret: "testets",
-		cookie: {
-				secure: false,
-				httpOnly: true,
-				maxAge: 600000000
-		},
-		store: new FileStore(),
-		name: "session"
-	})
-);
+// app.use(
+// 	session({
+// 		genid: function(req) {
+// 				return genuuid();
+// 		},
+// 		resave: false,
+// 		saveUninitialized: false,
+// 		secret: "testets",
+// 		cookie: {
+// 				secure: false,
+// 				httpOnly: true,
+// 				maxAge: 600000000
+// 		},
+// 		store: new FileStore(),
+// 		name: "session"
+// 	})
+// );
 
 app.use("/api", require("./routes"));
 
@@ -58,8 +63,6 @@ app.use((err, req, response, next) => {
 	});
 });
 
-var http = require('http').createServer(app);
-var io = require('socket.io')(http);
 
 var allUserSocket = [];
 
@@ -86,6 +89,19 @@ function getHisSocket (user, all)
 	all.reverse();
 	return promise;
 }
+
+io.use(async (socket, next) => {
+	try {
+		const cookies = cookie.parse(socket.request.headers.cookie);
+		console.log(socket.handshake.address);
+		const payload = await jwtHelper.checkToken(cookies.token);
+		socket.username = payload.username;
+		next();
+	} catch (err) {
+		console.log(err.message);
+		next(err);
+	}
+});
 
 io.on('connection', (socketa) =>{
 	console.log('a user is connected')

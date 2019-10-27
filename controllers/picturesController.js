@@ -3,14 +3,14 @@ const pictureModel = require(`${paths.MODELS}/pictureModel`);
 
 module.exports = {
 	getUserPics: async (req, response) => {
-		console.log('getting pics...');
+		// console.log('getting pics...');
 		const params = {
 			username: req.params.username
 		};
 		pictureModel
 			.getUserPics(params)
 			.then(result => {
-				console.log(result);
+				// console.log(result);
 				response
 					.json({
 						status: 200,

@@ -3,7 +3,7 @@ const jwtHelper = require(`${paths.HELPERS}/jwtokens`);
 const userModel = require(`${paths.MODELS}/userModel`);
 
 module.exports = (req, res, next) => {
-  const token = req.session ? req.session.token : "";
+  const token = req.cookies ? req.cookies.token : "";
 
   if (!token) {
     res.status(401).json({
@@ -26,9 +26,8 @@ module.exports = (req, res, next) => {
         }
       })
       .catch(err => {
-        console.log("hey");
         console.log(err.message);
-        res.status(401).json({
+        res.status(401).clearCookie("token").json({
           status: 401,
           msg: err.message
         });
