@@ -30,7 +30,8 @@ const styleinput = {
 const mymsgStyle = {
     float: 'right',
     color: 'white',
-    backgroundColor: '#ff59fa'
+    backgroundColor: '#ff59fa',
+    marginTop: '3%'
 }
 
 const sendstyle = {
@@ -158,8 +159,6 @@ class Chats extends Component {
                 allmsg.push(data);
                 if ((allmsg[0].sender === this.state.to) || (allmsg[0].receiver === this.state.to))
                     this.setState({conversation : allmsg});
-                else
-                    this.setState({conversation : []});
             });
         })
         .catch(err => {
