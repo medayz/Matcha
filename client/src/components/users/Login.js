@@ -185,7 +185,7 @@ class Login extends Component {
   render() {
     return (
       <div className="container">
-          <div class="login-wrap">
+          <div className="login-wrap">
               {this.state.errState.active && (
                 <div className="alert alert-primary" role="alert">
                   {" "}
@@ -193,14 +193,14 @@ class Login extends Component {
                 </div>
               )}
               <Alert />
-              <div class="login-html">
+              <div className="login-html">
               <form id="Login" onSubmit={this.onSubmit}>
-                <input id="tab-1" type="radio" name="tab" class="sign-in" checked /><label for="tab-1" class="tab">Sign In</label>
-                <input id="tab-2" type="radio" name="tab" class="for-pwd" /><label for="tab-2" class="tab">Forgot Password</label>
-                <div class="login-form">
-                  <div class="sign-in-htm">
-                    <div class="group">
-                      <label for="user" class="label">Username or Email</label>
+                <input id="tab-1" type="radio" name="tab" className="sign-in" chacked="true" /><label htmlFor="tab-1" className="tab">Sign In</label>
+                <input id="tab-2" type="radio" name="tab" className="for-pwd" /><label htmlFor="tab-2" className="tab">Forgot Password</label>
+                <div className="login-form">
+                  <div className="sign-in-htm">
+                    <div className="group">
+                      <label htmlFor="user" className="label">Username or Email</label>
                       <RegisterInput
                         label=""
                         type="text"
@@ -213,8 +213,8 @@ class Login extends Component {
                         onChange={this.onChange}
                       />
                     </div>
-                    <div class="group">
-                      <label for="pass" class="label">Password</label>
+                    <div className="group">
+                      <label htmlFor="pass" className="label">Password</label>
                       <RegisterInput
                         label=""
                         type="password"
@@ -227,7 +227,7 @@ class Login extends Component {
                         onChange={this.onChange}
                       />
                     </div>
-                    <div class="group">
+                    <div className="group">
                       {this.state.login === "done" && (
                         <Redirect to={`/profile/edit`} Component={profile} />
                       )}
@@ -235,17 +235,17 @@ class Login extends Component {
                         Login
                       </button>
                     </div>
-                    <div class="hr"></div>
+                    <div className="hr"></div>
                   </div>
-                  <div class="for-pwd-htm">
-                    <div class="group">
-                      <label for="user" class="label">Username or Email</label>
-                      <input id="user" type="text" class="input" />
+                  <div className="for-pwd-htm">
+                    <div className="group">
+                      <label htmlFor="user" className="label">Username or Email</label>
+                      <input id="user" type="text" className="input" />
                     </div>
-                   <div class="group">
-                      <input type="submit" class="button" value="Reset Password" />
+                   <div className="group">
+                      <input type="submit" className="button" value="Reset Password" />
                     </div>
-                    <div class="hr"></div>
+                    <div className="hr"></div>
                   </div>
                 </div>
                 </form>

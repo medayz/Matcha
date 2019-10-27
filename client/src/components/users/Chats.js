@@ -31,7 +31,6 @@ const mymsgStyle = {
     float: 'right',
     color: 'white',
     backgroundColor: 'rgb(78, 103, 222)',
-    marginTop: '3%'
 }
 
 const sendstyle = {
@@ -202,6 +201,7 @@ class Chats extends Component {
                                             {(msg.receiver === this.state.from
                                                 && <div><Chip label={msg.body} style={{marginTop: '3%', borderColor: 'rgb(217, 255, 8)', color: 'rgb(217, 255, 8)'}}  variant="outlined" /> </div>)
                                                 || <div><Chip  label={msg.body} style={mymsgStyle}/></div>}
+                                            <br />
                                             <br />
                                             <br />
                                         </div>    
