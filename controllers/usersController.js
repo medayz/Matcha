@@ -159,6 +159,10 @@ module.exports = {
 			pass: validator.password(params.pass),
 			cPass: validator.confirmPassword(params.pass, params.cPass)
 		};
+		let checkusername = await userModel.getUser(params.username);
+		if (checkusername !== undefined)
+			params.err.username = "username already exist";
+		console.log(params);
 		if (!Object.values(params.err).filter(obj => obj !== "").length) {
 			let newUser = {};
 			Object.assign(newUser, params);
@@ -569,8 +573,9 @@ module.exports = {
 		tag: async (req, response, next) => {
 			const params = {
 				username: req.username || "",
-				tagName: req.tagName || ""
+				tagName: req.body.tagName || ""
 			};
+			console.log(params);
 			userModel.delete
 				.tag(params)
 				.then(() => response.sendStatus(200))

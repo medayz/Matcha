@@ -161,7 +161,7 @@ class EditProfile extends Component {
 				{this.state.tokenErr && <Redirect to="/login" />}
 				<div className="row profile">
 					<div className="col-md-3">
-					 	{this.state.visible &&  <ProfilePic pp={this.state.pp[0]}/>}
+					 	{this.state.visible &&  <ProfilePic pp={this.state.pp[0]} username={`${this.state.username}`}/>}
 					</div>
 					<br />
 					<div className="col-md-9">
@@ -198,7 +198,9 @@ class EditProfile extends Component {
 						<form>
 							<div className="row jjj">
 								{this.state.pics.map((img, index) => (
-									<Picture key={index} img={ img.filename } deleteImg={ () => this.deleteImg(img.filename) } />
+									<div className="col-md-6 col-lg-3" style={{marginTop: '2%'}} key={index}>
+										<Picture img={ img.filename } deleteImg={ () => this.deleteImg(img.filename) } />
+									</div>
 								))}
 							</div>
 							{this.state.addlogo &&

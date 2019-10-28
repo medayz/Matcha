@@ -26,6 +26,7 @@ import RadioButtonCheckedIcon from '@material-ui/icons/RadioButtonChecked';
 import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
 import { connect } from 'react-redux';
 import { user_socket } from "../../actions/socket";
+import '../../css/profile.css';
 
 const avatarcss = {
     width: '140px',
@@ -278,7 +279,7 @@ class Profileuser extends Component {
                         <br />
                         <div className="col-md-10 profile-content" >
                             <center>
-                                <Carousel width="500px">
+                                <Carousel  width="50%">
                                     {this.state.pics.map((p,index) => 
                                         <div key={index}>
                                             <img src={`/userPics/${p.filename}`} alt=""/>

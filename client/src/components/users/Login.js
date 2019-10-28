@@ -10,7 +10,6 @@ import { user_state } from "../../actions/connected";
 import { Redirect } from "react-router-dom";
 import profile from "./ConfirmAcc";
 import publicIp from "public-ip";
-import { btnColor } from "../../css/styleClasses";
 import io from 'socket.io-client';
 import '../../css/login.css';
 
@@ -185,17 +184,17 @@ class Login extends Component {
   render() {
     return (
       <div className="container">
-          <div className="login-wrap">
-              {this.state.errState.active && (
+          {this.state.errState.active && (
                 <div className="alert alert-primary" role="alert">
                   {" "}
                   {this.state.errState.active}{" "}
                 </div>
               )}
               <Alert />
+          <div className="login-wrap">
               <div className="login-html">
               <form id="Login" onSubmit={this.onSubmit}>
-                <input id="tab-1" type="radio" name="tab" className="sign-in" chacked="true" /><label htmlFor="tab-1" className="tab">Sign In</label>
+                <input id="tab-1" type="radio" name="tab" className="sign-in" defaultChecked="true" /><label htmlFor="tab-1" className="tab">Sign In</label>
                 <input id="tab-2" type="radio" name="tab" className="for-pwd" /><label htmlFor="tab-2" className="tab">Forgot Password</label>
                 <div className="login-form">
                   <div className="sign-in-htm">

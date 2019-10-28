@@ -70,6 +70,10 @@ export default class ProfilePic extends Component {
     }, 3000);
   };
 
+  componentDidMount() {
+    console.log(this.props);
+  }
+
   render() {
     return (
       <div>
@@ -80,7 +84,7 @@ export default class ProfilePic extends Component {
             </div>
           </div>
           <div className="profile-usertitle">
-            <div className="profile-usertitle-name">name weldname</div>
+            <div className="profile-usertitle-name">{this.props.username}</div>
           </div>
           <div className="upload-btn-wrapper">
             <center>

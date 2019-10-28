@@ -127,9 +127,17 @@ export default class EditInfos extends Component {
       });
     });
   };
-  ondeleteTag = () => {
-    console.log(this.state.optionsUser);
-    console.log("tag will be deleted");
+  ondeleteTag = async (tagName) => {
+    let tags =  this.state.optionsUser;
+    delete tags[tags.indexOf(tagName)];
+    this.setState({optionsUser: tags});
+    let obj = {
+      tagName: tagName.value,
+    }
+    await axios.post('/api/users/delete/tag', obj)
+    .then(res => {
+    })
+    .catch(err => {});
   };
 
   selectCountry (val) {
@@ -162,7 +170,6 @@ export default class EditInfos extends Component {
       .then(res => {
         if (res.data.data) {
           const user = res.data.data;
-          console.log(user);
           user.fName && this.setState({ fName: user.fName });
           user.lName && this.setState({ lName: user.lName });
           user.gender && this.setState({ gender: user.gender });
@@ -178,7 +185,6 @@ export default class EditInfos extends Component {
         }
       })
       .catch(err => {
-        console.log("adadad");
       });
   }
 
@@ -197,7 +203,6 @@ export default class EditInfos extends Component {
       userCountry: this.state.country,
       userRegion: this.state.region
     };
-    console.log(usr);
     if (usr.activeLocation === "1") usr.activeLocation = true;
     else usr.activeLocation = false;
     this.setState({
@@ -365,8 +370,8 @@ export default class EditInfos extends Component {
             </div>{" "}
             <br />
             <div className="row">
-              <div className="col">
-                <label>  <span style={red}>*</span>Add tags <small style={red}>(At least one tag)</small></label>{" "}
+              <div className="col" style={{color: "black"}}>
+                <label style={{color: "white"}}>  <span style={red}>*</span>Add tags <small style={red}>(At least one tag)</small></label>{" "}
                 <CreatableSelect
                   isClearable
                   onChange={this.onChangeTags}
@@ -387,8 +392,8 @@ export default class EditInfos extends Component {
                       key={tag.label}
                       label={tag.label}
                       value={tag.value}
-                      onDelete={this.ondeleteTag}
                       onChange={this.handleChangeTag}
+                      onDelete={(e) => this.ondeleteTag(tag)}
                       className="mr-1 mb-1"
                       style={tagsColor}
                     />
