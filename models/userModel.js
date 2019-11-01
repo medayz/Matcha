@@ -122,7 +122,13 @@ module.exports = {
 				"MATCH (u:User {username: $username}) SET u.location = point({longitude: $long, latitude: $lat}), u.country=$country, u.city=$city;",
 				params
 			);
-		}
+		},
+		notification: async params => {
+			await query.execute(
+				"MATCH (u:User {username: $username}) CREATE (u)-[:GOT_NOTIFIED]->(:Notification {text: $text, date: date(), time: time()})",
+				params
+			);
+		},
 	},
 	edit: {
 		infos: async (username, newInfos) => {

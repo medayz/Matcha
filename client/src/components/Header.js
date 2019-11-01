@@ -17,7 +17,8 @@ class Header extends Component {
     whoami: "",
     show: false,
     toLogin: false,
-    socket: {}
+    socket: {},
+    notifs: []
   };
 
   logout = () => {
@@ -39,25 +40,23 @@ class Header extends Component {
       await axios
         .get("/api/users/isLoggedOn")
         .then(async res => {
-            await axios.get('/api/users/whoami')
-            .then(res => {
-              this.setState({
-                  whoami : res.data.user
-              });
-            })
-            .catch(err => {
-              console.log(err.message);
-            });
-            this.props.user_state(true);
-            let socket = io(':1337', {query: `owner=${this.state.whoami}`});
-            this.props.user_socket(socket);
-            })
+          const notifs = await axios.get("/api/notifs/get");
+          this.setState({notifs: notifs.data.data});
+          this.props.user_state(true);
+          let socket = io(':1337');
+          socket.on('notification', res => {
+            const newNotif = this.state.notifs.slice();
+            newNotif.unshift(res);
+            this.setState({notifs: newNotif});
+          });
+          this.props.user_socket(socket);
+        })
         .catch(err => {
           this.props.user_state(false);
           if (this.props.userSocket !== {})
             this.props.user_socket({});
           this.setState({toLogin : true})
-          })
+        });
       this.setState({show : true});
   }
 
@@ -108,7 +107,7 @@ class Header extends Component {
                   </Link>
                 </li>
               )}
-              {this.state.connected && <Notifications />}
+              {this.state.connected && <Notifications notifs={this.state.notifs}/>}
               {this.state.connected && (
                 <li className="nav-item">
                   <Link to={`/profile/${this.state.whoami}`} className="nav-link">

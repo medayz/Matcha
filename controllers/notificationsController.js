@@ -4,12 +4,12 @@ const notificationModel = require(paths.MODELS + '/notificationModel');
 module.exports = {
     getAllNotifications: async (req, response) => {
         notificationModel
-            .getAllNotifications(req.params.username)
+            .getAllNotifications(req.username)
             .then((result) => {
                 response
                     .json({
                         status: 200,
-                        data: result
+                        data: result.map(item => item.props)
                     });
             })
             .catch(err => {

@@ -61,7 +61,7 @@ class Profileuser extends Component {
     whoami: "",
     redirect: false,
     online: false,
-    socket: [],
+    socket: null,
   }
 
   toEditProfile = () => {
@@ -73,14 +73,13 @@ class Profileuser extends Component {
         to: this.state.user
     };
     console.log("outside");
-    await axios
-    .post('/api/users/like', user)
-    .then(res => {
-        console.log("inside");
-        let like = res.data.like;
-        this.setState({like : like});
-    })
-    .catch();
+    axios
+        .post('/api/users/like', user)
+        .then(res => {
+            let like = res.data.like;
+            this.setState({like : like});
+        })
+        .catch();
   }
 
   async componentDidMount() {

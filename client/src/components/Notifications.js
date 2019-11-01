@@ -36,7 +36,9 @@ class Notifications extends Component {
                         open={Boolean(this.state.anchor)}
                         onClose={this.handleClose}
                     >
-                        <MenuItem onClick={this.profile}>Profile</MenuItem>
+                        { this.props.notifs.map(
+                            (notif, index) => <MenuItem key={index} onClick={()=>{}}>{notif.text}</MenuItem>
+                        )}
                     </Menu>
                 </div>
             );

@@ -256,7 +256,8 @@ module.exports = {
 				data: params
 			});
 		}
-	}, logOut: async (req, response) => {
+	},
+	logOut: async (req, response) => {
 		response.clearCookie("token").sendStatus(200);
 	},
 	accountActivation: async (req, response) => {
@@ -585,54 +586,53 @@ module.exports = {
 	stateOfLike : async (req, response) => {
 		let user1 = req.username;
 		let user2 = req.body.to;
-		await userModel.stateOfLike(user1, user2)
-		.then(res => {
-			if (res === undefined)
-			{
-				response.status(200).json({
-					status: 200,
-					like: false
-				});
-			}
-			else
-			{
-				response.status(200).json({
-					status: 200,
-					like: true
-				});
-			}
-
-		})
+		userModel.stateOfLike(user1, user2)
+			.then(res => {
+				if (res === undefined)
+				{
+					response.status(200).json({
+						status: 200,
+						like: false
+					});
+				}
+				else
+				{
+					response.status(200).json({
+						status: 200,
+						like: true
+					});
+				}
+			});
 	},
 	like : async (req, response) =>  {
+		console.log(req.sockets.length);
 		let user1 = req.username;
 		let user2 = req.body.to;
-		await userModel.likeUser(user1, user2)
-		.then( async (res) => {
-			let ResUser1 = res.user1;
-			let ResUser2 = res.user2;
-			if (ResUser1 === null)
-			{
-				if (ResUser2 !== null)
-					 chatModel.addChat(user1,user2).catch(err => {});
-				response.status(200).json({
-					status: 200,
-					like: true
-				});	
-			}
-			else
-			{
-				await userModel.disLikeUser(user1, user2);
-				await chatModel.deleteChatRelation(user1,user2);
-				await chatModel.deleteChat(user1,user2);
-				response.status(200).json({
-					status: 200,
-					like: false
-				});
-			}
-		})
-		.catch(err => {
-
-		});
+		userModel.likeUser(user1, user2)
+			.then( async (res) => {
+				let ResUser1 = res.user1;
+				let ResUser2 = res.user2;
+				if (ResUser1 === null)
+				{
+					if (ResUser2 !== null)
+						chatModel.addChat(user1,user2).catch(err => {});
+					response.status(200).json({
+						status: 200,
+						like: true
+					});	
+				}
+				else
+				{
+					await userModel.disLikeUser(user1, user2);
+					await chatModel.deleteChat(user1, user2);
+					response.status(200).json({
+						status: 200,
+						like: false
+					});
+				}
+			})
+			.catch(err => {
+				console.log(err.message);
+			});
 	}
 };

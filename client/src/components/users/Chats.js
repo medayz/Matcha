@@ -50,7 +50,7 @@ class Chats extends Component {
         to: "Choose a conversation",
         from: "",
         conversation : [],
-        socket : '',
+        socket : null,
         redirect: false
     }
 
@@ -90,18 +90,18 @@ class Chats extends Component {
         this.setState({conversation : []})
         this.setState({to : user});
         await axios.get(`/api/chats/getConversation/${this.state.from}/${user}`)
-        .then(res => {
-            this.mapOnMsgs(res.data.data).then(res => {
-                let conv = res;
-                conv = conv.reverse();
-                this.setState({conversation : conv});
+            .then(res => {
+                this.mapOnMsgs(res.data.data).then(res => {
+                    let conv = res;
+                    conv = conv.reverse();
+                    this.setState({conversation : conv});
+                    
+                });
                 
+            })
+            .catch(err => {
+                console.log(err);
             });
-            
-        })
-        .catch(err => {
-            console.log(err);
-        })
     }
 
     sendmsg = async () => {
@@ -114,19 +114,11 @@ class Chats extends Component {
         obj.msg = obj.msg.trim();
         if (obj.msg.length > 0)
         {
-            this.state.socket.emit('msg', obj);
-            await axios.get(`/api/chats/getConversation/${this.state.from}/${this.state.to}`)
-            .then(res => {
-                this.mapOnMsgs(res.data.data).then(res => {
-                    let conv = res;
-                    conv = conv.reverse();
-                    this.setState({conversation : conv});
-                });
-                this.setState({ msg: "" });
-            })
-            .catch(err => {
-                console.log(err);
-            })
+            this.state.socket.emit('msg', obj, data => {
+                const conv = this.state.conversation.slice();
+                conv.push(data);
+                this.setState({conversation : conv});
+            });
             this.setState({msg : ""});
         }
         

@@ -12,7 +12,7 @@ async function run(query, params) {
 };
 
 async function getNodes(query, params) {
-	const results = [];
+	let results = [];
 	const queryResult = await run(query, params);
 	queryResult.records.forEach((rec) => {
 		results.push({
@@ -21,6 +21,7 @@ async function getNodes(query, params) {
 			props: rec.get(0).properties
 		});
 	});
+	results = results.map(obj => propsToInt(obj));
 	return results;
 }
 
