@@ -7,6 +7,7 @@ const tagModel = require(`${paths.MODELS}/tagModel`);
 const validator = require(`${paths.HELPERS}/validator`);
 const mail = require(`${paths.HELPERS}/sendmail`);
 const token = require(`${paths.HELPERS}/token`);
+const sockets = require(`${paths.HELPERS}/sockets`);
 const fs = require('fs');
 
 module.exports = {
@@ -605,17 +606,32 @@ module.exports = {
 			});
 	},
 	like : async (req, response) =>  {
-		console.log(req.sockets.length);
-		let user1 = req.username;
-		let user2 = req.body.to;
+		const user1 = req.username;
+		const user2 = req.body.to;
+		const user1Socket = await sockets.getUserSocket(user1, req.sockets);
+		const user2Socket = await sockets.getUserSocket(user2, req.sockets);
+
 		userModel.likeUser(user1, user2)
 			.then( async (res) => {
 				let ResUser1 = res.user1;
 				let ResUser2 = res.user2;
 				if (ResUser1 === null)
 				{
-					if (ResUser2 !== null)
-						chatModel.addChat(user1,user2).catch(err => {});
+					user2Socket.emit('notification', {
+						username: user2,
+						text: `${user1} liked you`
+					});
+					if (ResUser2 !== null) {
+						user1Socket.emit('notification', {
+							username: user1,
+							text: `you're now connected with ${user2}`
+						});
+						user2Socket.emit('notification', {
+							username: user2,
+							text: `you're now connected with ${user1}`
+						});
+						chatModel.addChat(user1,user2);
+					}
 					response.status(200).json({
 						status: 200,
 						like: true
@@ -623,6 +639,10 @@ module.exports = {
 				}
 				else
 				{
+					user2Socket.emit('notification', {
+						username: user2,
+						text: `${user1} unliked you`
+					});
 					await userModel.disLikeUser(user1, user2);
 					await chatModel.deleteChat(user1, user2);
 					response.status(200).json({
