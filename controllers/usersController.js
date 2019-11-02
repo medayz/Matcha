@@ -370,6 +370,21 @@ module.exports = {
 						msg: "Location couldn't be added!"
 					});
 				});
+		},
+		view: async (req, response) => {
+			const params = {
+				user1: req.username,
+				user2: req.body.viewed
+			};
+			user2Socket = await sockets.getUserSocket(params.user2, req.sockets);
+			userModel.add.view(params)
+				.then(res => {
+					user2Socket && user2Socket.emit('notification', {
+						username: params.user2,
+						text: `${params.user1} viewed your profile`
+					});
+					response.sendStatus(200);
+				});
 		}
 	},
 	filter: (req, response, next) => {

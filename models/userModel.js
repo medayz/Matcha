@@ -129,6 +129,12 @@ module.exports = {
 				params
 			);
 		},
+		view: async params => {
+			await query.execute(
+				"MATCH (u1:User {username: $user1}), (u2:User {username: $user2}) MERGE (u1)-[:VIEWED]->(u2)",
+				params
+			);
+		},
 	},
 	edit: {
 		infos: async (username, newInfos) => {

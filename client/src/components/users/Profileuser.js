@@ -86,10 +86,7 @@ class Profileuser extends Component {
     //console.log(this.props);
     let socket = this.props.userSocket;
 	try {
-        let res = await axios.get(`/api/users/get/${this.state.user}`)
-                    .catch(er => {
-                    this.setState({redirect: true});    
-        });
+        let res = await axios.get(`/api/users/get/${this.state.user}`);
         console.log(res.data.data);
 		this.setState({data: res.data.data});
 		res = await getUserTags(this.state.user);
@@ -102,12 +99,8 @@ class Profileuser extends Component {
 		res = await axios.post('/api/users/stateOfLike', user)
 		this.setState({like : res.data.like});
         this.setState({ visible: true });
-        await axios.get('/api/users/whoami')
-        .then(res => {
-            this.setState({
-                whoami : res.data.user
-            })
-        })
+        axios.get('/api/users/whoami')
+            .then(res => this.setState({ whoami : res.data.user }));
         if (this.state.user === this.state.whoami)
             this.setState({online : true});
         else
@@ -119,11 +112,13 @@ class Profileuser extends Component {
                 else
                     this.setState({online : false});
             });
-			this.state.socket.emit('isOnline', this.state.user);
-            
+            this.state.socket.emit('isOnline', this.state.user);
+            // POST REQUEST TO STORE THE VIEW
+            axios.post('/api/users/add/view', { viewed: this.state.user });
         }
         console.log(this.state);
 	} catch(err) {
+        this.setState({redirect: true});    
 		console.log(err.message);
     }
     if (this.state.user === this.state.whoami && (this.state.data.birthDate === "" || this.state.data.gender === "" ||

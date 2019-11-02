@@ -19,4 +19,8 @@ addRouter
     .route('/location')
     .post(usersController.add.location);
 
+addRouter
+    .route('/view')
+    .post(usersController.add.view);
+
 module.exports = addRouter;
