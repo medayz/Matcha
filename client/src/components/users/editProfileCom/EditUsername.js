@@ -3,8 +3,11 @@ import RegisterInput from "../RegisterInput";
 import axios from "axios";
 import { Redirect } from 'react-router';
 import { btnColor } from "../../../css/styleClasses";
+import { connect } from 'react-redux';
+import { user_state } from "../../../actions/connected";
+import { user_socket } from "../../../actions/socket";
 
-export default class EditUsername extends Component {
+class EditUsername extends Component {
   state = {
     username: "",
     errState: {},
@@ -22,6 +25,8 @@ export default class EditUsername extends Component {
     await axios
     .put(`/api/users/edit/username`, usr)
     .then(res => {
+      this.props.user_state(false);
+      this.props.user_socket({});
       this.setState({ msg2: res.data.msg });
     })
     .catch(err => {
@@ -41,6 +46,7 @@ export default class EditUsername extends Component {
   UNSAFE_componentWillMount() {
     this.setState({ username: this.props.username });
   }
+
   render() {
     return (
       <div>
@@ -82,3 +88,12 @@ export default class EditUsername extends Component {
     );
   }
 }
+
+const mapStateToProps = (state) => {
+  return {
+    userState: state.connected,
+    userSocket: state.socket
+  }
+}
+
+export default connect(mapStateToProps, {user_state, user_socket})(EditUsername);

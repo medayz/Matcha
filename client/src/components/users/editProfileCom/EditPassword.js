@@ -3,8 +3,11 @@ import RegisterInput from "../RegisterInput";
 import axios from "axios";
 import { Redirect } from "react-router";
 import { btnColor } from "../../../css/styleClasses";
+import { connect } from 'react-redux';
+import { user_state } from "../../../actions/connected";
+import { user_socket } from "../../../actions/socket";
 
-export default class EditUsername extends Component {
+class EditPassword extends Component {
   state = {
     pass: "",
     cPass: "",
@@ -26,6 +29,8 @@ export default class EditUsername extends Component {
     await axios
       .put(`/api/users/edit/password`, pwd)
       .then(res => {
+        this.props.user_state(false);
+        this.props.user_socket({});
         this.setState({ isValid: true });
       })
       .catch(err => {
@@ -99,3 +104,13 @@ export default class EditUsername extends Component {
     );
   }
 }
+
+
+const mapStateToProps = (state) => {
+  return {
+    userState: state.connected,
+    userSocket: state.socket
+  }
+}
+
+export default connect(mapStateToProps, {user_state, user_socket})(EditPassword);

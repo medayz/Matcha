@@ -281,6 +281,8 @@ export default class EditInfos extends Component {
                   onChange={this.handleGender}
                   className="form-control"
                 >
+
+                  {this.state.gender === "" && <option>-</option>}
                   {this.state.genderArr.map((gen, index) => 
                     <option value={gen} key={index} disabled={gen === this.state.gender ? true : false}> {gen} </option>
                   )}
@@ -297,6 +299,7 @@ export default class EditInfos extends Component {
                       onChange={this.handleSexual}
                       className="form-control"
                     >
+                      {this.state.sexualPref === "" && <option>-</option>}
                       {this.state.sexual.map((gen, index) => 
                         <option value={gen} key={index} disabled={gen === this.state.sexualPref ? true : false}> {gen} </option>
                       )}
