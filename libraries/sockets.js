@@ -9,22 +9,20 @@ const eventHandlers = {
             socketat.reverse();
             const userSocket = await sockets.getUserSocket(msg.to, socketat);
             socketat.reverse();
-            const message = {
+            const message = await chatModel.addMessage({
                 sender: msg.from,
                 receiver: msg.to,
                 body: msg.msg,
                 date: msg.date
-            };
-            const notif = {
+            });
+            const notif = await userModel.add.notification({
                 username: msg.to,
                 text: `${msg.from} sent you a message`
-            };
+            });
             if (userSocket !== undefined) {
                 userSocket.emit("msg", message);
                 userSocket.emit("notification", notif);
             }
-            chatModel.addMessage(message);
-            userModel.add.notification(notif);
             calback(message);
         } catch (err) {
             console.log(err.message);
