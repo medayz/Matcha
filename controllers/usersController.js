@@ -378,12 +378,12 @@ module.exports = {
 			};
 			user2Socket = await sockets.getUserSocket(params.user2, req.sockets);
 			userModel.add.view(params)
-				.then(res => {
+				.then(async res => {
 					const user2Notif = await userModel.add.notification({
 						username: params.user2,
 						text: `${params.user1} viewed your profile`
 					});
-					user2Socket && user2Socket.emit('notification', user2Notif);
+					user2Socket && user2Socket.emit('notification', user2Notif.props);
 					response.sendStatus(200);
 				});
 		}
@@ -637,7 +637,7 @@ module.exports = {
 						username: user2,
 						text: `${user1} liked you`
 					});
-					user2Socket.emit('notification', user2Notif);
+					user2Socket.emit('notification', user2Notif.props);
 					if (ResUser2 !== null) {
 						const user1Notif = await userModel.add.notification({
 							username: user1,
@@ -647,8 +647,8 @@ module.exports = {
 							username: user2,
 							text: `you're now connected with ${user1}`
 						});
-						user1Socket.emit('notification', user1Notif);
-						user2Socket.emit('notification', user2Notif);
+						user1Socket.emit('notification', user1Notif.props);
+						user2Socket.emit('notification', user2Notif.props);
 						chatModel.addChat(user1, user2);
 					}
 					response.status(200).json({

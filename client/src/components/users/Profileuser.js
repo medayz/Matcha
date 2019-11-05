@@ -31,7 +31,6 @@ import RadioButtonCheckedIcon from "@material-ui/icons/RadioButtonChecked";
 import RadioButtonUncheckedIcon from "@material-ui/icons/RadioButtonUnchecked";
 import { connect } from "react-redux";
 import { user_socket } from "../../actions/socket";
-import "../../css/profile.css";
 
 const avatarcss = {
   width: "140px",

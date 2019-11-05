@@ -4,7 +4,7 @@ const userModel = require(`${paths.MODELS}/userModel`);
 const sockets = require(`${paths.HELPERS}/sockets`);
 
 const eventHandlers = {
-    msg: async (msg, calback) => {
+    msg: async (msg, callback, socketat) => {
         try {
             socketat.reverse();
             const userSocket = await sockets.getUserSocket(msg.to, socketat);
@@ -20,15 +20,15 @@ const eventHandlers = {
                 text: `${msg.from} sent you a message`
             });
             if (userSocket !== undefined) {
-                userSocket.emit("msg", message);
-                userSocket.emit("notification", notif);
+                userSocket.emit("msg", message.props);
+                userSocket.emit("notification", notif.props);
             }
-            calback(message);
+            callback(message.props);
         } catch (err) {
             console.log(err.message);
         }
     },
-    login: async data => {
+    login: async (data, socketa, socketat) => {
         try {
             socketat.reverse();
             const userSocket = await sockets.getUserSocket(data, socketat);
@@ -46,8 +46,8 @@ const eventHandlers = {
 
 module.exports = function(socketa, socketat) {
     socketat.push(socketa);
-    socketa.on("msg", data => eventHandlers.msg(data, socketat));
-    socketa.on("isOnline", data => eventHandlers.login(data, socketat));
+    socketa.on("msg", (data, callback) => eventHandlers.msg(data, callback, socketat));
+    socketa.on("isOnline", data => eventHandlers.login(data, socketa, socketat));
     socketa.on("ForceDisconnect", async data => {
         try {
             const filtered = await eventHandlers.logout();

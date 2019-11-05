@@ -29,7 +29,7 @@ module.exports = {
         );
     },
     addMessage: async msg => {
-        return await query.execute(
+        return await query.getOneRow(
             "MATCH (u1:User {username: $name1})-[:PARTICIPATE_IN]->(c)<-[:PARTICIPATE_IN]-(u2:User {username: $name2}) CREATE (c)-[:CONTAINS]->(m:Message {date: date(), time: time(), sender: u1.username, receiver: u2.username, body: $body}) RETURN m",
             {
                 name1: msg.sender,

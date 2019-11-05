@@ -45,7 +45,7 @@ module.exports = {
                 response
                     .json({
                         status: 200,
-                        data: msg
+                        data: msg.props
                     });
             })
             .catch (err => {});
