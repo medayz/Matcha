@@ -5,16 +5,21 @@ const driver = neo4j.driver(dbconfig.DSN, neo4j.auth.basic(dbconfig.USER, dbconf
 const session = driver.session();
 
 async function run(query, params) {
-	const queryResult = await session.run(query, params);
-
-	session.close();
-	return queryResult;
+	const queryResult = {};
+	try {
+		queryResult = await session.run(query, params);
+		session.close();
+		return queryResult;
+	}
+	catch(err) {
+		console.log(err.message);
+	}
 };
 
 async function getNodes(query, params) {
 	let results = [];
 	const queryResult = await run(query, params);
-	queryResult.records.forEach((rec) => {
+	queryResult && queryResult.records.forEach((rec) => {
 		results.push({
 			id: rec.get(0).identity && rec.get(0).identity.toNumber(),
 			labels: rec.get(0).labels,
