@@ -17,7 +17,7 @@ const stylebtn = {
 	width: '100%',
 	margin: '0.3%',
 	marginTop: '3%',
-	backgroundColor: 'rgb(39, 0, 255)',
+	backgroundColor: 'pink',
     color: 'white'
 }
 

@@ -55,7 +55,6 @@ class Header extends Component {
           this.props.user_state(false);
           if (this.props.userSocket !== {})
             this.props.user_socket({});
-          this.setState({toLogin : true})
         });
       this.setState({show : true});
   }
@@ -119,6 +118,13 @@ class Header extends Component {
                 <li className="nav-item">
                   <Link to={'/chats'} className="nav-link">
                     Chat
+                  </Link>
+                </li>
+              )}
+              {this.state.connected && (
+                <li className="nav-item">
+                  <Link to={'/infos'} className="nav-link">
+                    History
                   </Link>
                 </li>
               )}

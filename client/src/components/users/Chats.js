@@ -11,7 +11,7 @@ import { user_socket } from "../../actions/socket";
 const iconstyle = {
     float: 'right',
     cursor: 'pointer',
-    color: 'rgb(95, 89, 255)',
+    color: 'pink',
 }
 
 const scroll = {
@@ -30,11 +30,11 @@ const styleinput = {
 const mymsgStyle = {
     float: 'right',
     color: 'white',
-    backgroundColor: 'rgb(78, 103, 222)',
+    backgroundColor: 'pink',
 }
 
 const sendstyle = {
-    color : '#ff59fa',
+    color : 'pink',
     margin: '4%'
 }
 
@@ -191,7 +191,7 @@ class Chats extends Component {
                                     {this.state.conversation.map((msg, index) => 
                                         <div key={index}>
                                             {(msg.receiver === this.state.from
-                                                && <div><Chip label={msg.body} style={{marginTop: '3%', borderColor: 'rgb(217, 255, 8)', color: 'rgb(217, 255, 8)'}}  variant="outlined" /> </div>)
+                                                && <div><Chip label={msg.body} style={{marginTop: '3%', borderColor: 'pink', color: 'pink'}}  variant="outlined" /> </div>)
                                                 || <div><Chip  label={msg.body} style={mymsgStyle}/></div>}
                                             <br />
                                             <br />

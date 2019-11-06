@@ -9,15 +9,14 @@ a{color:inherit;text-decoration:none}
 	max-width:510px;
 	min-height:510px;
 	position:relative;
-	background:url(https://maxcdn.icons8.com/app/uploads/2016/03/material-1-1000x563.jpg) no-repeat center;
 	background-size: cover;
-	box-shadow:0 12px 15px 0 rgba(0,0,0,.24),0 17px 50px 0 rgba(0,0,0,.19);
+	box-shadow:0 12px 15px 0 pink;
 }
 .login-html{
 	width:100%;
 	height:100%;
 	padding:90px 70px 50px 70px;
-	background:rgba(0,0,0,0.5);
+	background:pink;
 }
 .login-html .sign-in-htm,
 .login-html .for-pwd-htm{
@@ -49,11 +48,11 @@ a{color:inherit;text-decoration:none}
 	margin:0 15px 10px 0;
 	display:inline-block;
 	border-bottom:2px solid transparent;
+	color: white;
 }
 .login-html .sign-in:checked + .tab,
 .login-html .for-pwd:checked + .tab{
 	color:#fff;
-	border-color:#1161ee;
 }
 .login-form{
 	min-height:345px;
@@ -78,18 +77,19 @@ a{color:inherit;text-decoration:none}
 	border:none;
 	padding:15px 20px;
 	border-radius:25px;
-	background:rgba(255,255,255,.1);
+	background:white;
 }
 .login-form .group input[data-type="password"]{
 	text-security:circle;
 	-webkit-text-security:circle;
 }
 .login-form .group .label{
-	color:#aaa;
+	color:white;
 	font-size:12px;
 }
 .login-form .group .button{
-	background:#1161ee;
+	background:white;
+	color :pink;
 }
 .login-form .group label .icon{
 	width:15px;
@@ -97,7 +97,7 @@ a{color:inherit;text-decoration:none}
 	border-radius:2px;
 	position:relative;
 	display:inline-block;
-	background:rgba(255,255,255,.1);
+	background: pink;
 }
 .login-form .group label .icon:before,
 .login-form .group label .icon:after{
