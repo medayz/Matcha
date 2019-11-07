@@ -11,6 +11,7 @@
     "classnames": "^2.2.6",
     "filepond": "^4.4.12",
     "http": "0.0.0",
+    "http-proxy-middleware": "^0.20.0",
     "jsonwebtoken": "^8.5.1",
     "jwt-decode": "^2.2.0",
     "mdbreact": "^4.21.0",
@@ -32,7 +33,6 @@
     "socket.io": "^2.3.0",
     "socket.io-client": "^2.3.0"
   },
-  "proxy": "http://localhost:1337",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",

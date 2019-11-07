@@ -663,7 +663,7 @@ module.exports = {
 		const user1 = req.username;
 		const user2 = req.body.to;
 
-		(params.user1 !== params.user2)
+		(user1 !== user2)
 		&& userModel.likeUser(user1, user2)
 			.then( async (res) => {
 				let ResUser1 = res.user1;

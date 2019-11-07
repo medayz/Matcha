@@ -91,10 +91,11 @@ class Profileuser extends Component {
     let user = {
       to: this.state.user
     };
-    console.log("outside");
+    //console.log("outside");
     axios
       .post("/api/users/like", user)
       .then(res => {
+        console.log(res);
         let like = res.data.like;
         this.setState({ like: like });
       })
@@ -163,7 +164,7 @@ class Profileuser extends Component {
                       <Avatar
                         style={avatarcss}
                         alt="Remy Sharp"
-                        src={`/userPics/${this.state.pp[0].filename}`}
+                        src={`http://localhost:1337/userPics/${this.state.pp[0].filename}`}
                       />
                       <br />
                       <Chip
@@ -316,7 +317,7 @@ class Profileuser extends Component {
                 <Carousel width="50%">
                   {this.state.pics.map((p, index) => (
                     <div key={index}>
-                      <img src={`/userPics/${p.filename}`} alt="" />
+                      <img src={`http://localhost:1337/userPics/${p.filename}`} alt="" />
                       <p className="legend">Legend 1</p>
                     </div>
                   ))}

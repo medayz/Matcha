@@ -100,7 +100,7 @@ module.exports = {
     },
     filterUsers: async params => {
         return await query.getAllSpecialNodes(
-            "MATCH (u1:User {username: $username})-[]->(t:Tag)<-[]-(u2:User)-[]->(p:Picture {`isProfilePicture`: 'true'}) WITH count(DISTINCT t) AS c, round(distance(u1.location, u2.location)/1000) AS dist, duration.between(date(u2.birthDate), date()).years AS age, u2.username AS name, p.name AS pp, u1 AS u1, u2 AS u2, u2.gender AS gender WHERE dist <= $distance AND age >= $ageMin AND age <= $ageMax AND c >= $tags AND NOT (u1)-[:BLOCKED]->(u2) RETURN collect({ntags: c, username: name, pic: pp, distance: dist, age: age, gender: gender})",
+            "MATCH (u1:User {username: $username})-[]->(t:Tag)<-[]-(u2:User)-[]->(p:Picture {`isProfilePicture`: 'true'}) WITH count(DISTINCT t) AS c, round(distance(u1.location, u2.location)/1000) AS dist, duration.between(date(u2.birthDate), date()).years AS age, u2.username AS name, p.name AS pp, u1 AS u1, u2 AS u2, u2.gender AS gender WHERE dist <= $distance AND age >= $ageMin AND age <= $ageMax AND c >= $tags AND NOT (u1)-[:BLOCKED]->(u2) AND (u1.sexualPref=u2.gender OR u1.sexualPref='Everyone') RETURN collect({ntags: c, username: name, pic: pp, distance: dist, age: age, gender: gender})",
             params
         );
     },

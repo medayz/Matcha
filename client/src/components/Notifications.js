@@ -5,9 +5,9 @@ import MenuItem from '@material-ui/core/MenuItem';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import Badge from '@material-ui/core/Badge';
 import axios from 'axios'; 
-import { user_state } from "../actions/connected";
 import { user_socket } from "../actions/socket";
 import { connect } from 'react-redux';
+import io from 'socket.io-client';
 
 const style_unread = {
     backgroundColor : 'pink',
@@ -17,27 +17,38 @@ const style_unread = {
 class Notifications extends Component {
     state = {
         anchor: null,
-        notifs: this.props.notifs,
-        number: this.props.unread
+        notifs: [],
+        number: 0
     };
+
+    countUnReadNotifs = (notifs) => {
+        let number = 0;
+        let promise = new Promise((resolve, reject) => {
+            notifs.forEach(notif => {
+                if (notif.read === 0)
+                    number++;
+            });
+            resolve(number);
+        })
+        return (promise);
+    }
 
     handleClick = event => {
         //console.log(event.currentTarget);
         this.setState({anchor: event.currentTarget});
-        axios.post("/api/notifs/read").then(async res => {
-            let notifs = this.state.notifs
-            this.setState({number: 0});
-            setTimeout(() => {
-                notifs.forEach(notif => {
-                    notif.read = 1;
-                });
-                this.setState({notifs: notifs});
-            }, 2000);
-        }).catch(err => {});
     };
 
     handleClose = () => {
         this.setState({anchor: null});
+        axios.post("/api/notifs/read").then(async res => {
+            this.setState({number: 0});
+            this.setState({notifs:
+                this.state.notifs.map(notif => {
+                    notif.read = 1;
+                    return notif;
+                })
+            });
+        }).catch(err => {});
     };
 
     profile = () => {
@@ -45,14 +56,20 @@ class Notifications extends Component {
         this.handleClose();
     };
 
-    componentDidMount () {
-        let socket = this.props.userSocket;
-        socket.on('notification', res => {
+    async componentDidMount () {
+        let socket = io(':1337');
+        this.props.user_socket(socket);
+        const notifs = await axios.get("/api/notifs/get");
+        this.setState({ notifs: notifs.data.data });
+        const nb_unread_notifs = await this.countUnReadNotifs(this.state.notifs);
+        this.setState({number : nb_unread_notifs});
+        console.log(socket)
+        socket.on('notification', async res => {
             const newNotif = this.state.notifs.slice();
             newNotif.unshift(res);
             this.setState({notifs: newNotif});
-            let unread = this.state.number + 1;
-            this.setState({number : unread});
+            const nb_unread_notifs = await this.countUnReadNotifs(this.state.notifs);
+            this.setState({number : nb_unread_notifs});
         });
     }
 
@@ -93,3 +110,4 @@ const mapStateToProps = (state) => {
   
 
 export default  connect(mapStateToProps, {user_socket})(Notifications);
+// export default Notifications;

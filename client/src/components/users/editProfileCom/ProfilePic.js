@@ -41,6 +41,7 @@ export default class ProfilePic extends Component {
     err: 'not yet',
     pp : this.props.pp
   }
+
   uploadProfileImg = async e => {
      let img = e.target.files[0];
      if (img.name.match(/\.(jpg|jpeg|png)$/)) {
@@ -80,7 +81,7 @@ export default class ProfilePic extends Component {
         <div className="profile-sidebar">
           <div className="profile-userpic">
             <div className="row">
-              <img src={`/userPics/${this.state.pp.filename}`} style={avatarcss} className="img-responsive" alt="" />
+              <img src={`http://localhost:1337/userPics/${this.state.pp.filename}`} style={avatarcss} className="img-responsive" alt="" />
             </div>
           </div>
           <div className="profile-usertitle">

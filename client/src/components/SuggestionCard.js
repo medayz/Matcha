@@ -10,7 +10,7 @@ function SuggestionCard(props) {
         <div className="col-md-4" style={{color: "black"}}>
             <div className="card">
                 <img
-                    src={`userPics/${props.img}`}
+                    src={`http://localhost:1337/userPics/${props.img}`}
                     className="card-img-top img-fluid"
                     alt="user suggestion card"
                 />

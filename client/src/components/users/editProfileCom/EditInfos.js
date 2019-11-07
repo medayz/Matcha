@@ -42,7 +42,7 @@ export default class EditInfos extends Component {
     tagsExit: "",
     visible: false,
     genderArr: ["Male", "Female", "Other"],
-    sexual: ["Male", "Female"],
+    sexual: ["Male", "Female", "Everyone"],
     country: '',
     region: ''
   };
