@@ -21,5 +21,23 @@ module.exports = {
                         msg: 'Error fetching user notifications'
                     });
             });
+    },
+    readNotif: async (req, response) => {
+        notificationModel
+            .readNotification(req.username)
+            .then(res => {
+                response.json({
+                    status: 200,
+                    data: "success"
+                });
+            })
+            .catch(err => {
+                response
+                    .status(500)
+                    .json({
+                        status: 500,
+                        msg: 'Error fetching user notifications'
+                    });
+            })
     }
 }

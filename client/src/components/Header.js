@@ -18,7 +18,8 @@ class Header extends Component {
     show: false,
     toLogin: false,
     socket: {},
-    notifs: []
+    notifs: [],
+    unread: 0
   };
 
   logout = () => {
@@ -36,20 +37,37 @@ class Header extends Component {
       });
   }
   
+  countUnReadNotifs = (notifs) => {
+    let number = 0;
+    let promise = new Promise((resolve, reject) => {
+      notifs.forEach(notif => {
+        if (notif.read === 0)
+          number++;
+      });
+      resolve(number);
+    })
+    return (promise);
+  }
+
   async componentDidMount () {
       await axios
         .get("/api/users/isLoggedOn")
         .then(async res => {
           const notifs = await axios.get("/api/notifs/get");
           this.setState({ notifs: notifs.data.data });
+          let nb_unread_notifs = await this.countUnReadNotifs(this.state.notifs);
+          console.log("test " + nb_unread_notifs);
+          this.setState({unread : nb_unread_notifs});
           this.props.user_state(true);
           let socket = io(':1337');
-          socket.on('notification', res => {
+          /*socket.on('notification', res => {
             console.log(res);
             const newNotif = this.state.notifs.slice();
             newNotif.unshift(res);
             this.setState({notifs: newNotif});
-          });
+            let unread = this.state.unread + 1;
+            this.setState({unread : unread});
+          });*/
           this.props.user_socket(socket);
         })
         .catch(err => {
@@ -107,7 +125,7 @@ class Header extends Component {
                   </Link>
                 </li>
               )}
-              {this.state.connected && <Notifications notifs={this.state.notifs}/>}
+              {this.state.connected && <Notifications unread={this.state.unread} notifs={this.state.notifs}/>}
               {this.state.connected && (
                 <li className="nav-item">
                   <Link to={`/profile/${this.state.whoami}`} className="nav-link">
