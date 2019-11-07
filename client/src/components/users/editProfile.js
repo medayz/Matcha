@@ -22,6 +22,10 @@ const addstyle= {
 	cursor: 'pointer'
 }
 
+const padd = {
+	paddingTop: '3%'
+}
+
 const fileaddstyle= {
 	fontSize: '50px',
 	width: '100%',
@@ -159,66 +163,78 @@ class EditProfile extends Component {
 		return (
 			<div className="container-fluid">
 				{this.state.tokenErr && <Redirect to="/login" />}
+				
 				<div className="row profile">
 					<div className="col-md-3">
 					 	{this.state.visible &&  <ProfilePic pp={this.state.pp[0]} username={`${this.state.username}`}/>}
 					</div>
 					<br />
 					<div className="col-md-9">
-						{this.state.visible && <EditInfos username={this.state.username} />}
-					</div>
-				</div>
-				<div className="row profile">
-					<div className="col-md-3" />
-					<br />
-					<div className="col-md-9">
-						{this.state.visible && (
-							<EditUsername username={this.state.username} />
-						)}
-					</div>
-				</div>
-				<div className="row profile">
-					<div className="col-md-3" />
-					<br />
-					<div className="col-md-9">
-						{this.state.visible && <EditEmail email={this.state.email} />}
-					</div>
-				</div>
-				{this.state.visible && <EditPassword /> }
-				{this.state.visible &&  <div className="row profile">
-				<div className="col-md-3" />
-				<br />
-				<div className="col-md-9">
-					<div className="profile-content">
-						<small style={red}>*You should have at least one picture</small>
-							
-						{this.state.err === true && <Alertmsgsuccess action="uploaded"/>}
-						{this.state.err === false && <Alertmsgerror />}
-						{this.state.err === "deleted" && <Alertmsgsuccess action="deleted"/>}
-						<form>
-							<div className="row jjj">
-								{this.state.pics.map((img, index) => (
-									<div className="col-md-6 col-lg-3" style={{marginTop: '2%'}} key={index}>
-										<Picture img={ img.filename } deleteImg={ () => this.deleteImg(img.filename) } />
+						<ul className="nav nav-tabs" id="myTab" role="tablist">
+							<li className="nav-item">
+								<a className="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Setting</a>
+							</li>
+							<li className="nav-item">
+								<a className="nav-link" id="username-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Username</a>
+							</li>
+							<li className="nav-item">
+								<a className="nav-link" id="email-tab" data-toggle="tab" href="#mail" role="tab" aria-controls="contact" aria-selected="false">Email</a>
+							</li>
+							<li className="nav-item">
+								<a className="nav-link" id="pass-tab" data-toggle="tab" href="#pass" role="tab" aria-controls="contact" aria-selected="false">Password</a>
+							</li>
+							<li className="nav-item">
+								<a className="nav-link" id="imgs-tab" data-toggle="tab" href="#imgs" role="tab" aria-controls="contact" aria-selected="false">Images</a>
+							</li>
+						</ul>
+						<div className="tab-content" id="myTabContent">
+						<div style={padd} className="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+							{this.state.visible && <EditInfos username={this.state.username} />}
+						</div>
+						<div style={padd} className="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="username-tab">
+							{this.state.visible && (
+								<EditUsername username={this.state.username} />
+							)}
+						</div>
+						<div  style={padd} className="tab-pane fade" id="mail" role="tabpanel" aria-labelledby="email-tab">
+							{this.state.visible && <EditEmail email={this.state.email} />}
+						</div>
+						<div style={padd} className="tab-pane fade" id="pass" role="tabpanel" aria-labelledby="pass-tab">
+							{this.state.visible && <EditPassword /> }
+						</div>
+						<div style={padd} className="tab-pane fade" id="imgs" role="tabpanel" aria-labelledby="imgs-tab">
+							<div className="profile-content">
+								<small style={red}>*You should have at least one picture</small>
+									
+								{this.state.err === true && <Alertmsgsuccess action="uploaded"/>}
+								{this.state.err === false && <Alertmsgerror />}
+								{this.state.err === "deleted" && <Alertmsgsuccess action="deleted"/>}
+								<form>
+									<div className="row jjj">
+										{this.state.pics.map((img, index) => (
+											<div className="col-md-6 col-lg-3" style={{marginTop: '2%'}} key={index}>
+												<Picture img={ img.filename } deleteImg={ () => this.deleteImg(img.filename) } />
+											</div>
+										))}
 									</div>
-								))}
+									{this.state.addlogo &&
+									<div className="upload-btn-wrapper">
+										<center>
+										<AddIcon style={addstyle} className="btn222" size="large"/>
+										<input
+											style={fileaddstyle}
+											type="file"
+											name="myfile"
+											onChange={this.uploadProfileImg}
+										/>
+										</center>
+									</div>}
+								</form>
 							</div>
-							{this.state.addlogo &&
-							<div className="upload-btn-wrapper">
-								<center>
-								<AddIcon style={addstyle} className="btn222" size="large"/>
-								<input
-									style={fileaddstyle}
-									type="file"
-									name="myfile"
-									onChange={this.uploadProfileImg}
-								/>
-								</center>
-							</div>}
-						</form>
+						</div>
+						</div>
 					</div>
 				</div>
-			</div>}
 		</div>
 		);
 	}
