@@ -100,7 +100,7 @@ module.exports = {
     },
     filterUsers: async params => {
         return await query.getAllSpecialNodes(
-            "MATCH (u1:User {username: $username})-[]->(t:Tag)<-[]-(u2:User)-[]->(p:Picture {`isProfilePicture`: 'true'}) WITH count(DISTINCT t) AS c, round(distance(u1.location, u2.location)/1000) AS dist, duration.between(date(u2.birthDate), date()).years AS age, u2.username AS name, p.name AS pp WHERE dist <= $distance AND age >= $ageMin AND age <= $ageMax AND c >= $tags RETURN collect({ntags: c, username: name, pic: pp, distance: dist, age: age})",
+            "MATCH (u1:User {username: $username})-[]->(t:Tag)<-[]-(u2:User)-[]->(p:Picture {`isProfilePicture`: 'true'}) WITH count(DISTINCT t) AS c, round(distance(u1.location, u2.location)/1000) AS dist, duration.between(date(u2.birthDate), date()).years AS age, u2.username AS name, p.name AS pp, u1 AS u1, u2 AS u2, u2.gender AS gender WHERE dist <= $distance AND age >= $ageMin AND age <= $ageMax AND c >= $tags AND NOT (u1)-[:BLOCKED]->(u2) RETURN collect({ntags: c, username: name, pic: pp, distance: dist, age: age, gender: gender})",
             params
         );
     },
@@ -132,6 +132,18 @@ module.exports = {
         view: async params => {
             await query.execute(
                 "MATCH (u1:User {username: $user1}), (u2:User {username: $user2}) MERGE (u1)-[:VIEWED]->(u2)",
+                params
+            );
+        },
+        block: async params => {
+            await query.execute(
+                "MATCH (u1:User {username: $user1}), (u2:User {username: $user2}) MERGE (u1)-[:BLOCKED]->(u2)",
+                params
+            );
+        },
+        report: async params => {
+            await query.execute(
+                "MATCH (u1:User {username: $user1}), (u2:User {username: $user2}) MERGE (u1)-[:REPORTED]->(u2)",
                 params
             );
         }

@@ -71,6 +71,22 @@ class Profileuser extends Component {
     this.setState({ redirect: true });
   };
 
+  blockUser = async () => {
+    axios
+      .post("/api/users/add/block", {
+        blocked: this.state.user
+      })
+      .catch((err) => console.log('ash hadshi al akh!'));
+  };
+
+  reportUser = async () => {
+    axios
+      .post("/api/users/add/report", {
+        reported: this.state.user
+      })
+      .catch((err) => console.log('ash hadshi al akh!'));
+  };
+
   like = async () => {
     let user = {
       to: this.state.user
@@ -179,10 +195,10 @@ class Profileuser extends Component {
                             )}
                           </div>
                           <div className="col-md-4">
-                            <BlockIcon style={iconColor} />
+                            <BlockIcon style={iconColor} onClick={this.blockUser} />
                           </div>
                           <div className="col-md-4">
-                            <ReportIcon style={iconColor} />
+                            <ReportIcon style={iconColor} onClick={this.reportUser} />
                           </div>
                         </div>
                       )}

@@ -23,4 +23,12 @@ addRouter
     .route('/view')
     .post(usersController.add.view);
 
+addRouter
+    .route('/block')
+    .post(usersController.add.block);
+
+addRouter
+    .route('/report')
+    .post(usersController.add.report);
+
 module.exports = addRouter;

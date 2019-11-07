@@ -386,6 +386,44 @@ module.exports = {
 					sockets.eventEmitter(params.user2, req.sockets, 'notification', user2Notif.props);
 					response.sendStatus(200);
 				});
+		},
+		block: async (req, response) => {
+			const params = {
+				user1: req.username,
+				user2: req.body.blocked
+			};
+			(params.user1 !== params.user2)
+			&& userModel.add.block(params)
+				.then(res => {
+					response.json({
+						status: 200,
+						msg: "User blocked successfully!"
+					});
+				}).catch(err => {
+					response.status(500).json({
+						status: 500,
+						msg: "Something went wrong!"
+					});
+				});
+		},
+		report: async (req, response) => {
+			const params = {
+				user1: req.username,
+				user2: req.body.reported
+			};
+			(params.user1 !== params.user2)
+			&& userModel.add.report(params)
+				.then(res => {
+					response.json({
+						status: 200,
+						msg: "User reported successfully!"
+					});
+				}).catch(err => {
+					response.status(500).json({
+						status: 500,
+						msg: "Something went wrong!"
+					});
+				});
 		}
 	},
 	filter: (req, response, next) => {
@@ -625,7 +663,8 @@ module.exports = {
 		const user1 = req.username;
 		const user2 = req.body.to;
 
-		userModel.likeUser(user1, user2)
+		(params.user1 !== params.user2)
+		&& userModel.likeUser(user1, user2)
 			.then( async (res) => {
 				let ResUser1 = res.user1;
 				let ResUser2 = res.user2;
