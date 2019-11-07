@@ -125,7 +125,7 @@ module.exports = {
         },
         notification: async params => {
             return await query.getOneRow(
-                "MATCH (u:User {username: $username}) CREATE (u)-[:GOT_NOTIFIED]->(n:Notification {text: $text, date: date(), time: time()}) RETURN n",
+                "MATCH (u:User {username: $username}) CREATE (u)-[:GOT_NOTIFIED]->(n:Notification {read: 0,text: $text, date: date(), time: time()}) RETURN n",
                 params
             );
         },

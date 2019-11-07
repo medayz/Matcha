@@ -46,9 +46,8 @@ class EditPassword extends Component {
   render() {
     return (
       <div className="row profile">
-        <div className="col-md-3" />
         <br />
-        <div className="col-md-9">
+        <div className="col-md-12">
           <div className="profile-content">
             <form onSubmit={this.editPass}>
               <div className="row">

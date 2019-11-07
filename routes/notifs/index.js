@@ -4,5 +4,7 @@ const notificationsController = require('../../controllers/notificationsControll
 notifsRouter
 	.route('/get')
 	.get(notificationsController.getAllNotifications);
-
+notifsRouter
+	.route('/read')
+	.post(notificationsController.readNotif);
 module.exports = notifsRouter;
