@@ -31,7 +31,6 @@ import RadioButtonCheckedIcon from "@material-ui/icons/RadioButtonChecked";
 import RadioButtonUncheckedIcon from "@material-ui/icons/RadioButtonUnchecked";
 import { connect } from "react-redux";
 import { user_socket } from "../../actions/socket";
-import "../../css/profile.css";
 
 const avatarcss = {
   width: "140px",
@@ -46,7 +45,7 @@ const offline = {
 };
 
 const pinkColor = {
-  color: "rgb(39, 0, 255)"
+  color: "pink"
 };
 
 const online = {

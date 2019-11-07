@@ -3,6 +3,7 @@ import Header  from './components/Header';
 import Register  from './components/users/Register';
 import Login  from './components/users/Login';
 import editProfile  from './components/users/editProfile';
+import Infos  from './components/users/Infos';
 import ConfirmAcc from './components/users/ConfirmAcc'
 // import Logout from './components/users/Logout'
 import Profileuser from './components/users/Profileuser'
@@ -26,6 +27,7 @@ class App extends Component {
             <Route exact path="/confirmAcc/:username/:token" component={ConfirmAcc}/>
             <Route exact path="/profile/:username" component={Profileuser}/>
             <Route exact path="/logout" component={Login}/>
+            <Route exact path="/infos" component={Infos}/>
             <Route exact path="/chats" component={Chats}/>
           </Switch>
         </Router>

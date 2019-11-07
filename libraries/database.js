@@ -7,7 +7,7 @@ const session = driver.session();
 async function run(query, params) {
 	const queryResult = {};
 	try {
-		queryResult = await session.run(query, params);
+		Object.assign(queryResult, await session.run(query, params));
 		session.close();
 		return queryResult;
 	}

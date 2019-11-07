@@ -1,14 +1,14 @@
 export const navBar = {
-    backgroundColor: 'hsl(214, 83%, 50%)'
+    backgroundColor: 'pink'
 }
 
 export const btnColor = {
-    backgroundColor: 'rgb(0, 138, 255)',
+    backgroundColor: 'pink',
     color: 'white'
 }
 
 export const tagsColor = {
-    backgroundColor: 'rgb(64, 101, 132)',
+    backgroundColor: 'pink',
     color: 'white'
 }
 
@@ -17,7 +17,7 @@ export const writeColor = {
 }
 
 export const likeColor = {
-    color : "rgb(39, 0, 255)",
+    color : "pink",
     cursor : 'pointer'
 }
 
@@ -27,11 +27,11 @@ export const iconColor = {
 }
 
 export const filterColor = {
-    color: 'rgb(39, 0, 255)',
+    color: 'pink',
 }
 
 export const avatarColor = {
     marginTop : '2%', 
-    color : "rgb(39, 0, 255)", 
-    borderColor: "rgb(39, 0, 255)"
+    color : "pink", 
+    borderColor: "pink"
 }

@@ -4,6 +4,10 @@ import axios from 'axios';
 import { btnColor } from "../../css/styleClasses";
 import '../../css/login.css';
 
+const regStyle = {
+  padding: '15px'
+}
+
 class Register extends Component {
   state = {
       fName: '',
@@ -162,7 +166,7 @@ class Register extends Component {
         <br />
         <div className="row login-wrap">
           <div className="col-md-3"></div>
-          <div className="col-md-6" >
+          <div className="col-md-6" style={regStyle} >
             <form id="form1" onSubmit={this.onSubmit}>
               {this.state.registred === 'done' && <div className="alert alert-primary" role="alert"> you will receive an email to confirm your account before you sign in </div>}
               {this.state.registred === '500' && <div className="alert alert-primary" role="alert"> Unsuccesful registration, please retry! </div>}
