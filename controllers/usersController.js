@@ -376,14 +376,14 @@ module.exports = {
 				user1: req.username,
 				user2: req.body.viewed
 			};
-			user2Socket = await sockets.getUserSocket(params.user2, req.sockets);
-			userModel.add.view(params)
+			(params.user1 !== params.user2)
+			&& userModel.add.view(params)
 				.then(async res => {
 					const user2Notif = await userModel.add.notification({
 						username: params.user2,
 						text: `${params.user1} viewed your profile`
 					});
-					user2Socket && user2Socket.emit('notification', user2Notif.props);
+					sockets.eventEmitter(params.user2, req.sockets, 'notification', user2Notif.props);
 					response.sendStatus(200);
 				});
 		}
@@ -624,8 +624,6 @@ module.exports = {
 	like : async (req, response) =>  {
 		const user1 = req.username;
 		const user2 = req.body.to;
-		const user1Socket = await sockets.getUserSocket(user1, req.sockets);
-		const user2Socket = await sockets.getUserSocket(user2, req.sockets);
 
 		userModel.likeUser(user1, user2)
 			.then( async (res) => {
@@ -637,7 +635,7 @@ module.exports = {
 						username: user2,
 						text: `${user1} liked you`
 					});
-					user2Socket.emit('notification', user2Notif.props);
+					sockets.eventEmitter(user2, req.sockets, 'notification', user2Notif.props);
 					if (ResUser2 !== null) {
 						const user1Notif = await userModel.add.notification({
 							username: user1,
@@ -647,8 +645,8 @@ module.exports = {
 							username: user2,
 							text: `you're now connected with ${user1}`
 						});
-						user1Socket.emit('notification', user1Notif.props);
-						user2Socket.emit('notification', user2Notif.props);
+						sockets.eventEmitter(user1, req.sockets, 'notification', user1Notif.props);
+						sockets.eventEmitter(user2, req.sockets, 'notification', user2Notif.props);
 						chatModel.addChat(user1, user2);
 					}
 					response.status(200).json({
@@ -662,7 +660,7 @@ module.exports = {
 						username: user2,
 						text: `${user1} unliked you`
 					});
-					user2Socket.emit('notification', user2Notif);
+					sockets.eventEmitter(user2, req.sockets, 'notification', user2Notif.props);
 					await userModel.disLikeUser(user1, user2);
 					await chatModel.deleteChat(user1, user2);
 					response.status(200).json({

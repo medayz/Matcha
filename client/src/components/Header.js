@@ -41,10 +41,11 @@ class Header extends Component {
         .get("/api/users/isLoggedOn")
         .then(async res => {
           const notifs = await axios.get("/api/notifs/get");
-          this.setState({notifs: notifs.data.data});
+          this.setState({ notifs: notifs.data.data });
           this.props.user_state(true);
           let socket = io(':1337');
           socket.on('notification', res => {
+            console.log(res);
             const newNotif = this.state.notifs.slice();
             newNotif.unshift(res);
             this.setState({notifs: newNotif});
