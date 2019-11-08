@@ -15,7 +15,7 @@ usersRouter.route("/get").get(auth, usersController.getPersonalInfos);
 usersRouter.route("/get/:username").get(usersController.getUserByUsername);
 
 usersRouter.route("/isLoggedOn").get(auth, (req, res) => res.send("logged"));
-usersRouter.route("/logout").get(usersController.logOut);
+usersRouter.route("/logout").get(auth,usersController.logOut);
 
 usersRouter
   .route("/create")

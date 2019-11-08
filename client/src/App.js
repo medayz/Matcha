@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Header  from './components/Header';
+//import Footer  from './components/Footer';
 import Register  from './components/users/Register';
 import Login  from './components/users/Login';
 import editProfile  from './components/users/editProfile';

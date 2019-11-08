@@ -22,7 +22,6 @@ class Header extends Component {
 
   logout = () => {
     let statesocket = this.props.userSocket;
-    //console.log(statesocket);
     axios
       .get('/api/users/logout')
       .then(res => {

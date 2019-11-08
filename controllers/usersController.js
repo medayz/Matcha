@@ -95,7 +95,9 @@ module.exports = {
 					gender,
 					birthDate,
 					bio,
-					fameRating
+					fameRating,
+					timeLastCnx,
+					dateLastCnx
 				} = results.props;
 				results = {
 					username: username,
@@ -109,7 +111,9 @@ module.exports = {
 					gender: gender,
 					birthDate: birthDate,
 					bio: bio,
-					fameRating: fameRating
+					fameRating: fameRating,
+					timeLastCnx: timeLastCnx,
+					dateLastCnx: dateLastCnx
 				};
 				if (results) {
 					response.json({
@@ -272,6 +276,7 @@ module.exports = {
 		}
 	},
 	logOut: async (req, response) => {
+		await userModel.edit.lastTimeCnx(req.username);
 		response.clearCookie("token").sendStatus(200);
 	},
 	accountActivation: async (req, response) => {
@@ -523,6 +528,7 @@ module.exports = {
 		}
 	},
 	filter: (req, response, next) => {
+		console.log(req.body.fame)
 		const	params = {
 			username: req.username,
 			distance: req.body.distance || 10,
