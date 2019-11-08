@@ -24,7 +24,8 @@ class Home extends Component {
 		const sortFuncs = {
 			tags: (a, b) => b.ntags - a.ntags,
 			distance: (a, b) => a.distance - b.distance,
-			age: (a, b) => a.age - b.age
+			age: (a, b) => a.age - b.age,
+			fame: (a, b) => a.fameRating - b.fameRating
 		};
 		this.setState({
 			suggestions: this.state.suggestions.sort(sortFuncs[sortingCriteria]).slice()
@@ -47,7 +48,8 @@ class Home extends Component {
 			distance: filtersState.distanceFilter,
 			tags: filtersState.tagsFilter,
 			ageMin: filtersState.ageFilter[0],
-			ageMax: filtersState.ageFilter[1]
+			ageMax: filtersState.ageFilter[1],
+			fame: filtersState.fameFilter
 		};
 		axios
 			.post('/api/users/filter', filters)
@@ -63,7 +65,6 @@ class Home extends Component {
 		axios.get('/api/users/whoami')
         .then(async res => {
 			this.setState({whoami: res.data.user});
-			//console.log(res);
 			res = await axios.get(`/api/users/get/${this.state.whoami}`)
                     .catch(er => {
                     this.setState({redirect: true});    
@@ -110,6 +111,7 @@ class Home extends Component {
 								age={suggestion.age}
 								ntags={suggestion.ntags}
 								distance={suggestion.distance}
+								fameRating={suggestion.fameRating}
 								toProfile={() => this.toProfile(suggestion.username)}
 							/>
 						))}

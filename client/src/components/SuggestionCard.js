@@ -20,6 +20,7 @@ function SuggestionCard(props) {
                         <span style={propsStyle}>Age: </span>{props.age} yo<br />
                         <span style={propsStyle}>Distance: </span>{props.distance} Km<br />
                         <span style={propsStyle}>Common tags: </span>{props.ntags} tags<br />
+                        <span style={propsStyle}>Fame Rating: </span>{props.fameRating}<br />
                     </p>
                     <button className="btn" style={btnColor} onClick={props.toProfile}>See profile</button>
                 </div>

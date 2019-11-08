@@ -26,6 +26,7 @@ class Filters extends Component {
 		ageFilter: [18, 25],
 		tagsFilter : 1,
 		distanceFilter : 10,
+		fameFilter : 0
 	}
 
 	filterAge = (e, newValue) => {
@@ -38,6 +39,10 @@ class Filters extends Component {
 
 	filterTags = (e, newValue) => {
 		this.setState({tagsFilter: newValue});
+	};
+
+	filterFame = (e, newValue) => {
+		this.setState({fameFilter: newValue});
 	};
 
 	render () {
@@ -71,6 +76,16 @@ class Filters extends Component {
 						style={filterColor}
 						min={1}
 						max={10}
+						aria-labelledby="continuous-slider"
+					/>
+					<Typography id="continuous-slider" style={{color: "black"}} gutterBottom>Fame Rating</Typography>
+					<Slider
+						value={this.state.fameFilter}
+						onChange={this.filterFame}
+						valueLabelDisplay="auto"
+						style={filterColor}
+						min={1}
+						max={100}
 						aria-labelledby="continuous-slider"
 					/>
 				</FormGroup>

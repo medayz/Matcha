@@ -299,6 +299,18 @@ class Profileuser extends Component {
                           })}
                         />
                       </ListItem>
+                      <Divider variant="inset" component="li" />
+                      <ListItem>
+                        <ListItemAvatar>
+                          <Avatar>
+                            <AssignmentIcon style={pinkColor} />
+                          </Avatar>
+                        </ListItemAvatar>
+                        <ListItemText
+                          primary="Fame Rating"
+                          secondary={this.state.data.fameRating}
+                        />
+                      </ListItem>
                     </List>
                   </div>
                   <br />

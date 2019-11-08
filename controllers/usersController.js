@@ -83,7 +83,20 @@ module.exports = {
 		userModel
 			.getUser(req.params.username)
 			.then(results => {
-				let { lName, fName, username, country, city, userRegion, userCountry, sexualPref, gender, birthDate, bio  } = results.props;
+				let {
+					lName,
+					fName,
+					username,
+					country,
+					city,
+					userRegion,
+					userCountry,
+					sexualPref,
+					gender,
+					birthDate,
+					bio,
+					fameRating
+				} = results.props;
 				results = {
 					username: username,
 					fName: fName,
@@ -95,7 +108,8 @@ module.exports = {
 					sexualPref: sexualPref,
 					gender: gender,
 					birthDate: birthDate,
-					bio: bio
+					bio: bio,
+					fameRating: fameRating
 				};
 				if (results) {
 					response.json({
@@ -379,6 +393,7 @@ module.exports = {
 			(params.user1 !== params.user2)
 			&& userModel.add.view(params)
 				.then(async res => {
+					userModel.fameRate(params.user2);
 					const user2Notif = await userModel.add.notification({
 						username: params.user2,
 						text: `${params.user1} viewed your profile`
@@ -414,6 +429,7 @@ module.exports = {
 			(params.user1 !== params.user2)
 			&& userModel.add.report(params)
 				.then(res => {
+					userModel.fameRate(params.user2);
 					response.json({
 						status: 200,
 						msg: "User reported successfully!"
@@ -432,7 +448,8 @@ module.exports = {
 			distance: req.body.distance || 10,
 			ageMin: req.body.ageMin || 18,
 			ageMax: req.body.ageMax || 25,
-			tags: req.body.tags || 0
+			tags: req.body.tags || 0,
+			fameRating: req.body.fame || 0
 		};
 		userModel
 			.filterUsers(params)
@@ -668,6 +685,8 @@ module.exports = {
 			.then( async (res) => {
 				let ResUser1 = res.user1;
 				let ResUser2 = res.user2;
+
+				userModel.fameRate(user2);
 				if (ResUser1 === null)
 				{
 					const user2Notif = await userModel.add.notification({
@@ -700,8 +719,8 @@ module.exports = {
 						text: `${user1} unliked you`
 					});
 					sockets.eventEmitter(user2, req.sockets, 'notification', user2Notif.props);
-					await userModel.disLikeUser(user1, user2);
-					await chatModel.deleteChat(user1, user2);
+					userModel.disLikeUser(user1, user2);
+					chatModel.deleteChat(user1, user2);
 					response.status(200).json({
 						status: 200,
 						like: false

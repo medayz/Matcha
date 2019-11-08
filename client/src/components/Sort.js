@@ -5,6 +5,7 @@ import LocationOnIcon from '@material-ui/icons/LocationOn';
 import ToggleButton from "@material-ui/lab/ToggleButton";
 import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
 import FormLabel from "@material-ui/core/FormLabel";
+import PersonIcon from '@material-ui/icons/Person';
 
 const pStyle = {
 	marginTop: '5%',
@@ -29,13 +30,16 @@ class Sort extends Component {
                         aria-label="text alignment"
                     >
                         <ToggleButton value="age" aria-label="left aligned">
-                        <FavoriteIcon />
+                            <PersonIcon />
                         </ToggleButton>
                         <ToggleButton value="tags" aria-label="centered">
-                        <LabelIcon />
+                            <LabelIcon />
                         </ToggleButton>
-                        <ToggleButton value="distance" aria-label="right aligned">
-                        <LocationOnIcon />
+                        <ToggleButton value="distance" aria-label="centered">
+                            <LocationOnIcon />
+                        </ToggleButton>
+                        <ToggleButton value="fame" aria-label="right aligned">
+                            <FavoriteIcon />
                         </ToggleButton>
                     </ToggleButtonGroup>
                 </div>
