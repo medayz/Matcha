@@ -52,7 +52,7 @@ module.exports = {
 	addUser: async newUser => {
 		newUser.pass = await password.hash(newUser.pass);
 		await query.execute(
-			"CREATE (u:User {emailToken: $emailToken, lName: $lName, activated: $active, fName: $fName, email: $email, username: $username, fameRating: 0, pwd: $pwd})-[:UPLOADED]->(:Picture {name: 'default.png', isProfilePicture: 'true', date: date()})",
+			"CREATE (u:User {dateLastCnx: date(),timeLastCnx: time(), emailToken: $emailToken, lName: $lName, activated: $active, fName: $fName, email: $email, username: $username, fameRating: 0, pwd: $pwd})-[:UPLOADED]->(:Picture {name: 'default.png', isProfilePicture: 'true', date: date()})",
 			{
 				fName: newUser.fName,
 				lName: newUser.lName,
@@ -198,7 +198,15 @@ module.exports = {
 					newEmail: newEmail
 				}
 			);
-		}
+        },
+        lastTimeCnx: async (username) => {
+            await query.execute(
+                "MATCH (u:User {username: $username}) SET u.dateLastCnx = date(), u.timeLastCnx = time();",
+                {
+                    username: username
+                }
+            );
+        }
 	},
 	delete: {
 		picture: async params => {

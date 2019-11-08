@@ -32,6 +32,12 @@ import RadioButtonUncheckedIcon from "@material-ui/icons/RadioButtonUnchecked";
 import { connect } from "react-redux";
 import { user_socket } from "../../actions/socket";
 
+const timeStyle = {
+  fontSize: '9px',
+  fontFamily: 'initial',
+  color: '#757575'
+}
+
 const avatarcss = {
   width: "140px",
   height: "140px",
@@ -179,6 +185,13 @@ class Profileuser extends Component {
                       </span>
                       <br />
                       <br />
+                      {!this.state.online && (
+                            <span style={timeStyle}>
+                              <span style={{fontSize: '14px',color: 'pink'}}>Last time connexion</span> {` ${this.state.data.dateLastCnx.month}-${this.state.data.dateLastCnx.day}-${this.state.data.dateLastCnx.year} ${this.state.data.timeLastCnx.hour}:${this.state.data.timeLastCnx.minute}`}
+                              <br />
+                            </span>
+                      )}
+                      <br/>
                       {this.state.user !== this.state.whoami && (
                         <div className="row">
                           <div className="col-md-4">
@@ -229,6 +242,7 @@ class Profileuser extends Component {
                           <RadioButtonUncheckedIcon style={offline} />
                         )}
                         {this.state.data.fName}&nbsp;{this.state.data.lName}
+                        
                       </h2>
                     </center>
                     <List>
