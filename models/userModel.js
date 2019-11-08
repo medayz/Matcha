@@ -90,6 +90,23 @@ module.exports = {
 			}
 		);
 	},
+	addPwdToken: async (username, token) => {
+		await query.execute(
+			"MATCH (u:User {username: $user}) SET u.resetPwdToken=$token;",
+			{
+				user: username,
+				token: token
+			}
+		);
+	},
+	removePwdToken: async username => {
+		await query.execute(
+			"MATCH (u:User {username: $user}) REMOVE u.resetPwdToken;",
+			{
+				user: username
+			}
+		);
+	},
 	setUserActive: async username => {
 		await query.execute(
 			"MATCH (u:User {username: $user}) SET u.activated = true;",

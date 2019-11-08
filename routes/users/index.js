@@ -27,6 +27,12 @@ usersRouter
   .route("/activation/:username/:token")
   .get(usersController.accountActivation);
 usersRouter
+  .route("/forgotpwd")
+  .post(usersController.getResetPassToken);
+usersRouter
+  .route("/resetpwd/:username/:token")
+  .post(usersController.resetPassword);
+usersRouter
   .route("/filter")
   .post(auth, usersController.filter);
 
