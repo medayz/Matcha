@@ -177,7 +177,6 @@ module.exports = {
 		let checkusername = await userModel.getUser(params.username);
 		if (checkusername !== undefined)
 			params.err.username = "username already exist";
-		console.log(params);
 		if (!Object.values(params.err).filter(obj => obj !== "").length) {
 			let newUser = {};
 			Object.assign(newUser, params);
@@ -306,6 +305,87 @@ module.exports = {
 					msg: err.message
 				});
 			});
+	},
+	getResetPassToken: async (req, response) => {
+		const tok = token.get();
+		const user = req.body.username;
+		console.log(user);
+		userModel
+			.getUser(user)
+			.then(async result => {
+				result = result.props;
+				await userModel.addPwdToken(result.username, tok);
+				mail.send({
+					receiver: result.email,
+					subject: "Reset Password link!",
+					body: "message body goes here!",
+					html: `<h1>You can reset your password from <a href="http:/localhost:3000/resetpwd/${user}/${tok}">here</a></h1>`
+				})
+				.then(res => {
+					response.json({
+						status: 200,
+						msg: "An Email has been sent for you with a reset link!"
+					});
+				})
+				.catch(err => {
+					console.log(err.message);
+					response.status(500).json({
+						status: 500,
+						msg: "Unsuccesful operation, please retry!"
+					});
+				});
+			})
+			.catch(err => console.log(err.message));
+	},
+	resetPassword: async (req, response) => {
+		const params = {
+			username: req.body.username || "",
+			pass: req.body.pass || "",
+			cPass: req.body.cPass || ""
+		};
+		params.err = {
+			username: validator.username(params.username),
+			pass: validator.password(params.pass),
+			cPass: validator.confirmPassword(params.pass, params.cPass)
+		};
+		if (!Object.values(params.err).filter(obj => obj !== "").length) {
+			userModel
+				.getUser(req.params.username)
+				.then(async result => {
+					if (result) {
+						result = result.props;
+						if (result.resetPwdToken === req.params.token) {
+							const resetPwd = userModel.edit.password(
+								params.username,
+								params.pass
+							);
+							const rmToken = userModel.removePwdToken(
+								req.params.username
+							);
+							await Promise.all([resetPwd, rmToken]);
+							response.json({
+								status: 200,
+								msg: "Your Password has been successfully changed!"
+							});
+						} else {
+							throw new Error("Invalid or expired token");
+						}
+					} else {
+						throw new Error("Username not registered");
+					}
+				})
+				.catch(err => {
+					response.status(400).json({
+						status: 400,
+						msg: err.message
+					});
+				});
+			} else {
+				response.status(400).json({
+					status: 400,
+					data: params
+				});
+			}
 	},
 	add: {
 		picture: async (req, res, next) => {
