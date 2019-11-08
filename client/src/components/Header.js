@@ -44,6 +44,7 @@ class Header extends Component {
           this.props.user_state(false);
           if (this.props.userSocket !== {})
             this.props.user_socket({});
+          this.setState({toLogin: true});
         });
       this.setState({show : true});
   }
@@ -60,6 +61,7 @@ class Header extends Component {
           });
         })
         .catch(err => {
+          //this.setState({toLogin: true});
           console.log(err.message);
         });
       this.setState({connected : stateuser});

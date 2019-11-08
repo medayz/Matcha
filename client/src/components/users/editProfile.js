@@ -151,7 +151,7 @@ class EditProfile extends Component {
 			}
 		} catch(err) {
 			console.log(`ERROOR: ${err.message}`);
-			this.setState({tokenErr : true});
+			//this.setState({tokenErr : true});
 		};
 	}
 

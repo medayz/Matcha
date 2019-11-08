@@ -132,7 +132,7 @@ class Chats extends Component {
             })
         })
         .catch(err => {
-            this.setState({redirect: true});
+            //this.setState({redirect: true});
         })
         await axios
         .get(`/api/chats/get/${this.state.from}`)
@@ -149,7 +149,7 @@ class Chats extends Component {
             });
         })
         .catch(err => {
-            this.setState({redirect : true});
+           // this.setState({redirect : true});
         });
         //<span style={styleDate}>{msg.time.hour.low}:{msg.time.minute.low}</span>
     }
