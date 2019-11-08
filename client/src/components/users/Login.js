@@ -24,6 +24,8 @@ class Login extends Component {
   state = {
     username: "",
     pass: "",
+    forgetUsername: "",
+    emailSend: "",
     errState: {},
     login: "",
     longitude: -1,
@@ -81,7 +83,21 @@ class Login extends Component {
       }
     );  
   }
-
+  onForgotPass = async e => {
+    e.preventDefault();
+    const obj = {
+      username: this.state.forgetUsername
+    }
+    await axios
+      .post('/api/users/forgotpwd', obj)
+      .then(res => {
+        this.setState({forgetUsername: ""});
+        this.setState({emailSend: "email Send"});
+      })
+      .catch(err => {
+        
+      });
+  }
   onSubmit = async e => {
     e.preventDefault();
     await this.getlocalisation();
@@ -139,51 +155,7 @@ class Login extends Component {
         });
     } else return;
   };
-/*
-<div className="row">
-        <div className="col-md-4">
-        </div>
-        <div className="col-md-4">
-        {this.state.errState.active && (
-            <div className="alert alert-primary" role="alert">
-              {" "}
-              {this.state.errState.active}{" "}
-            </div>
-          )}
-          <Alert />
-          <form id="Login" onSubmit={this.onSubmit}>
-            <RegisterInput
-              label="Username"
-              type="text"
-              name="username"
-              id="username"
-              placeholder="Enter username"
-              err={this.state.errState.username}
-              value={this.state.username}
-              onChange={this.onChange}
-            />
-            <RegisterInput
-              label="Password"
-              type="password"
-              name="pass"
-              id="pass"
-              placeholder="Enter password"
-              err={this.state.errState.pass}
-              value={this.state.pass}
-              onChange={this.onChange}
-            />
-            {this.state.login === "done" && (
-              <Redirect to={`/profile/edit`} Component={profile} />
-            )}
-            <button type="submit" className="btn" style={btnColor}>
-              Login
-            </button>
-          </form>
-        </div>
-        <div className="col-md-4">
-        </div>
-        </div>
-*/
+
   render() {
     return (
       <div className="container">
@@ -194,67 +166,82 @@ class Login extends Component {
                 </div>
               )}
               <Alert />
+          {this.state.emailSend &&
+            <div className="alert alert-success" role="alert">
+              {this.state.emailSend}
+            </div>
+          }
           <div className="login-wrap">
               <div className="login-html">
-              <form id="Login" onSubmit={this.onSubmit}>
                 <input id="tab-1" type="radio" name="tab" className="sign-in" defaultChecked="true" /><label htmlFor="tab-1" className="tab">Sign In</label>
                 <input id="tab-2" type="radio" name="tab" className="for-pwd" /><label htmlFor="tab-2" className="tab">Forgot Password</label>
                 <div className="login-form">
-                  <div className="sign-in-htm">
-                    <div className="group">
-                      <label htmlFor="user" className="label">Username or Email</label>
-                      <RegisterInput
-                        label=""
-                        type="text"
-                        name="username"
-                        id="username"
-                        className="input"
-                        placeholder="Enter username"
-                        err={this.state.errState.username}
-                        value={this.state.username}
-                        onChange={this.onChange}
-                      />
+                  <form id="Login" onSubmit={this.onSubmit}>
+                    <div className="sign-in-htm">
+                      <div className="group">
+                        <label htmlFor="user" className="label">Username or Email</label>
+                        <RegisterInput
+                          label=""
+                          type="text"
+                          name="username"
+                          id="username"
+                          className="input"
+                          placeholder="Enter username"
+                          err={this.state.errState.username}
+                          value={this.state.username}
+                          onChange={this.onChange}
+                        />
+                      </div>
+                      <div className="group">
+                        <label htmlFor="pass" className="label">Password</label>
+                        <RegisterInput
+                          label=""
+                          type="password"
+                          name="pass"
+                          id="pass"
+                          className="input"
+                          placeholder="Enter password"
+                          err={this.state.errState.pass}
+                          value={this.state.pass}
+                          onChange={this.onChange}
+                        />
+                      </div>
+                      <div className="group">
+                        {this.state.login === "done" && (
+                          <Redirect to={`/profile/edit`} Component={profile} />
+                        )}
+                        <button type="submit" className="button">
+                          Login
+                        </button>
+                      </div>
+                      <div className="hr"></div>
                     </div>
-                    <div className="group">
-                      <label htmlFor="pass" className="label">Password</label>
-                      <RegisterInput
-                        label=""
-                        type="password"
-                        name="pass"
-                        id="pass"
-                        className="input"
-                        placeholder="Enter password"
-                        err={this.state.errState.pass}
-                        value={this.state.pass}
-                        onChange={this.onChange}
-                      />
-                    </div>
-                    <div className="group">
-                      {this.state.login === "done" && (
-                        <Redirect to={`/profile/edit`} Component={profile} />
-                      )}
-                      <button type="submit" className="button">
-                        Login
-                      </button>
-                    </div>
-                    <div className="hr"></div>
-                  </div>
+                  </form>
                   <div className="for-pwd-htm">
                     <div className="group">
-                      <label htmlFor="user" className="label">Username or Email</label>
-                      <input id="user" type="text" className="input" />
-                    </div>
-                   <div className="group">
-                      <input type="submit" className="button" value="Reset Password" />
+                      <form id="Forget" onSubmit={this.onForgotPass}>
+                          <label htmlFor="user" className="label">Username</label>
+                          <RegisterInput
+                            label=""
+                            type="text"
+                            name="forgetUsername"
+                            id="forgetUsername"
+                            className="forgetUsername"
+                            placeholder="Enter username"
+                            err=""
+                            value={this.state.forgetUsername}
+                            onChange={this.onChange}
+                          />
+                          <div className="group">
+                            <input type="submit" className="button" value="Reset Password" />
+                          </div>
+                      </form>
                     </div>
                     <div className="hr"></div>
                   </div>
                 </div>
-                </form>
               </div>
           </div>
-
-      
       </div>
     );
   }

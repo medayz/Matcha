@@ -50,7 +50,7 @@ module.exports = function(socketa, socketat) {
     socketa.on("isOnline", data => eventHandlers.login(data, socketa, socketat));
     socketa.on("ForceDisconnect", async data => {
         try {
-            const filtered = await eventHandlers.logout();
+            const filtered = await eventHandlers.logout(data, socketat);
             socketat.length = 0;
             socketat.push(...filtered);
         } catch (err) {

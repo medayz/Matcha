@@ -8,7 +8,6 @@ import { user_state } from "../actions/connected";
 import { user_socket } from "../actions/socket";
 import { Redirect } from "react-router-dom";
 import {navBar} from "../css/styleClasses";
-import io from 'socket.io-client';
 
 class Header extends Component {
 
@@ -41,10 +40,12 @@ class Header extends Component {
           this.props.user_state(true);
         })
         .catch(err => {
+          const path = window.location.pathname.split("/");
           this.props.user_state(false);
           if (this.props.userSocket !== {})
             this.props.user_socket({});
-          this.setState({toLogin: true});
+          if (path[1] !== "resetpwd")
+            this.setState({toLogin: true});
         });
       this.setState({show : true});
   }
