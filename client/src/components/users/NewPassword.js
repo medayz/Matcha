@@ -26,8 +26,7 @@ class NewPassword extends Component {
         pass: this.state.pass,
         cPass: this.state.cPass
     }
-    console.log(obj);
-    await axios
+    axios
     .post(`/api/users/resetpwd/${this.state.username}/${this.state.token}`, obj)
     .then(res => {
         this.setState({changed: true});
