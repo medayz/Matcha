@@ -34,6 +34,7 @@ class Header extends Component {
   }
 
   async componentDidMount () {
+      console.log("hey");
       await axios
         .get("/api/users/isLoggedOn")
         .then(async res => {
@@ -51,7 +52,6 @@ class Header extends Component {
   }
 
   async componentDidUpdate () {
-
     let stateuser = this.props.userState;
     if (stateuser !== this.state.connected)
     {
