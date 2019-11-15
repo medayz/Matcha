@@ -100,7 +100,6 @@ class Login extends Component {
   }
   onSubmit = async e => {
     e.preventDefault();
-    await this.getlocalisation();
     const err = {
       username: "",
       pass: "",
@@ -113,7 +112,8 @@ class Login extends Component {
       const user = this.state;
       await axios
         .post(`/api/users/auth`, user, head)
-        .then(res => {
+        .then(async res => {
+          await this.getlocalisation();
           this.props.setUser(this.state.username);
           const backend = res.data;
           if (res.status === 200) {
