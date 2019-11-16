@@ -495,6 +495,8 @@ module.exports = {
 			(params.user1 !== params.user2)
 			&& userModel.add.block(params)
 				.then(res => {
+					userModel.disLikeUser(params.user1, params.user2);
+					chatModel.deleteChat(params.user1, params.user2);
 					response.json({
 						status: 200,
 						msg: "User blocked successfully!"
