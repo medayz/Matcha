@@ -111,6 +111,8 @@ class Profileuser extends Component {
   async componentDidMount() {
     //console.log(this.props);
     let socket = this.props.userSocket;
+    console.log("profile");
+    console.log(this.props.userSocket);
     try {
       let res = await axios.get(`/api/users/get/${this.state.user}`);
       console.log(res.data.data);
@@ -132,6 +134,10 @@ class Profileuser extends Component {
         this.setState({ online: true });
       else {
         this.setState({ socket: socket });
+        console.log("-----------");
+        console.log(this.state.socket);
+        console.log("-----------");
+
         this.state.socket.on("isOnline", data => {
           if (data === true) this.setState({ online: true });
           else this.setState({ online: false });
@@ -141,6 +147,7 @@ class Profileuser extends Component {
       }
       console.log(this.state);
     } catch (err) {
+      console.log("iozzine")
       this.setState({ redirect: true });
       console.log(err.message);
     }

@@ -8,6 +8,7 @@ import { user_state } from "../actions/connected";
 import { user_socket } from "../actions/socket";
 import { Redirect } from "react-router-dom";
 import {navBar} from "../css/styleClasses";
+import io from 'socket.io-client';
 
 class Header extends Component {
 
@@ -33,22 +34,23 @@ class Header extends Component {
       });
   }
 
-  async componentDidMount () {
-      console.log("hey");
-      await axios
-        .get("/api/users/isLoggedOn")
-        .then(async res => {
-          this.props.user_state(true);
-        })
-        .catch(err => {
-          const path = window.location.pathname.split("/");
-          this.props.user_state(false);
-          if (this.props.userSocket !== {})
-            this.props.user_socket({});
-          if (path[1] !== "resetpwd")
-            this.setState({toLogin: true});
-        });
-      this.setState({show : true});
+  async UNSAFE_componentWillMount () {
+    let socket = io(':1337');
+    this.props.user_socket(socket);
+    await axios
+      .get("/api/users/isLoggedOn")
+      .then(async res => {
+        this.props.user_state(true);
+      })
+      .catch(err => {
+        const path = window.location.pathname.split("/");
+        this.props.user_state(false);
+        if (this.props.userSocket !== {})
+          this.props.user_socket({});
+        if (path[1] !== "resetpwd")
+          this.setState({toLogin: true});
+      });
+    this.setState({show : true});
   }
 
   async componentDidUpdate () {
@@ -62,7 +64,6 @@ class Header extends Component {
           });
         })
         .catch(err => {
-          //this.setState({toLogin: true});
           console.log(err.message);
         });
       this.setState({connected : stateuser});
