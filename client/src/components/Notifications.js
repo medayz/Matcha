@@ -7,6 +7,7 @@ import Badge from '@material-ui/core/Badge';
 import axios from 'axios'; 
 import { user_socket } from "../actions/socket";
 import { connect } from 'react-redux';
+import io from 'socket.io-client';
 
 const style_unread = {
     backgroundColor : 'pink',
@@ -55,14 +56,16 @@ class Notifications extends Component {
         this.handleClose();
     };
 
-    async UNSAFE_componentWillMount () {
-        const socket = this.props.userSocket;
-        console.log('notif socket:', this.props.userSocket);
+    async componentDidMount () {
+        let socket = this.props.userSocket;
+        if (!socket) {
+            socket = io(':1337');
+            this.props.user_socket(socket);
+        }
         const notifs = await axios.get("/api/notifs/get");
         this.setState({ notifs: notifs.data.data });
         const nb_unread_notifs = await this.countUnReadNotifs(this.state.notifs);
         this.setState({number : nb_unread_notifs});
-        console.log(socket)
         socket.on('notification', async res => {
             const newNotif = this.state.notifs.slice();
             newNotif.unshift(res);

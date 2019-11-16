@@ -30,7 +30,7 @@ class EditPassword extends Component {
       .put(`/api/users/edit/password`, pwd)
       .then(res => {
         this.props.user_state(false);
-        this.props.user_socket({});
+        this.props.user_socket(null);
         this.setState({ isValid: true });
       })
       .catch(err => {

@@ -31,6 +31,7 @@ import RadioButtonCheckedIcon from "@material-ui/icons/RadioButtonChecked";
 import RadioButtonUncheckedIcon from "@material-ui/icons/RadioButtonUnchecked";
 import { connect } from "react-redux";
 import { user_socket } from "../../actions/socket";
+import io from 'socket.io-client';
 
 const timeStyle = {
   fontSize: '9px',
@@ -108,14 +109,18 @@ class Profileuser extends Component {
       .catch();
   };
 
-  async componentDidMount() {
+  async componentWillMount() {
     //console.log(this.props);
     let socket = this.props.userSocket;
-    console.log("profile");
-    console.log(this.props.userSocket);
+    if (!socket) {
+      socket = io(':1337');
+      this.props.user_socket(socket);
+    }
+    // console.log("profile");
+    // console.log(this.props.userSocket);
     try {
       let res = await axios.get(`/api/users/get/${this.state.user}`);
-      console.log(res.data.data);
+      // console.log(res.data.data);
       this.setState({ data: res.data.data });
       res = await getUserTags(this.state.user);
       this.setState({ tags: res.data.data });
@@ -134,10 +139,6 @@ class Profileuser extends Component {
         this.setState({ online: true });
       else {
         this.setState({ socket: socket });
-        console.log("-----------");
-        console.log(this.state.socket);
-        console.log("-----------");
-
         this.state.socket.on("isOnline", data => {
           if (data === true) this.setState({ online: true });
           else this.setState({ online: false });
@@ -145,9 +146,9 @@ class Profileuser extends Component {
         this.state.socket.emit("isOnline", this.state.user);
         axios.post("/api/users/add/view", { viewed: this.state.user });
       }
-      console.log(this.state);
+      // console.log(this.state);
     } catch (err) {
-      console.log("iozzine")
+      // console.log("iozzine")
       this.setState({ redirect: true });
       console.log(err.message);
     }

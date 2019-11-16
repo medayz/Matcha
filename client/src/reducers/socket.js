@@ -1,7 +1,7 @@
 
 import { USER_SOCKET } from '../actions/types';
 
-const initialState = [];
+const initialState = null;
 
 export default function(state = initialState, action){
     const { type, payload } = action;

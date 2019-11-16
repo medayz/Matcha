@@ -28,29 +28,34 @@ class Header extends Component {
         console.log(this.state);
         statesocket.emit('ForceDisconnect', this.state.whoami);
         this.props.user_state(false);
-        this.props.user_socket({});
+        this.props.user_socket(null);
         this.setState({whoami: ""});
         this.setState({toLogin: true});
       });
   }
 
-  async UNSAFE_componentWillMount () {
-    let socket = io(':1337');
-    this.props.user_socket(socket);
-    await axios
+  componentDidMount () {
+     axios
       .get("/api/users/isLoggedOn")
       .then(async res => {
+        console.log("header then");
+        let socket = this.props.userSocket;
+        if (!socket) {
+          socket = io(':1337');
+          this.props.user_socket(socket);
+        }
         this.props.user_state(true);
       })
       .catch(err => {
+        console.log("header catch");
         const path = window.location.pathname.split("/");
         this.props.user_state(false);
         if (this.props.userSocket !== {})
-          this.props.user_socket({});
+          this.props.user_socket(null);
         if (path[1] !== "resetpwd")
           this.setState({toLogin: true});
       });
-    this.setState({show : true});
+      this.setState({show : true});
   }
 
   async componentDidUpdate () {

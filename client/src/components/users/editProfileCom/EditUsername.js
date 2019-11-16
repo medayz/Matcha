@@ -26,7 +26,7 @@ class EditUsername extends Component {
     .put(`/api/users/edit/username`, usr)
     .then(res => {
       this.props.user_state(false);
-      this.props.user_socket({});
+      this.props.user_socket(null);
       this.setState({ msg2: res.data.msg });
     })
     .catch(err => {
