@@ -121,6 +121,12 @@ module.exports = {
 			params
 		);
 	},
+	searchUsers: async params => {
+		return await query.getAllSpecialNodes(
+			"UNWIND $tags AS tagname MATCH (u1:User {username: $username})-[:INTERESTED_IN]->(tag:Tag {name: tagname})<-[:INTERESTED_IN]-(u2)-[]->(p:Picture {`isProfilePicture`: 'true'}) WITH u2 AS u, count(tag) AS tag_count, duration.between(date(u2.birthDate), date()).years AS age, round(distance(u1.location, u2.location)) AS dist, p.name AS pp WHERE u.place=$location AND age >= $ageMin AND age <= $ageMax AND u.fameRating >= $fameMin AND u.fameRating <= $fameMax RETURN collect({username: u.username, ntags: tag_count, age: age, fame: u.fameRating, distance: dist, pp: pp})",
+			params
+		);
+	},
 	fameRate: async username => {
 		return await query.execute(
 			"MATCH (u:User {username: $username}) OPTIONAL MATCH (l:User)-[:LIKES]->(:User {username: $username}) OPTIONAL MATCH (v:User)-[:VIEWED]->(:User {username: $username}) OPTIONAL MATCH (r:User)-[:REPORTED]->(:User {username: $username}) WITH count(v) + (count(l)*2) - count(r) AS fameRate, u AS user SET user.fameRating=fameRate",

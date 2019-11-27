@@ -530,7 +530,6 @@ module.exports = {
 		}
 	},
 	filter: (req, response, next) => {
-		console.log(req.body.fame)
 		const	params = {
 			username: req.username,
 			distance: req.body.distance || 10,
@@ -541,6 +540,26 @@ module.exports = {
 		};
 		userModel
 			.filterUsers(params)
+			.then(res => {
+				response.json({
+					status: 200,
+					data: res
+				});
+			}).catch(err => {console.log(err); next("Something Went Wrong!");});
+	},
+	search: (req, response, next) => {
+		const	params = {
+			username: req.username,
+			location: req.body.location || "",
+			ageMin: req.body.ageMin || 18,
+			ageMax: req.body.ageMax || 25,
+			tags: req.body.tags || [],
+			fameMin: req.body.fameMin || 0,
+			fameMax: req.body.fameMax || 0
+		};
+		console.log(params);
+		userModel
+			.searchUsers(params)
 			.then(res => {
 				response.json({
 					status: 200,

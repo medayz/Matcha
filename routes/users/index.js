@@ -35,6 +35,9 @@ usersRouter
 usersRouter
   .route("/filter")
   .post(auth, usersController.filter);
+usersRouter
+  .route("/search")
+  .post(auth, usersController.search);
 
 
 // like
