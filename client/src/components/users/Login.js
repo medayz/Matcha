@@ -52,8 +52,7 @@ class Login extends Component {
         }
         axios
           .post('/api/users/add/location', loc, head)
-          .catch(err => console.log(err));
-        console.log(loc);
+          .catch(err => {});
       },
       (error) => {
         if (error.code === error.PERMISSION_DENIED)
@@ -72,11 +71,11 @@ class Login extends Component {
                   };
                   axios
                     .post('/api/users/add/location', location, head)
-                    .catch(err => console.log(err));
+                    .catch(err => {});
                 }
               )
               .catch(err => {
-                console.log(err.message);
+                
               });
           });
         }
@@ -124,7 +123,6 @@ class Login extends Component {
             this.props.user_state(true);
             let socket = io(':1337', {query: `owner=${this.state.username}`});
             this.props.user_socket(socket);
-            console.log(this.props);
             this.setState({ login: "done" });
           } else {
             if (backend.data.err.username !== "")
@@ -151,7 +149,6 @@ class Login extends Component {
               return;
             }
           }
-          console.log(err.message);
         });
     } else return;
   };

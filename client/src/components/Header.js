@@ -25,7 +25,6 @@ class Header extends Component {
     axios
       .get('/api/users/logout')
       .then(res => {
-        console.log(this.state);
         statesocket.emit('ForceDisconnect', this.state.whoami);
         this.props.user_state(false);
         this.props.user_socket(null);
@@ -38,7 +37,6 @@ class Header extends Component {
      axios
       .get("/api/users/isLoggedOn")
       .then(async res => {
-        console.log("header then");
         let socket = this.props.userSocket;
         if (!socket) {
           socket = io(':1337');
@@ -47,7 +45,6 @@ class Header extends Component {
         this.props.user_state(true);
       })
       .catch(err => {
-        console.log("header catch");
         const path = window.location.pathname.split("/");
         this.props.user_state(false);
         if (this.props.userSocket !== {})
@@ -69,7 +66,6 @@ class Header extends Component {
           });
         })
         .catch(err => {
-          console.log(err.message);
         });
       this.setState({connected : stateuser});
     }
@@ -109,6 +105,13 @@ class Header extends Component {
                 <li className="nav-item">
                   <Link to={`/profile/${this.state.whoami}`} className="nav-link">
                     profile
+                  </Link>
+                </li>
+              )}
+              {this.state.connected && (
+                <li className="nav-item">
+                  <Link to={'/search'} className="nav-link">
+                    search
                   </Link>
                 </li>
               )}

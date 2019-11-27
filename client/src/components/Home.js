@@ -39,7 +39,7 @@ class Home extends Component {
 				this.setState({redirect : true});
 			})
 			.catch (err => {
-				this.setState({tokenErr : true});
+				//this.setState({tokenErr : true});
 			});
 	}
 
@@ -57,7 +57,7 @@ class Home extends Component {
 				this.setState({ suggestions: res.data.data });
 			})
 			.catch(err => {
-				this.setState({tokenErr : true});
+				//this.setState({tokenErr : true});
 			});
 	}
 
@@ -85,7 +85,6 @@ class Home extends Component {
 	render() {
 		return (
 			<div>
-				{this.state.tokenErr && <Redirect to="/login" />}
 				{this.state.redirectToEdit && <Redirect to="/profile/edit" />}
 				{this.state.redirect && <Redirect to={
 					{
