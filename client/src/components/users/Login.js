@@ -31,7 +31,8 @@ class Login extends Component {
     longitude: -1,
     latitude: -1,
     apikey: "7fe00b97-6bab-4efc-b916-f95e25a32256",
-    myip: publicIp.v4()
+    myip: publicIp.v4(),
+    show: undefined
   };
 
   onChange = e => {
@@ -99,63 +100,78 @@ class Login extends Component {
   }
   onSubmit = async e => {
     e.preventDefault();
-    const err = {
-      username: "",
-      pass: "",
-      active: ""
-    };
-    this.setState({ errState: err });
-    if (this.state.username.length === 0) err.username = "Username is required";
-    if (this.state.pass.length === 0) err.pass = "password is required";
-    if (err.username === "" && err.pass === "") {
-      const user = this.state;
-      await axios
-        .post(`/api/users/auth`, user, head)
-        .then(async res => {
-          await this.getlocalisation();
-          this.props.setUser(this.state.username);
-          const backend = res.data;
-          if (res.status === 200) {
-            this.setState({
-              pass: "",
-              errState: {}
-            });
-            this.props.user_state(true);
-            let socket = io(':1337', {query: `owner=${this.state.username}`});
-            this.props.user_socket(socket);
-            this.setState({ login: "done" });
-          } else {
-            if (backend.data.err.username !== "")
-              err.email = backend.data.err.username;
-            if (backend.data.err.pass !== "")
-              err.username = backend.data.err.pass;
-            if (backend.data.err.active !== "")
-              err.active = backend.data.err.active;
-            this.setState({ errState: backend.data.err });
-            return;
-          }
-        })
-        .catch(err => {
-          if (err.response) {
-            const back_err = err.response.data;
-            if (err.response.status === 400) {
-              if (back_err.data.err.username !== "")
-                err.username = back_err.data.err.username;
-              if (back_err.data.err.pass !== "")
-                err.pass = back_err.data.err.pass;
-              if (back_err.data.err.active !== "")
-                err.active = back_err.data.err.active;
-              this.setState({ errState: err });
+    
+      const err = {
+        username: "",
+        pass: "",
+        active: ""
+      };
+      this.setState({ errState: err });
+      if (this.state.username.length === 0) err.username = "Username is required";
+      if (this.state.pass.length === 0) err.pass = "password is required";
+      if (err.username === "" && err.pass === "") {
+        const user = this.state;
+        await axios
+          .post(`/api/users/auth`, user, head)
+          .then(async res => {
+            await this.getlocalisation();
+            this.props.setUser(this.state.username);
+            const backend = res.data;
+            if (res.status === 200) {
+              this.setState({
+                pass: "",
+                errState: {}
+              });
+              let socket = io(':1337', {query: `owner=${this.state.username}`});
+              this.props.user_socket(socket);
+              this.setState({ login: "done" });
+              this.props.user_state(true);
+            } else {
+              if (backend.data.err.username !== "")
+                err.email = backend.data.err.username;
+              if (backend.data.err.pass !== "")
+                err.username = backend.data.err.pass;
+              if (backend.data.err.active !== "")
+                err.active = backend.data.err.active;
+              this.setState({ errState: backend.data.err });
               return;
             }
-          }
-        });
-    } else return;
+          })
+          .catch(err => {
+            if (err.response) {
+              const back_err = err.response.data;
+              if (err.response.status === 400) {
+                if (back_err.data.err.username !== "")
+                  err.username = back_err.data.err.username;
+                if (back_err.data.err.pass !== "")
+                  err.pass = back_err.data.err.pass;
+                if (back_err.data.err.active !== "")
+                  err.active = back_err.data.err.active;
+                this.setState({ errState: err });
+                return;
+              }
+            }
+          });
+      } else return;
+    
   };
+  
+
+  componentDidMount () {
+    axios.get('/api/users/whoami')
+    .then(res => {
+      this.setState({show: true});
+    })
+    .catch(err => {
+      this.setState({show: false});
+    });
+  }
 
   render() {
+    if (this.state.show)
+      return (<Redirect to="/home"/>)
     return (
-      <div className="container">
+        <div className="container">
           {this.state.errState.active && (
                 <div className="alert alert-primary" role="alert">
                   {" "}
@@ -168,7 +184,7 @@ class Login extends Component {
               {this.state.emailSend}
             </div>
           }
-          <div className="login-wrap">
+          {this.state.show === false && <div className="login-wrap">
               <div className="login-html">
                 <input id="tab-1" type="radio" name="tab" className="sign-in" defaultChecked="true" /><label htmlFor="tab-1" className="tab">Sign In</label>
                 <input id="tab-2" type="radio" name="tab" className="for-pwd" /><label htmlFor="tab-2" className="tab">Forgot Password</label>
@@ -238,13 +254,19 @@ class Login extends Component {
                   </div>
                 </div>
               </div>
-          </div>
+          </div>}
       </div>
     );
   }
 }
 
+const mapStateToProps = (state) => {
+  return {
+    userState: state.connected,
+  }
+}
+
 export default connect(
-  null,
+  mapStateToProps,
   {setAlert, setUser, user_state, user_socket}
 )(Login);

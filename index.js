@@ -23,7 +23,7 @@ app.use("/api", (req, res, next) => {
 	next();
 }, require("./routes"));
 
-app.get("/", (req, res) => res.send("Hello World from 1337!"));
+app.get("/home", (req, res) => res.send("Hello World from 1337!"));
 
 app.use((req, response, next) => {
 	const error = new Error();

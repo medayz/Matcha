@@ -3,6 +3,7 @@ import RegisterInput from './RegisterInput';
 import axios from 'axios';
 import { btnColor } from "../../css/styleClasses";
 import '../../css/login.css';
+import { Redirect } from "react-router-dom";
 
 const regStyle = {
   padding: '15px'
@@ -17,7 +18,8 @@ class Register extends Component {
       pass: '',
       cPass: '',
       errState: {},
-      registred: ''
+      registred: '',
+      show: undefined
   };
   
   clear = () => {
@@ -159,12 +161,25 @@ class Register extends Component {
         
       }
   }
+
+  componentDidMount () {
+    axios.get('/api/users/whoami')
+    .then(res => {
+      this.setState({show: true});
+    })
+    .catch(err => {
+      this.setState({show: false});
+    });
+  }
+
   render() {
+    if (this.state.show)
+      return (<Redirect to="/home"/>)
     return (
     <div className="container">
         
         <br />
-        <div className="row login-wrap">
+        {this.state.show === false && <div className="row login-wrap">
           <div className="col-md-3"></div>
           <div className="col-md-6" style={regStyle} >
             <form id="form1" onSubmit={this.onSubmit}>
@@ -236,7 +251,7 @@ class Register extends Component {
             </form>
           </div>
           <div className="col-md-3"></div>
-        </div>
+        </div>}
     </div>
     );
   } 

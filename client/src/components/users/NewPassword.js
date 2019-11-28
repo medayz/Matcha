@@ -37,7 +37,7 @@ class NewPassword extends Component {
   }
   
   componentDidMount () {
-    const path = window.location.pathname.split("/");
+    const path = window.location.pathname.split("/home");
     this.setState({username : path[2]});
     this.setState({token : path[3]});
   }

@@ -7,6 +7,9 @@ import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Avatar from '@material-ui/core/Avatar';
 import Typography from '@material-ui/core/Typography';
 import axios from 'axios';
+import { Redirect } from "react-router-dom";
+import { connect } from "react-redux";
+import { user_socket } from "../../actions/socket";
 
 const cssList = {
     backgroundColor: 'white',
@@ -35,18 +38,24 @@ class Infos extends Component {
     state = {
         notifs: null,
         pics: null,
-        show: false
+        show: false,
+        redirect: false
     }
 
     UNSAFE_componentWillMount () {
         axios.get("/api/notifs/get").then(async res => {
             this.setState({notifs: res.data.data});
             this.setState({show : true});
+        })
+        .catch(err => {
+            this.props.user_socket(false);
+            this.setState({redirect : true});
         });
     }
   render() {
     return (
         <div className="conatiner">
+            {this.state.redirect && <Redirect to='/login' />}
             <div className="row">
                 <div className="col-md-2"></div>
                 <div className="col-md-8">
@@ -96,4 +105,11 @@ class Infos extends Component {
   } 
 }
 
-export default Infos;
+const mapStateToProps = (state) => {
+    return {
+      userSocket: state.socket
+    }
+  }
+  
+
+export default  connect(mapStateToProps, {user_socket})(Infos);

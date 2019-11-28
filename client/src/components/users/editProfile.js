@@ -11,6 +11,8 @@ import { Redirect } from "react-router";
 import AddIcon from '@material-ui/icons/Add';
 import Picture from '../Picture';
 import { addPic } from "../../helpers/addImg";
+import { connect } from "react-redux";
+import { user_socket } from "../../actions/socket";
 
 const red = {
 	color : "red"
@@ -137,6 +139,7 @@ class EditProfile extends Component {
 	}
 
 	async UNSAFE_componentWillMount() {
+		
 		try {
 			const res = await axios.get(`/api/users/get`);
 			if (res.data.data) {
@@ -150,8 +153,8 @@ class EditProfile extends Component {
 				this.setState({ visible: true });
 			}
 		} catch(err) {
-			console.log(`ERROOR: ${err.message}`);
-			//this.setState({tokenErr : true});
+			this.props.user_socket(false);
+			this.setState({tokenErr : true});
 		};
 	}
 
@@ -240,4 +243,11 @@ class EditProfile extends Component {
 	}
 }
 
-export default EditProfile;
+const mapStateToProps = (state) => {
+    return {
+      userSocket: state.socket
+    }
+  }
+  
+
+export default  connect(mapStateToProps, {user_socket})(EditProfile);

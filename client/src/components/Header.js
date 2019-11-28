@@ -6,9 +6,9 @@ import axios from 'axios';
 import Notifications from './Notifications'
 import { user_state } from "../actions/connected";
 import { user_socket } from "../actions/socket";
-import { Redirect } from "react-router-dom";
 import {navBar} from "../css/styleClasses";
 import io from 'socket.io-client';
+import { Redirect } from "react-router-dom";
 
 class Header extends Component {
 
@@ -45,12 +45,15 @@ class Header extends Component {
         this.props.user_state(true);
       })
       .catch(err => {
-        const path = window.location.pathname.split("/");
+        const path = window.location.pathname.split("/home");
         this.props.user_state(false);
         if (this.props.userSocket !== {})
           this.props.user_socket(null);
         if (path[1] !== "resetpwd")
+        {
+          this.props.user_state(false);
           this.setState({toLogin: true});
+        }
       });
       this.setState({show : true});
   }
@@ -75,10 +78,11 @@ class Header extends Component {
     return (
       
       <nav style={navBar} className="navbar navbar-expand-sm navbar-dark mb-3 py-0">
-      {this.state.toLogin && <Redirect to={`/login`} />}
+      {this.state.toLogin && <Redirect to='/login'/>} 
       {this.state.show &&
         <div className="container">
-          <Link to="/" className="navbar-brand">
+          
+          <Link to="/home" className="navbar-brand">
             Matcha
           </Link>
           <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">

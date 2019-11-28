@@ -31,6 +31,7 @@ import RadioButtonCheckedIcon from "@material-ui/icons/RadioButtonChecked";
 import RadioButtonUncheckedIcon from "@material-ui/icons/RadioButtonUnchecked";
 import { connect } from "react-redux";
 import { user_socket } from "../../actions/socket";
+import { user_state } from "../../actions/connected";
 import io from 'socket.io-client';
 
 const timeStyle = {
@@ -71,7 +72,8 @@ class Profileuser extends Component {
     whoami: "",
     redirect: false,
     online: false,
-    socket: null
+    socket: null,
+    connected: false
   };
 
   toEditProfile = () => {
@@ -109,62 +111,74 @@ class Profileuser extends Component {
       .catch();
   };
 
-  async componentWillMount() {
-    //console.log(this.props);
-    let socket = this.props.userSocket;
-    if (!socket) {
-      socket = io(':1337');
-      this.props.user_socket(socket);
-    }
-    // console.log("profile");
-    // console.log(this.props.userSocket);
-    try {
-      let res = await axios.get(`/api/users/get/${this.state.user}`);
-      // console.log(res.data.data);
-      this.setState({ data: res.data.data });
-      res = await getUserTags(this.state.user);
-      this.setState({ tags: res.data.data });
-      let pics = await axios.get(`/api/pics/get/${this.state.user}`);
-      pics = pics.data.data;
-      this.setState({ pics: pics.filter(img => img.ispp === "false") });
-      this.setState({ pp: pics.filter(img => img.ispp === "true") });
-      let user = { to: this.state.user };
-      res = await axios.post("/api/users/stateOfLike", user);
-      this.setState({ like: res.data.like });
-      this.setState({ visible: true });
-      axios
-        .get("/api/users/whoami")
-        .then(res => this.setState({ whoami: res.data.user }));
-      if (this.state.user === this.state.whoami)
-        this.setState({ online: true });
-      else {
-        this.setState({ socket: socket });
-        this.state.socket.on("isOnline", data => {
-          if (data === true) this.setState({ online: true });
-          else this.setState({ online: false });
-        });
-        this.state.socket.emit("isOnline", this.state.user);
-        axios.post("/api/users/add/view", { viewed: this.state.user });
-      }
-      // console.log(this.state);
-    } catch (err) {
-      // console.log("iozzine")
-      this.setState({ redirect: true });
-      console.log(err.message);
-    }
-    if (
-      this.state.user === this.state.whoami &&
-      (this.state.data.birthDate === "" ||
-        this.state.data.gender === "" ||
-        this.state.data.userCountry === undefined ||
-        this.state.data.userCountry === undefined)
-    )
-      this.setState({ redirect: true });
+  componentDidMount() {
+    axios.get('/api/users/whoami')
+      .then (async res => {
+          this.setState({connected : true});
+        //console.log(this.props);
+          let socket = this.props.userSocket;
+          if (!socket) {
+            socket = io(':1337');
+            this.props.user_socket(socket);
+          }
+          // console.log("profile");
+          // console.log(this.props.userSocket);
+          try {
+            let res = await axios.get(`/api/users/get/${this.state.user}`);
+            // console.log(res.data.data);
+            this.setState({ data: res.data.data });
+            res = await getUserTags(this.state.user);
+            this.setState({ tags: res.data.data });
+            let pics = await axios.get(`/api/pics/get/${this.state.user}`);
+            pics = pics.data.data;
+            this.setState({ pics: pics.filter(img => img.ispp === "false") });
+            this.setState({ pp: pics.filter(img => img.ispp === "true") });
+            let user = { to: this.state.user };
+            res = await axios.post("/api/users/stateOfLike", user);
+            this.setState({ like: res.data.like });
+            this.setState({ visible: true });
+            axios
+              .get("/api/users/whoami")
+              .then(res => this.setState({ whoami: res.data.user }));
+            if (this.state.user === this.state.whoami)
+              this.setState({ online: true });
+            else {
+              this.setState({ socket: socket });
+              this.state.socket.on("isOnline", data => {
+                if (data === true) this.setState({ online: true });
+                else this.setState({ online: false });
+              });
+              this.state.socket.emit("isOnline", this.state.user);
+              axios.post("/api/users/add/view", { viewed: this.state.user });
+            }
+            // console.log(this.state);
+          } catch (err) {
+            // console.log("iozzine")
+            //this.setState({ redirect: true });
+            //console.log(err.message);
+          }
+          if (
+            this.state.user === this.state.whoami &&
+            (this.state.data.birthDate === "" ||
+              this.state.data.gender === "" ||
+              this.state.data.userCountry === undefined ||
+              this.state.data.userCountry === undefined)
+          )
+            this.setState({ redirect: true });
+      })
+      .catch (err => {
+        this.props.user_state(false);
+        this.setState({connected : false});
+      })
+    
   }
 
   render() {
+    if (this.state.connected === false && this.state.connected !== undefined)
+      return (<Redirect to='/login'/>)
     return (
       <div className="container-fluid">
+        <div>
         {this.state.redirect && <Redirect to={`/profile/edit`} />}
         {this.state.visible && (
           <div className="row profile">
@@ -361,6 +375,7 @@ class Profileuser extends Component {
             <div className="col-md-1" />
           </div>
         )}
+        </div>
       </div>
     );
   }
@@ -374,5 +389,5 @@ const mapStateToProps = state => {
 
 export default connect(
   mapStateToProps,
-  { user_socket }
+  { user_socket,user_state }
 )(Profileuser);

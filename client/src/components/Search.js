@@ -7,7 +7,7 @@ import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import SuggestionCard from './SuggestionCard';
 import axios from "axios";
-import { Redirect } from 'react-router';
+import { Redirect } from 'react-router-dom';
 
 const spanStyle = {
 	fontSize: 'x-large',
