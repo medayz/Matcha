@@ -21,7 +21,7 @@ const SearchFilters = (props) => {
 	const [ageFilter, setAgeFilter] = useState([18, 25]);
 	const [tagsFilter, setTagsFilter] = useState([]);
 	const [location, setLocation] = useState("");
-	const [fame, setFame] = useState([1, 10]);
+	const [fame, setFame] = useState([0, 10]);
 
 	const filterAge = (e, newValue) => {
 		setAgeFilter(newValue);
