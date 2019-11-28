@@ -60,7 +60,7 @@ const BarTop = () => {
 		searchResults.forEach(element => {
 			arr.push(element);
 		});
-		arr.sort((a, b) => b.age - a.age);
+		arr.sort((a, b) => a.age - b.age);
 		setResults(arr);
 	}
 
@@ -73,12 +73,12 @@ const BarTop = () => {
 		setResults(arr);
 	}
 
-	const sortByLoca = () => {
+	const sortByLoc = () => {
 		let arr = [];
 		searchResults.forEach(element => {
 			arr.push(element);
 		});
-		arr.sort((a, b) => b.distance - a.distance);
+		arr.sort((a, b) => a.distance - b.distance);
 		setResults(arr);
 	}
 
@@ -110,7 +110,7 @@ const BarTop = () => {
 							<RadioGroup aria-label="sort" name="sort">
 								<FormControlLabel  value="age" control={<Radio onChange={sortByAge} />} label="Age" />
 								<FormControlLabel  value="fame" control={<Radio onChange={sortByFame}/>} label="Fame" />
-								<FormControlLabel  value="localisation" control={<Radio onChange={sortByLoca}/>} label="Localisation" />
+								<FormControlLabel  value="localisation" control={<Radio onChange={sortByLoc}/>} label="Localisation" />
 								<FormControlLabel  value="tags" control={<Radio onChange={sortByTags}/>} label="Tags" />
 							</RadioGroup>
 						</Paper>
