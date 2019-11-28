@@ -557,7 +557,6 @@ module.exports = {
 			fameMin: req.body.fameMin || 0,
 			fameMax: req.body.fameMax || 0
 		};
-		console.log(params);
 		userModel
 			.searchUsers(params)
 			.then(res => {

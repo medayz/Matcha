@@ -33,9 +33,9 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function GoogleMaps() {
+export default function GoogleMaps(props) {
   const classes = useStyles();
-  const [inputValue, setInputValue] = React.useState("");
+  // const [inputValue, setInputValue] = React.useState("");
   const [options, setOptions] = React.useState([]);
   const loaded = React.useRef(false);
 
@@ -51,9 +51,10 @@ export default function GoogleMaps() {
     loaded.current = true;
   }
 
-  const handleChange = event => {
-    setInputValue(event.target.value);
-  };
+  // const handleChange = event => {
+  //   setInputValue(event.target.value);
+  //   props.filteringHandler(inputValue);
+  // };
 
   const fetch = React.useMemo(
     () =>
@@ -73,12 +74,12 @@ export default function GoogleMaps() {
       return undefined;
     }
 
-    if (inputValue === "") {
+    if (props.inputValue === "") {
       setOptions([]);
       return undefined;
     }
 
-    fetch({ input: inputValue }, results => {
+    fetch({ input: props.inputValue }, results => {
       if (active) {
         setOptions(results || []);
       }
@@ -87,7 +88,7 @@ export default function GoogleMaps() {
     return () => {
       active = false;
     };
-  }, [inputValue, fetch]);
+  }, [props.inputValue, fetch]);
 
   return (
     <Autocomplete
@@ -107,7 +108,8 @@ export default function GoogleMaps() {
           label="Add a location"
           variant="outlined"
           style={styleW}
-          onChange={handleChange}
+          onChange={(e) => props.handleChange(e)}
+          onBlur={(e) => props.handleChange(e)}
         />
       )}
       renderOption={option => {

@@ -91,10 +91,10 @@ class Filters extends Component {
 				</FormGroup>
 				<button
 					className="btn"
-					onClick={() => this.props.filterFunction(this.state)}
+					onClick={() => this.props.filterFunction(Object.assign({}, this.state))}
 					style={stylebtn}
-					>
-						Filter
+				>
+					Filter
 				</button>
 			</FormControl>
 		);
