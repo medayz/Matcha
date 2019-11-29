@@ -93,37 +93,35 @@ module.exports = {
 		userModel
 			.getUser(req.params.username)
 			.then(results => {
-				let {
-					lName,
-					fName,
-					username,
-					country,
-					city,
-					place,
-					sexualPref,
-					gender,
-					birthDate,
-					bio,
-					fameRating,
-					timeLastCnx,
-					dateLastCnx
-				} = results.props;
-				results = {
-					username: username,
-					fName: fName,
-					lName: lName,
-					country: country,
-					city: city,
-					place: place,
-					sexualPref: sexualPref,
-					gender: gender,
-					birthDate: birthDate,
-					bio: bio,
-					fameRating: fameRating,
-					timeLastCnx: timeLastCnx,
-					dateLastCnx: dateLastCnx
-				};
 				if (results) {
+					let {
+						lName,
+						fName,
+						username,
+						country,
+						place,
+						sexualPref,
+						gender,
+						birthDate,
+						bio,
+						fameRating,
+						timeLastCnx,
+						dateLastCnx
+					} = results.props || {};
+					results = {
+						username: username,
+						fName: fName,
+						lName: lName,
+						country: country,
+						place: place,
+						sexualPref: sexualPref,
+						gender: gender,
+						birthDate: birthDate,
+						bio: bio,
+						fameRating: fameRating,
+						timeLastCnx: timeLastCnx,
+						dateLastCnx: dateLastCnx
+					};
 					response.json({
 						status: 200,
 						data: results

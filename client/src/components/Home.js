@@ -83,7 +83,10 @@ class Home extends Component {
 	}
 
 	render() {
-		return (
+		if (this.state.tokenErr)
+			return (<Redirect to="/login" />)
+		else
+			return (
 			<div>
 				{this.state.redirectToEdit && <Redirect to="/profile/edit" />}
 				{this.state.redirect && <Redirect to={

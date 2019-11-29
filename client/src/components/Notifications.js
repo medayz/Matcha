@@ -57,22 +57,27 @@ class Notifications extends Component {
     };
 
     async componentDidMount () {
-        let socket = this.props.userSocket;
-        if (!socket) {
-            socket = io(':1337');
-            this.props.user_socket(socket);
-        }
-        const notifs = await axios.get("/api/notifs/get");
-        this.setState({ notifs: notifs.data.data });
-        const nb_unread_notifs = await this.countUnReadNotifs(this.state.notifs);
-        this.setState({number : nb_unread_notifs});
-        socket.on('notification', async res => {
-            const newNotif = this.state.notifs.slice();
-            newNotif.unshift(res);
-            this.setState({notifs: newNotif});
+        try {
+            let socket = this.props.userSocket;
+            if (!socket) {
+                socket = io(':1337');
+                this.props.user_socket(socket);
+            }
+            const notifs = await axios.get("/api/notifs/get");
+            this.setState({ notifs: notifs.data.data });
             const nb_unread_notifs = await this.countUnReadNotifs(this.state.notifs);
             this.setState({number : nb_unread_notifs});
-        });
+            socket.on('notification', async res => {
+                const newNotif = this.state.notifs.slice();
+                newNotif.unshift(res);
+                this.setState({notifs: newNotif});
+                const nb_unread_notifs = await this.countUnReadNotifs(this.state.notifs);
+                this.setState({number : nb_unread_notifs});
+            });
+        } catch (error) {
+
+        }
+        
     }
 
     render() {
