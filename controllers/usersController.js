@@ -170,7 +170,6 @@ module.exports = {
 			fName: req.body.fName || "",
 			lName: req.body.lName || "",
 			username: req.body.username || "",
-			birthDate: req.body.birthDate || "",
 			email: req.body.email || "",
 			pass: req.body.pass || "",
 			cPass: req.body.cPass || ""
@@ -179,7 +178,6 @@ module.exports = {
 			fName: validator.firstName(params.fName),
 			lName: validator.lastName(params.lName),
 			username: validator.username(params.username),
-			birthDate: validator.birthDate(params.birthDate),
 			email: validator.email(params.email),
 			pass: validator.password(params.pass),
 			cPass: validator.confirmPassword(params.pass, params.cPass)

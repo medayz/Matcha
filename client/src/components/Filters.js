@@ -84,7 +84,7 @@ class Filters extends Component {
 						onChange={this.filterFame}
 						valueLabelDisplay="auto"
 						style={filterColor}
-						min={1}
+						min={0}
 						max={100}
 						aria-labelledby="continuous-slider"
 					/>

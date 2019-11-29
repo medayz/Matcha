@@ -21,7 +21,7 @@ export default function CheckboxesTags(props) {
 				.get("/api/users/whoami")
 				.then(res => {
 					axios
-						.get(`/api/tags/get/${res.data.user}`)
+						.get(`/api/tags/get`)
 						.then(res => {
 							let tag = res.data.data;
 							let obj = tag.map(t => {

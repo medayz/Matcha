@@ -17,7 +17,8 @@ class Header extends Component {
     whoami: "",
     show: false,
     toLogin: false,
-    socket: {}
+    socket: {},
+    _unmout: false
   };
 
   logout = () => {
@@ -43,19 +44,25 @@ class Header extends Component {
           this.props.user_socket(socket);
         }
         this.props.user_state(true);
+        this.setState({show : true});
       })
       .catch(err => {
         const path = window.location.pathname.split("/home");
-        this.props.user_state(false);
-        if (this.props.userSocket !== {})
-          this.props.user_socket(null);
         if (path[1] !== "resetpwd")
         {
           this.props.user_state(false);
           this.setState({toLogin: true});
         }
+        else
+        {
+          console.log("isloggen on false");
+          this.props.user_state(false);
+          if (this.props.userSocket !== {})
+            this.props.user_socket(null);
+        }
+        this.setState({show : true});
       });
-      this.setState({show : true});
+      
   }
 
   async componentDidUpdate () {
@@ -73,6 +80,10 @@ class Header extends Component {
       this.setState({connected : stateuser});
     }
   }
+
+  //abortController = new AbortController();
+
+  
 
   render() {
     return (

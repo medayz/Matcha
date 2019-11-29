@@ -62,6 +62,9 @@ const online = {
 };
 
 class Profileuser extends Component {
+
+  _unmout = true;
+
   state = {
     user: this.props.match.params.username,
     data: {},
@@ -73,7 +76,8 @@ class Profileuser extends Component {
     redirect: false,
     online: false,
     socket: null,
-    connected: false
+    connected: undefined,
+    toHome: false
   };
 
   toEditProfile = () => {
@@ -83,8 +87,10 @@ class Profileuser extends Component {
   blockUser = async () => {
     axios
       .post("/api/users/add/block", {
+
         blocked: this.state.user
       })
+      .then(res => this.setState({toHome: true}))
       .catch((err) => console.log('ash hadshi al akh!'));
   };
 
@@ -112,73 +118,69 @@ class Profileuser extends Component {
   };
 
   componentDidMount() {
-    axios.get('/api/users/whoami')
+    this._unmout && axios.get('/api/users/whoami')
       .then (async res => {
-          this.setState({connected : true});
-        //console.log(this.props);
+        this._unmout &&  this.setState({ whoami: res.data.user });
+        this._unmout && this.setState({connected : true});
           let socket = this.props.userSocket;
           if (!socket) {
             socket = io(':1337');
-            this.props.user_socket(socket);
+            this._unmout && this.props.user_socket(socket);
           }
-          // console.log("profile");
-          // console.log(this.props.userSocket);
+
           try {
             let res = await axios.get(`/api/users/get/${this.state.user}`);
-            // console.log(res.data.data);
-            this.setState({ data: res.data.data });
+
+            this._unmout && this.setState({ data: res.data.data });
             res = await getUserTags(this.state.user);
-            this.setState({ tags: res.data.data });
+            this._unmout && this.setState({ tags: res.data.data });
             let pics = await axios.get(`/api/pics/get/${this.state.user}`);
             pics = pics.data.data;
-            this.setState({ pics: pics.filter(img => img.ispp === "false") });
-            this.setState({ pp: pics.filter(img => img.ispp === "true") });
+            this._unmout && this.setState({ pics: pics.filter(img => img.ispp === "false") });
+            this._unmout && this.setState({ pp: pics.filter(img => img.ispp === "true") });
             let user = { to: this.state.user };
             res = await axios.post("/api/users/stateOfLike", user);
-            this.setState({ like: res.data.like });
-            this.setState({ visible: true });
-            axios
-              .get("/api/users/whoami")
-              .then(res => this.setState({ whoami: res.data.user }));
+            this._unmout && this.setState({ like: res.data.like });
+            this._unmout && this.setState({ visible: true });
             if (this.state.user === this.state.whoami)
-              this.setState({ online: true });
+              this._unmout && this.setState({ online: true });
             else {
-              this.setState({ socket: socket });
+              this._unmout && this.setState({ socket: socket });
               this.state.socket.on("isOnline", data => {
-                if (data === true) this.setState({ online: true });
-                else this.setState({ online: false });
+                if (data === true) this._unmout && this.setState({ online: true });
+                else this._unmout && this.setState({ online: false });
               });
               this.state.socket.emit("isOnline", this.state.user);
               axios.post("/api/users/add/view", { viewed: this.state.user });
             }
-            // console.log(this.state);
+
           } catch (err) {
-            // console.log("iozzine")
-            //this.setState({ redirect: true });
-            //console.log(err.message);
+
           }
           if (
             this.state.user === this.state.whoami &&
             (this.state.data.birthDate === "" ||
               this.state.data.gender === "" ||
-              this.state.data.userCountry === undefined ||
-              this.state.data.userCountry === undefined)
+              this.state.data.place === undefined )
           )
-            this.setState({ redirect: true });
+            this._unmout &&  this.setState({ redirect: true });
       })
       .catch (err => {
-        this.props.user_state(false);
-        this.setState({connected : false});
+
       })
     
   }
 
+  componentWillUnmount () {
+		this._unmout = false;
+	}
+
   render() {
-    if (this.state.connected === false && this.state.connected !== undefined)
-      return (<Redirect to='/login'/>)
+    
     return (
       <div className="container-fluid">
         <div>
+        {this.state.toHome && <Redirect to='/home'/>}
         {this.state.redirect && <Redirect to={`/profile/edit`} />}
         {this.state.visible && (
           <div className="row profile">
@@ -289,7 +291,7 @@ class Profileuser extends Component {
                         </ListItemAvatar>
                         <ListItemText
                           primary="Location"
-                          secondary={`${this.state.data.userCountry}, ${this.state.data.userRegion}`}
+                          secondary={this.state.data.place}
                         />
                       </ListItem>
                       <Divider variant="inset" component="li" />

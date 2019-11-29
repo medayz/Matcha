@@ -5,6 +5,8 @@ import SuggestionCard from './SuggestionCard';
 import Filters from './Filters';
 import Sort from './Sort';
 import { Redirect } from 'react-router';
+import { connect } from 'react-redux';
+import { user_state } from "../actions/connected";
 
 class Home extends Component {
 
@@ -15,8 +17,11 @@ class Home extends Component {
 		tokenErr : false,
 		user: {},
 		whoami: "",
-		redirectToEdit: false
+		redirectToEdit: false,
+		_unmout: true
 	};
+
+	//abortController = new AbortController();
 
 	changeSorting = (e, sortingCriteria) => {
 
@@ -62,32 +67,34 @@ class Home extends Component {
 	}
 
 	async componentDidMount () {
-		axios.get('/api/users/whoami')
-        .then(async res => {
-			this.setState({whoami: res.data.user});
-			res = await axios.get(`/api/users/get/${this.state.whoami}`)
-                    .catch(er => {
-                    this.setState({redirect: true});    
-			});
-			let pics = await axios.get(`/api/pics/get/${this.state.whoami}`);
-			pics = pics.data.data;
-			this.setState({pics : pics.filter(img =>  img.ispp === "false")});
-			this.setState({data: res.data.data});
-			if (this.state.pics.length === 0 || this.state.data.birthDate === "" || this.state.data.gender === "" ||
-        		this.state.data.userCountry === undefined || this.state.data.userCountry === undefined)
-                this.setState({redirectToEdit: true});
-        })
-        .catch(err => {
-            this.setState({tokenErr : true});
-		})
+		if (this.props.userState){
+			this.state._unmout && axios.get('/api/users/whoami')
+			.then(async res => {
+				this.state._unmout && this.setState({whoami: res.data.user});
+				res = await axios.get(`/api/users/get/${this.state.whoami}`)
+						.catch(er => {
+							this.state._unmout && this.setState({redirect: true});    
+				});
+				let pics = await axios.get(`/api/pics/get/${this.state.whoami}`);
+				pics = pics.data.data;
+				this.state._unmout && this.setState({pics : pics.filter(img =>  img.ispp === "false")});
+				this.state._unmout && this.setState({data: res.data.data});
+				if (this.state.pics.length === 0 || this.state.data.birthDate === "" || this.state.data.gender === "" ||
+					this.state.data.place === undefined)
+					this.state._unmout && this.setState({redirectToEdit: true});
+			})
+			.catch(err => {
+			})
+		}
 	}
 
+	
+
 	render() {
-		if (this.state.tokenErr)
-			return (<Redirect to="/login" />)
-		else
+		
 			return (
 			<div>
+				
 				{this.state.redirectToEdit && <Redirect to="/profile/edit" />}
 				{this.state.redirect && <Redirect to={
 					{
@@ -124,4 +131,11 @@ class Home extends Component {
 	}
 }
 
-export default Home;
+const mapStateToProps = (state) => {
+	return {
+	  userState: state.connected,
+	}
+  }
+
+export default connect(mapStateToProps, {user_state})(Home);
+
