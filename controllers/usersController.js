@@ -570,6 +570,10 @@ module.exports = {
 			fameMin: req.body.fameMin || 0,
 			fameMax: req.body.fameMax || 0
 		};
+		const place = geocoder.geocode(params.location || "");
+		params.lon = place[0] ? (place[0].longitude || 0) : 0;
+		params.lat = place[0] ? (place[0].latitude || 0) : 0;
+		delete params.location;
 		userModel
 			.searchUsers(params)
 			.then(res => {
