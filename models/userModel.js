@@ -148,7 +148,7 @@ module.exports = {
 		},
 		location: async params => {
 			await query.execute(
-				"MATCH (u:User {username: $username}) SET u.location = point({longitude: $long, latitude: $lat}), u.country=$country, u.city=$city;",
+				"MATCH (u:User {username: $username}) SET u.location = point({longitude: $long, latitude: $lat}), u.place=$place;",
 				params
 			);
 		},
@@ -180,7 +180,7 @@ module.exports = {
 	edit: {
 		infos: async (username, newInfos) => {
 			await query.execute(
-				"MATCH (u:User {username: $username}) SET u.userRegion = $userRegion, u.userCountry = $userCountry, u.lName = $lName, u.fName = $fName, u.gender = $gender, u.sexualPref = $sexualPref, u.bio = $bio, u.birthDate = $birthDate;",
+				"MATCH (u:User {username: $username}) SET u.place = $place, u.lName = $lName, u.fName = $fName, u.gender = $gender, u.sexualPref = $sexualPref, u.bio = $bio, u.birthDate = $birthDate;",
 				{
 					username: username,
 					fName: newInfos.fName,
@@ -189,8 +189,7 @@ module.exports = {
 					sexualPref: newInfos.sexualPref,
 					bio: newInfos.bio,
 					birthDate: newInfos.birthDate,
-					userRegion: newInfos.userRegion,
-					userCountry: newInfos.userCountry
+					place: newInfos.place
 				}
 			);
 		},

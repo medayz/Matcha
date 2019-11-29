@@ -1,6 +1,5 @@
 import "./edit.css";
 import React, { Component } from "react";
-// import addLogo from "../../images/default/plus.png";
 import axios from "axios";
 import EditInfos from "./editProfileCom/EditInfos";
 import ProfilePic from "./editProfileCom/ProfilePic";

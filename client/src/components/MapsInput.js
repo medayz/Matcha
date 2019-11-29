@@ -35,7 +35,6 @@ const useStyles = makeStyles(theme => ({
 
 export default function GoogleMaps(props) {
   const classes = useStyles();
-  // const [inputValue, setInputValue] = React.useState("");
   const [options, setOptions] = React.useState([]);
   const loaded = React.useRef(false);
 
@@ -50,11 +49,6 @@ export default function GoogleMaps(props) {
 
     loaded.current = true;
   }
-
-  // const handleChange = event => {
-  //   setInputValue(event.target.value);
-  //   props.filteringHandler(inputValue);
-  // };
 
   const fetch = React.useMemo(
     () =>

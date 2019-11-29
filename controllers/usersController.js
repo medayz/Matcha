@@ -9,6 +9,18 @@ const mail = require(`${paths.HELPERS}/sendmail`);
 const token = require(`${paths.HELPERS}/token`);
 const sockets = require(`${paths.HELPERS}/sockets`);
 const fs = require('fs');
+const NodeGeocoder = require("node-geocoder");
+
+const options = {
+  provider: "google",
+
+  // Optional depending on the providers
+  httpAdapter: "https", // Default
+  apiKey: "AIzaSyBc39oUNubkrmDpYhBqBtxjmTDhYcllEec", // for Mapquest, OpenCage, Google Premier
+  formatter: null // 'gpx', 'string', ...
+};
+
+const geocoder = NodeGeocoder(options);
 
 module.exports = {
 	whoami: async (req, response) => {
@@ -49,8 +61,7 @@ module.exports = {
 					gender,
 					sexualPref,
 					birthDate,
-					userRegion,
-					userCountry
+					place
 				} = results.props;
 				results = {
 					username: username,
@@ -64,8 +75,7 @@ module.exports = {
 					gender: gender,
 					sexualPref: sexualPref,
 					birthDate: birthDate,
-					userRegion: userRegion,
-					userCountry: userCountry
+					place: place
 				};
 				if (results) {
 					response.json({
@@ -89,8 +99,7 @@ module.exports = {
 					username,
 					country,
 					city,
-					userRegion,
-					userCountry,
+					place,
 					sexualPref,
 					gender,
 					birthDate,
@@ -105,8 +114,7 @@ module.exports = {
 					lName: lName,
 					country: country,
 					city: city,
-					userRegion: userRegion,
-					userCountry: userCountry,
+					place: place,
 					sexualPref: sexualPref,
 					gender: gender,
 					birthDate: birthDate,
@@ -173,7 +181,7 @@ module.exports = {
 			fName: validator.firstName(params.fName),
 			lName: validator.lastName(params.lName),
 			username: validator.username(params.username),
-			birthDate: validator.birthDate(params.email),
+			birthDate: validator.birthDate(params.birthDate),
 			email: validator.email(params.email),
 			pass: validator.password(params.pass),
 			cPass: validator.confirmPassword(params.pass, params.cPass)
@@ -446,14 +454,21 @@ module.exports = {
 					});
 				});
 		},
-		location: (req, response) => {
+		location: async (req, response) => {
 			const params = {
 				username: req.username,
 				long: req.body.long || null,
 				lat: req.body.lat || null,
-				country: req.body.country || "",
-				city: req.body.city || ""
+				place: req.body.place || ""
 			};
+			if (params.place) {
+				const place = await geocoder.geocode(params.place);
+				params.long = place[0].longitude;
+				params.lat = place[0].latitude;
+			} else if (params.long && params.lat) {
+				const place = await geocoder.reverse({ lat: params.lat, lon: params.long });
+				params.place = place[0].formattedAddress;
+			}
 			userModel.add
 				.location(params)
 				.then(() => {
@@ -577,14 +592,13 @@ module.exports = {
 					: "",
 				bio: req.body.bio ? req.body.bio.trim() : "",
 				birthDate: req.body.birthDate,
-				userCountry: req.body.userCountry ? req.body.userCountry.trim() : "",
-				userRegion: req.body.userRegion ? req.body.userRegion.trim() : ""
+				place: req.body.place ? req.body.place.trim() : ""
 			};
 			params.err = {
 				fName: validator.firstName(params.fName),
-				lName: validator.lastName(params.lName)
+				lName: validator.lastName(params.lName),
+				birthDate: validator.birthDate(params.birthDate)
 			};
-			console.log(params);
 			if (!Object.values(params.err).filter(obj => obj !== "").length) {
 				userModel.edit
 					.infos(req.username, params)

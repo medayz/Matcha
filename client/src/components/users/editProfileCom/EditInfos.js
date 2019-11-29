@@ -8,17 +8,11 @@ import { getAllTags } from "../../../helpers/getAllTags";
 import { getUserTags } from "../../../helpers/getUserTags";
 import { addTags } from "../../../helpers/addTags";
 import { btnColor, tagsColor } from "../../../css/styleClasses";
-import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
+import GoogleMaps from '../../MapsInput';
 
 const tagsErrorStyle = {
   color: "red"
 };
-
-const regionStyle = {
-    width: "100%",
-    height: "34px",
-    backgroundColor: "white"
-}
 
 const red = {
   color : "red"
@@ -29,7 +23,6 @@ export default class EditInfos extends Component {
     fName: "",
     lName: "",
     gender: "",
-    location: "",
     birthDate: "",
     sexualPref: "",
     activeLocation: false,
@@ -43,8 +36,7 @@ export default class EditInfos extends Component {
     visible: false,
     genderArr: ["Male", "Female", "Other"],
     sexual: ["Male", "Female", "Everyone"],
-    country: '',
-    region: ''
+    location: ''
   };
 
   onChange = e => {
@@ -140,12 +132,8 @@ export default class EditInfos extends Component {
     .catch(err => {});
   };
 
-  selectCountry (val) {
-    this.setState({ country: val });
-  }
- 
-  selectRegion (val) {
-    this.setState({ region: val });
+  filterLocation = (e) => {
+    this.setState({ location: e.target.value });
   }
 
   handleBirthday = e => {
@@ -165,27 +153,20 @@ export default class EditInfos extends Component {
   }
 
   async UNSAFE_componentWillMount() {
-    await axios
-      .get(`/api/users/get`)
-      .then(res => {
-        if (res.data.data) {
-          const user = res.data.data;
-          user.fName && this.setState({ fName: user.fName });
-          user.lName && this.setState({ lName: user.lName });
-          user.gender && this.setState({ gender: user.gender });
-          user.location && this.setState({ location: user.location });
-          user.bio && this.setState({ bio: user.bio });
-          user.sexualPref && this.setState({ sexualPref: user.sexualPref });
-          user.birthDate && this.setState({ birthDate: user.birthDate });
-          user.userRegion && this.setState({region: user.userRegion});
-          user.userCountry && this.setState({country: user.userCountry});
-          this.setState({ visible: true });
-          this.callTags();
-          this.calluserTags();
-        }
-      })
-      .catch(err => {
-      });
+    const res = await axios.get(`/api/users/get`);
+    if (res.data.data) {
+      const user = res.data.data;
+      user.fName && this.setState({ fName: user.fName });
+      user.lName && this.setState({ lName: user.lName });
+      user.gender && this.setState({ gender: user.gender });
+      user.bio && this.setState({ bio: user.bio });
+      user.sexualPref && this.setState({ sexualPref: user.sexualPref });
+      user.birthDate && this.setState({ birthDate: user.birthDate });
+      user.place && this.setState({location: user.place});
+      this.setState({ visible: true });
+      this.callTags();
+      this.calluserTags();
+    }
   }
 
   editInfo = async e => {
@@ -195,28 +176,31 @@ export default class EditInfos extends Component {
       fName: this.state.fName,
       lName: this.state.lName,
       gender: this.state.gender,
-      location: this.state.location,
       activeLocation: this.state.activeLocation,
       bio: this.state.bio,
       birthDate: this.state.birthDate,
-      sexualPref: this.state.sexualPref,
-      userCountry: this.state.country,
-      userRegion: this.state.region
+      sexualPref: this.state.sexualPref
     };
     if (usr.activeLocation === "1") usr.activeLocation = true;
     else usr.activeLocation = false;
     this.setState({
       activeLocation: usr.activeLocation
     });
-    await axios
+    axios
       .put(
         `/api/users/edit/infos`,
         usr
       )
-      .then(res => {
-        this.setState({
-          msg1: res.data.msg
-        });
+      .then(async res => {
+        axios
+          .post('/api/users/add/location', { place: this.state.location })
+          .then(res => {
+            this.setState({
+              msg1: res.data.msg
+            });
+          })
+          .catch(err => {});
+        
       })
       .catch(err => {
         const backend = err.response.data;
@@ -314,20 +298,10 @@ export default class EditInfos extends Component {
                 {" "}
                 {this.state.visible !== "" && (
                   <div className="row">
-                    <div className="col-md-6"> 
-                      <label> <span style={red}>*</span>Choose your Country </label>
-                      <CountryDropdown
-                        style={regionStyle}
-                        value={this.state.country}
-                        onChange={(val) => this.selectCountry(val)} />
-                    </div>
-                    <div className="col-md-6">
-                      <label>  <span style={red}>*</span>Choose your Region </label>
-                      <RegionDropdown
-                        style={regionStyle}
-                        country={this.state.country}
-                        value={this.state.region}
-                        onChange={(val) => this.selectRegion(val)} />
+                    <div className="col-md-12"> 
+                      <label> <span style={red}>*</span>Choose your Location</label>
+                      <span> (current: {this.state.location})</span>
+								      <GoogleMaps inputValue={this.state.location} handleChange={this.filterLocation} />
                     </div>
                   </div>
                 )}{" "}

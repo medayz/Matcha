@@ -16,6 +16,7 @@
     "jsonwebtoken": "^8.5.1",
     "jwt-decode": "^2.2.0",
     "mdbreact": "^4.21.0",
+    "node-geocoder": "^3.25.0",
     "notistack": "^0.9.3",
     "npm": "^6.13.0",
     "react": "^16.8.6",
