@@ -159,9 +159,8 @@ class Profileuser extends Component {
           }
           if (
             this.state.user === this.state.whoami &&
-            (this.state.data.birthDate === "" ||
-              this.state.data.gender === "" ||
-              this.state.data.place === undefined )
+            (this.state.pics.length === 0 || this.state.data.birthDate === "" ||
+              this.state.data.gender === "" )
           )
             this._unmout &&  this.setState({ redirect: true });
       })

@@ -89,7 +89,7 @@ class Notifications extends Component {
                 <div>
                     <Button aria-controls="simple-menu" aria-haspopup="true" onClick={this.handleClick}>
                         <Badge badgeContent={this.state.number} color="secondary">
-                            <NotificationsIcon />
+                            <NotificationsIcon style={{color: 'white'}}/>
                         </Badge>
                     </Button>
                     <Menu

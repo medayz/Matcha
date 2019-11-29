@@ -220,7 +220,6 @@ export default class EditInfos extends Component {
   render() {
     return (
       <div>
-        <small style={red}>Fields with "*" are required</small>
         <br />
         <div className="profile-content">
           <form onSubmit={this.editInfo}>

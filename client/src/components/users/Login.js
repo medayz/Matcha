@@ -157,21 +157,13 @@ class Login extends Component {
   };
   
 
-  componentDidMount () {
-    axios.get('/api/users/whoami')
-    .then(res => {
-      this.setState({show: true});
-    })
-    .catch(err => {
-      this.setState({show: false});
-    });
-  }
+ 
 
   render() {
-    if (this.state.show)
-      return (<Redirect to="/home"/>)
+
     return (
         <div className="container">
+          {this.props.userState === true && <Redirect to='/home'/>}
           {this.state.errState.active && (
                 <div className="alert alert-primary" role="alert">
                   {" "}
@@ -184,7 +176,7 @@ class Login extends Component {
               {this.state.emailSend}
             </div>
           }
-          {this.state.show === false && <div className="login-wrap">
+          {<div className="login-wrap">
               <div className="login-html">
                 <input id="tab-1" type="radio" name="tab" className="sign-in" defaultChecked="true" /><label htmlFor="tab-1" className="tab">Sign In</label>
                 <input id="tab-2" type="radio" name="tab" className="for-pwd" /><label htmlFor="tab-2" className="tab">Forgot Password</label>

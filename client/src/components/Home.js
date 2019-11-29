@@ -79,8 +79,7 @@ class Home extends Component {
 				pics = pics.data.data;
 				this.state._unmout && this.setState({pics : pics.filter(img =>  img.ispp === "false")});
 				this.state._unmout && this.setState({data: res.data.data});
-				if (this.state.pics.length === 0 || this.state.data.birthDate === "" || this.state.data.gender === "" ||
-					this.state.data.place === undefined)
+				if (this.state.pics.length === 0 || this.state.data.birthDate === "" || this.state.data.gender === "")
 					this.state._unmout && this.setState({redirectToEdit: true});
 			})
 			.catch(err => {

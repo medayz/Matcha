@@ -8,6 +8,13 @@ const avatarcss = {
   maxHeight: '140px',
 }
 
+const alertCss = {
+  backgroundColor: 'pink',
+  borderColor: 'pink',
+  color: 'white',
+  fontSize: '15px'
+}
+
 class Alertmsgerror extends Component{
 
   render () {
@@ -100,6 +107,19 @@ export default class ProfilePic extends Component {
         </div>
         {this.state.err === true && <Alertmsgsuccess />}
         {this.state.err === false && <Alertmsgerror />}
+        <br />
+        <div>
+            <div className="alert alert-primary" role="alert" style={alertCss}>
+                <span>Complete your profile:</span>
+                <br />
+                <br />
+                <li>
+                  <ul>At least one picture</ul>
+                  <ul>Birth date</ul>
+                  <ul>Gender</ul>
+                </li>
+            </div>
+        </div>
       </div>
     );
   }
