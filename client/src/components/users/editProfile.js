@@ -105,9 +105,6 @@ class EditProfile extends Component {
 		}
 		else
 			this.setState({err : false});
-		setTimeout(() => {
-		this.setState({err : 'not yet'});
-		}, 3000);
 	};
 
 	uploadsnap = () => {
