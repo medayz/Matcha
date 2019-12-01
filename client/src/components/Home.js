@@ -10,6 +10,8 @@ import { user_state } from "../actions/connected";
 
 class Home extends Component {
 
+	_unmout = true;
+
 	state = {
 		redirect : false,
 		dataprofile : {},
@@ -18,7 +20,6 @@ class Home extends Component {
 		user: {},
 		whoami: "",
 		redirectToEdit: false,
-		_unmout: true
 	};
 
 	//abortController = new AbortController();
@@ -68,26 +69,28 @@ class Home extends Component {
 
 	async componentDidMount () {
 		if (this.props.userState){
-			this.state._unmout && axios.get('/api/users/whoami')
+			axios.get('/api/users/whoami')
 			.then(async res => {
-				this.state._unmout && this.setState({whoami: res.data.user});
+				this._unmout && this.setState({whoami: res.data.user});
 				res = await axios.get(`/api/users/get/${this.state.whoami}`)
 						.catch(er => {
-							this.state._unmout && this.setState({redirect: true});    
+							this._unmout && this.setState({redirect: true});    
 				});
 				let pics = await axios.get(`/api/pics/get/${this.state.whoami}`);
 				pics = pics.data.data;
-				this.state._unmout && this.setState({pics : pics.filter(img =>  img.ispp === "false")});
-				this.state._unmout && this.setState({data: res.data.data});
+				this._unmout && this.setState({pics : pics.filter(img =>  img.ispp === "false")});
+				this._unmout && this.setState({data: res.data.data});
 				if (this.state.pics.length === 0 || this.state.data.birthDate === "" || this.state.data.gender === "")
-					this.state._unmout && this.setState({redirectToEdit: true});
+					this._unmout && this.setState({redirectToEdit: true});
 			})
 			.catch(err => {
 			})
 		}
 	}
 
-	
+	componentWillUnmount () {
+		this._unmout = false;
+	}
 
 	render() {
 		

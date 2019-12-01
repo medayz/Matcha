@@ -60,4 +60,4 @@ io.use(async function (socket, next) {
 
 io.on('connection', (socketa) => sockets(socketa, socketat));
 
-http.listen(PORT, () => console.log(`running on port ${PORT}...`));
+http.listen(PORT, {pingTimeout: 600000},() => console.log(`running on port ${PORT}...`));

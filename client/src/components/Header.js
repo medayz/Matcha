@@ -12,13 +12,15 @@ import { Redirect } from "react-router-dom";
 
 class Header extends Component {
 
+  
+  _unmout = true;
+
   state = {
     connected: false,
     whoami: "",
     show: false,
     toLogin: false,
     socket: {},
-    _unmout: false
   };
 
   logout = () => {
@@ -26,9 +28,9 @@ class Header extends Component {
     axios
       .get('/api/users/logout')
       .then(res => {
-        statesocket.emit('ForceDisconnect', this.state.whoami);
         this.props.user_state(false);
         this.props.user_socket(null);
+        statesocket.emit('ForceDisconnect', this.state.whoami);
         this.setState({whoami: ""});
         this.setState({toLogin: true});
       });
@@ -41,26 +43,26 @@ class Header extends Component {
         let socket = this.props.userSocket;
         if (!socket) {
           socket = io(':1337');
-          this.props.user_socket(socket);
+          this._unmout && this.props.user_socket(socket);
         }
-        this.props.user_state(true);
-        this.setState({show : true});
+        this._unmout && this.props.user_state(true);
+        this._unmout && this.setState({show : true});
       })
       .catch(err => {
-        const path = window.location.pathname.split("/home");
-        if (path[1] !== "resetpwd")
+        const path = window.location.pathname.split("/");
+        if (path[1] !== "resetpwd" && path[1] !== "confirmAcc")
         {
-          this.props.user_state(false);
-          this.setState({toLogin: true});
+          this._unmout && this.props.user_state(false);
+          this._unmout && this.setState({toLogin: true});
         }
         else
         {
           console.log("isloggen on false");
-          this.props.user_state(false);
+          this._unmout && this.props.user_state(false);
           if (this.props.userSocket !== {})
-            this.props.user_socket(null);
+            this._unmout && this.props.user_socket(null);
         }
-        this.setState({show : true});
+        this._unmout && this.setState({show : true});
       });
       
   }
@@ -71,19 +73,23 @@ class Header extends Component {
     {
       axios.get('/api/users/whoami')
         .then(res => {
-          this.setState({
+          this._unmout && this.setState({
               whoami : res.data.user
           });
+          
         })
         .catch(err => {
         });
-      this.setState({connected : stateuser});
+        this._unmout && this.setState({connected : stateuser});
     }
   }
 
   //abortController = new AbortController();
 
-  
+  componentWillUnmount () {
+		this._unmout = false;
+	}
+
 
   render() {
     return (

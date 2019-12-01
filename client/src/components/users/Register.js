@@ -22,6 +22,8 @@ class Register extends Component {
       show: undefined
   };
   
+  _unmount = true;
+
   clear = () => {
     document.getElementById('firstName').value = "";
     document.getElementById('lastName').value = "";
@@ -165,11 +167,15 @@ class Register extends Component {
   componentDidMount () {
     axios.get('/api/users/whoami')
     .then(res => {
-      this.setState({show: true});
+      this._unmount && this.setState({show: true});
     })
     .catch(err => {
-      this.setState({show: false});
+      this._unmount && this.setState({show: false});
     });
+  }
+
+  componentWillUnmount () {
+    this._unmount = false;
   }
 
   render() {

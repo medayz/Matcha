@@ -1,4 +1,4 @@
-import React, { Component, useState } from 'react'
+import React, { Component, useState, useEffect } from 'react'
 import Filters from './SearchFilters';
 import Paper from '@material-ui/core/Paper';
 import '../css/search.css';
@@ -22,6 +22,8 @@ const BarTop = () => {
 	const [searchResults, setResults] = useState([]);
 	const [redirect, setRedirect] = useState(false);
 	const [data, setData] = useState({});
+	const [toEdit, setToEdit] = useState(false);
+
 
 
 	const search = (e, filterValues) => {
@@ -51,7 +53,7 @@ const BarTop = () => {
 				setRedirect(true);
 			})
 			.catch (err => {
-				//this.setState({tokenErr : true});
+
 			});
 	}
 
@@ -91,51 +93,69 @@ const BarTop = () => {
 		setResults(arr);
 	}
 
-	return (
-		<div>
-			<Filters search={search} />
-			<br />
-			{redirect && <Redirect to={
-					{
-						pathname: `/profile/${data.username}`,
-						state: data
-					}
-				} />}
-			{activeSort && <div className="container-fluid">
-				<div className="row">
-					<div className="col-md-3">
-						<Paper id="divSearch">
-							<span style={spanStyle}>Sort</span>
-							<br />
-							<RadioGroup aria-label="sort" name="sort">
-								<FormControlLabel  value="age" control={<Radio onChange={sortByAge} />} label="Age" />
-								<FormControlLabel  value="fame" control={<Radio onChange={sortByFame}/>} label="Fame" />
-								<FormControlLabel  value="localisation" control={<Radio onChange={sortByLoc}/>} label="Localisation" />
-								<FormControlLabel  value="tags" control={<Radio onChange={sortByTags}/>} label="Tags" />
-							</RadioGroup>
-						</Paper>
-					</div>
-					<div className="col-md-9">
-						<div className="row">
-							{searchResults.length > 0 && searchResults.map((item, index) => (
-								<SuggestionCard
-									key={index}
-									img={item.pp}
-									username={item.username}
-									age={item.age}
-									ntags={item.ntags}
-									distance={item.distance}
-									fameRating={item.fame}
-									toProfile={() => toProfile(item.username)}
-								/>
-							))}
+	useEffect(() => {
+		axios.get('/api/users/whoami')
+        .then(async result => {
+			let res = await axios.get(`/api/users/get/${result.data.user}`)
+				.catch(er => {
+				});    
+			let pics = await axios.get(`/api/pics/get/${result.data.user}`);
+			pics = pics.data.data;
+			let picture = pics.filter(img =>  img.ispp === "false");
+			let data = res.data.data;
+			if (picture.length === 0 || data.birthDate === "" || data.gender === "")
+				setToEdit(true);
+		}).catch(err => {});
+	}, [])
+
+
+	if (toEdit)
+		return (<Redirect to='/profile/edit' />)
+	else
+		return (
+			<div>
+				<Filters search={search} />
+				<br />
+				{redirect && <Redirect to={
+						{
+							pathname: `/profile/${data.username}`,
+							state: data
+						}
+					} />}
+				{activeSort && <div className="container-fluid">
+					<div className="row">
+						<div className="col-md-3">
+							<Paper id="divSearch">
+								<span style={spanStyle}>Sort</span>
+								<br />
+								<RadioGroup aria-label="sort" name="sort">
+									<FormControlLabel  value="age" control={<Radio onChange={sortByAge} />} label="Age" />
+									<FormControlLabel  value="fame" control={<Radio onChange={sortByFame}/>} label="Fame" />
+									<FormControlLabel  value="localisation" control={<Radio onChange={sortByLoc}/>} label="Localisation" />
+									<FormControlLabel  value="tags" control={<Radio onChange={sortByTags}/>} label="Tags" />
+								</RadioGroup>
+							</Paper>
+						</div>
+						<div className="col-md-9">
+							<div className="row">
+								{searchResults.length > 0 && searchResults.map((item, index) => (
+									<SuggestionCard
+										key={index}
+										img={item.pp}
+										username={item.username}
+										age={item.age}
+										ntags={item.ntags}
+										distance={item.distance}
+										fameRating={item.fame}
+										toProfile={() => toProfile(item.username)}
+									/>
+								))}
+							</div>
 						</div>
 					</div>
-				</div>
-			</div>}
-		</div>
-		
-	)
+				</div>}
+			</div>
+		)
 }
 
 

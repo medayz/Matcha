@@ -117,13 +117,13 @@ module.exports = {
 	},
 	filterUsers: async params => {
 		return await query.getAllSpecialNodes(
-			"MATCH (u1:User {username: $username})-[]->(t:Tag)<-[]-(u2:User)-[]->(p:Picture {`isProfilePicture`: 'true'}) WITH count(DISTINCT t) AS c, round(distance(u1.location, u2.location)/1000) AS dist, duration.between(date(u2.birthDate), date()).years AS age, u2.username AS name, p.name AS pp, u1 AS u1, u2 AS u2, u2.gender AS gender, u2.fameRating AS fRate WHERE dist <= $distance AND age >= $ageMin AND age <= $ageMax AND c >= $tags AND NOT (u1)-[:BLOCKED]-(u2) AND NOT (u1)-[:LIKES]-(u2) AND fRate >= $fameRating AND (u1.sexualPref=u2.gender OR u1.sexualPref='Everyone') RETURN collect({ntags: c, username: name, pic: pp, distance: dist, age: age, gender: gender, fameRating: fRate})",
+			"MATCH (u1:User {username: $username})-[]->(t:Tag)<-[]-(u2:User)-[]->(p:Picture {`isProfilePicture`: 'true'}) WITH count(DISTINCT t) AS c, round(distance(u1.location, u2.location)/1000) AS dist, duration.between(date(u2.birthDate), date()).years AS age, u2.username AS name, p.name AS pp, u1 AS u1, u2 AS u2, u2.gender AS gender, u2.fameRating AS fRate WHERE dist <= $distance AND age >= $ageMin AND age <= $ageMax AND c >= $tags AND NOT (u1)-[:BLOCKED]-(u2) AND NOT (u1)-[:LIKES]->(u2) AND fRate >= $fameRating AND (u1.sexualPref=u2.gender OR u1.sexualPref='Everyone') RETURN collect({ntags: c, username: name, pic: pp, distance: dist, age: age, gender: gender, fameRating: fRate})",
 			params
 		);
 	},
 	searchUsers: async params => {
 		return await query.getAllSpecialNodes(
-			"UNWIND $tags AS tagname MATCH (u1:User {username: $username})-[:INTERESTED_IN]->(tag:Tag {name: tagname})<-[:INTERESTED_IN]-(u2)-[]->(p:Picture {`isProfilePicture`: 'true'}) WITH u1 AS u1, u2 AS u2, count(tag) AS tag_count, duration.between(date(u2.birthDate), date()).years AS age, round(distance(u1.location, u2.location)) AS dist, p.name AS pp, round(distance(u2.location, point({longitude: $lon, latitude: $lat}))/1000) AS dist2 WHERE age >= $ageMin AND age <= $ageMax AND u2.fameRating >= $fameMin AND u2.fameRating <= $fameMax AND NOT (u1)-[:BLOCKED]-(u2) AND NOT (u1)-[:LIKES]-(u2) AND dist2 <= 3 RETURN collect({username: u2.username, ntags: tag_count, age: age, fame: u.fameRating, distance: dist, pp: pp})",
+			"UNWIND $tags AS tagname MATCH (u1:User {username: $username})-[:INTERESTED_IN]->(tag:Tag {name: tagname})<-[:INTERESTED_IN]-(u2)-[]->(p:Picture {`isProfilePicture`: 'true'}) WITH u1 AS u1, u2 AS u2, count(tag) AS tag_count, duration.between(date(u2.birthDate), date()).years AS age, round(distance(u1.location, u2.location)) AS dist, p.name AS pp, round(distance(u2.location, point({longitude: $lon, latitude: $lat}))/1000) AS dist2 WHERE age >= $ageMin AND age <= $ageMax AND u2.fameRating >= $fameMin AND u2.fameRating <= $fameMax AND NOT (u1)-[:BLOCKED]-(u2) AND NOT (u1)-[:LIKES]->(u2) AND dist2 <= 3 RETURN collect({username: u2.username, ntags: tag_count, age: age, fame: u2.fameRating, distance: dist, pp: pp})",
 			params
 		);
 	},

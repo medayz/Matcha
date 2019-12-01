@@ -558,7 +558,7 @@ module.exports = {
 				});
 			}).catch(err => {console.log(err); next("Something Went Wrong!");});
 	},
-	search: (req, response, next) => {
+	search: async (req, response, next) => {
 		const	params = {
 			username: req.username,
 			location: req.body.location || "",
@@ -568,10 +568,12 @@ module.exports = {
 			fameMin: req.body.fameMin || 0,
 			fameMax: req.body.fameMax || 0
 		};
-		const place = geocoder.geocode(params.location || "");
+		const place = params.location ? await geocoder.geocode(params.location) : [0];
+		console.log(place);
 		params.lon = place[0] ? (place[0].longitude || 0) : 0;
 		params.lat = place[0] ? (place[0].latitude || 0) : 0;
-		delete params.location;
+		params.location && delete params.location;
+		console.log(params);
 		userModel
 			.searchUsers(params)
 			.then(res => {
@@ -599,6 +601,7 @@ module.exports = {
 				lName: validator.lastName(params.lName),
 				birthDate: validator.birthDate(params.birthDate)
 			};
+			console.log(params);
 			if (!Object.values(params.err).filter(obj => obj !== "").length) {
 				userModel.edit
 					.infos(req.username, params)

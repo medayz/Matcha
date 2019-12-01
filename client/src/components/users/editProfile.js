@@ -129,9 +129,7 @@ class EditProfile extends Component {
 			this.setState({err : "deleted"});
 		})
 		;
-		setTimeout(() => {
-			this.setState({err : 'not yet'});
-		}, 3000);
+		this.setState({err : 'not yet'});
 	}
 
 	async UNSAFE_componentWillMount() {

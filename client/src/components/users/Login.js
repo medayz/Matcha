@@ -32,8 +32,11 @@ class Login extends Component {
     latitude: -1,
     apikey: "7fe00b97-6bab-4efc-b916-f95e25a32256",
     myip: publicIp.v4(),
-    show: undefined
+    show: undefined,
+    userConnection: false
   };
+
+  _unmount = true;
 
   onChange = e => {
     this.setState({ [e.target.name]: e.target.value });
@@ -156,14 +159,27 @@ class Login extends Component {
     
   };
   
+  componentDidMount () {
+      axios.get('/api/users/whoami')
+      .then(res => {
+        this._unmount && this.setState({
+          userConnection : true
+        });
+      })
+      .catch(err => {
+      });
+  }
 
+  componentWillUnmount () {
+    this._unmount = false;
+  }
  
 
   render() {
 
     return (
         <div className="container">
-          {this.props.userState === true && <Redirect to='/home'/>}
+          {this.state.userConnection === true && <Redirect to='/home'/>}
           {this.state.errState.active && (
                 <div className="alert alert-primary" role="alert">
                   {" "}
@@ -255,6 +271,7 @@ class Login extends Component {
 const mapStateToProps = (state) => {
   return {
     userState: state.connected,
+    userSocket: state.socket,
   }
 }
 
