@@ -123,7 +123,7 @@ module.exports = {
 	},
 	searchUsers: async params => {
 		return await query.getAllSpecialNodes(
-			"UNWIND $tags AS tagname MATCH (u1:User {username: $username})-[:INTERESTED_IN]->(tag:Tag {name: tagname})<-[:INTERESTED_IN]-(u2)-[]->(p:Picture {`isProfilePicture`: 'true'}) WITH u1 AS u1, u2 AS u2, count(tag) AS tag_count, duration.between(date(u2.birthDate), date()).years AS age, round(distance(u1.location, u2.location)) AS dist, p.name AS pp, round(distance(u2.location, point({longitude: $lon, latitude: $lat}))/1000) AS dist2 WHERE age >= $ageMin AND age <= $ageMax AND u2.fameRating >= $fameMin AND u2.fameRating <= $fameMax AND NOT (u1)-[:BLOCKED]-(u2) AND NOT (u1)-[:LIKES]->(u2) AND dist2 <= 3 RETURN collect({username: u2.username, ntags: tag_count, age: age, fame: u2.fameRating, distance: dist, pp: pp})",
+			"UNWIND $tags AS tagname MATCH (u1:User {username: $username})-[:INTERESTED_IN]->(tag:Tag {name: tagname})<-[:INTERESTED_IN]-(u2)-[]->(p:Picture {`isProfilePicture`: 'true'}) WITH u1 AS u1, u2 AS u2, count(tag) AS tag_count, duration.between(date(u2.birthDate), date()).years AS age, round(distance(u1.location, u2.location)) AS dist, p.name AS pp, round(distance(u2.location, point({longitude: $lon, latitude: $lat}))/1000) AS dist2 WHERE age >= $ageMin AND age <= $ageMax AND u2.fameRating >= $fameMin AND u2.fameRating <= $fameMax AND NOT (u1)-[:BLOCKED]-(u2) AND NOT (u1)-[:LIKES]->(u2) AND dist2 <= 3 RETURN collect({username: u2.username, ntags: tag_count, age: age, fame: u2.fameRating, distance: dist2, meters: dist, pp: pp})",
 			params
 		);
 	},
@@ -180,7 +180,7 @@ module.exports = {
 	edit: {
 		infos: async (username, newInfos) => {
 			await query.execute(
-				"MATCH (u:User {username: $username}) SET u.place = $place, u.lName = $lName, u.fName = $fName, u.gender = $gender, u.sexualPref = $sexualPref, u.bio = $bio, u.birthDate = $birthDate;",
+				"MATCH (u:User {username: $username}) SET u.lName = $lName, u.fName = $fName, u.gender = $gender, u.sexualPref = $sexualPref, u.bio = $bio, u.birthDate = $birthDate;",
 				{
 					username: username,
 					fName: newInfos.fName,
@@ -188,8 +188,7 @@ module.exports = {
 					gender: newInfos.gender,
 					sexualPref: newInfos.sexualPref,
 					bio: newInfos.bio,
-					birthDate: newInfos.birthDate,
-					place: newInfos.place
+					birthDate: newInfos.birthDate
 				}
 			);
 		},

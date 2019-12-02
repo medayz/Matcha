@@ -89,7 +89,7 @@ export default function GoogleMaps(props) {
       
       id="google-map-demo"
       style={{ width: "100%" }}
-      getOptionLabel={option => option.description}
+      getOptionLabel={option => option.description ? option.description : ""}
       filterOptions={x => x}
       options={options}
       autoComplete

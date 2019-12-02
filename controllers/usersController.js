@@ -456,29 +456,39 @@ module.exports = {
 				lat: req.body.lat || null,
 				place: req.body.place || ""
 			};
-			if (params.place) {
-				const place = await geocoder.geocode(params.place);
-				params.long = place[0].longitude;
-				params.lat = place[0].latitude;
-			} else if (params.long && params.lat) {
-				const place = await geocoder.reverse({ lat: params.lat, lon: params.long });
-				params.place = place[0].formattedAddress;
-			}
-			userModel.add
-				.location(params)
-				.then(() => {
-					response.json({
-						status: 200,
-						msg: "Location added successfully!"
+			params.err = {
+				place: validator.place(await geocoder.geocode(params.place), params.long, params.lat)
+			};
+			if (!Object.values(params.err).filter(obj => obj !== "").length) {
+				if (params.place) {
+					const place = await geocoder.geocode(params.place);
+					params.long = place[0].longitude;
+					params.lat = place[0].latitude;
+				} else if (params.long && params.lat) {
+					const place = await geocoder.reverse({ lat: params.lat, lon: params.long });
+					params.place = place[0].formattedAddress;
+				}
+				userModel.add
+					.location(params)
+					.then(() => {
+						response.json({
+							status: 200,
+							msg: "Location added successfully!"
+						});
+					})
+					.catch(err => {
+						console.log(err.message);
+						response.status(500).json({
+							status: 500,
+							msg: "Location couldn't be added!"
+						});
 					});
-				})
-				.catch(err => {
-					console.log(err.message);
-					response.status(500).json({
-						status: 500,
-						msg: "Location couldn't be added!"
-					});
+			} else {
+				response.status(400).json({
+					status: 400,
+					data: params
 				});
+			}
 		},
 		view: async (req, response) => {
 			const params = {
@@ -583,7 +593,7 @@ module.exports = {
 			}).catch(err => {console.log(err); next("Something Went Wrong!");});
 	},
 	edit: {
-		infos: (req, response) => {
+		infos: async (req, response) => {
 			const params = {
 				fName: req.body.fName ? req.body.fName.trim() : "",
 				lName: req.body.lName ? req.body.lName.trim() : "",
@@ -592,15 +602,16 @@ module.exports = {
 					? req.body.sexualPref.trim()
 					: "",
 				bio: req.body.bio ? req.body.bio.trim() : "",
-				birthDate: req.body.birthDate,
-				place: req.body.place ? req.body.place.trim() : ""
+				birthDate: req.body.birthDate
 			};
 			params.err = {
 				fName: validator.firstName(params.fName),
 				lName: validator.lastName(params.lName),
-				birthDate: validator.birthDate(params.birthDate)
+				gender: validator.gender(params.gender),
+				sexualPref: validator.sexualPref(params.sexualPref),
+				birthDate: validator.birthDate(params.birthDate),
+				bio: validator.bio(params.bio)
 			};
-			console.log(params);
 			if (!Object.values(params.err).filter(obj => obj !== "").length) {
 				userModel.edit
 					.infos(req.username, params)
