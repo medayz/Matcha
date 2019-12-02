@@ -53,4 +53,9 @@ module.exports = function(socketa, socketat) {
       console.log(err.message);
     }
   });
+  socketa.on('disconnect', function() {
+    console.log('socket disconnect');
+    var i = socketat.indexOf(socketa);
+    socketat.splice(i, 1);
+ });
 };

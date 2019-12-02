@@ -9,7 +9,7 @@ const paths = require("./config/paths");
 const jwtHelper = require(`${paths.HELPERS}/jwtokens`);
 const sockets = require(`${paths.LIBRARIES}/sockets`);
 var http = require('http').createServer(app);
-var io = require('socket.io')(http);
+var io = require('socket.io')(http, {pingTimeout: 60000});
 const socketat = [];
 
 app.disable("x-powered-by");
@@ -60,4 +60,4 @@ io.use(async function (socket, next) {
 
 io.on('connection', (socketa) => sockets(socketa, socketat));
 
-http.listen(PORT, {pingTimeout: 600000},() => console.log(`running on port ${PORT}...`));
+http.listen(PORT, () => console.log(`running on port ${PORT}...`));
