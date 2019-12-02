@@ -47,13 +47,13 @@ export default function CheckboxesTags(props) {
 			options={tags}
 			disableCloseOnSelect
 			getOptionLabel={tag => tag.title}
+			onChange={(e, array) => props.handleChange(array)}
 			renderOption={(tag, { selected }) => (
 				<React.Fragment>
 					<Checkbox
 						icon={icon}
 						checkedIcon={checkedIcon}
 						style={{ marginRight: 8 }}
-						onChange={(e) => props.handleChange(e, tag.title)}
 						checked={selected}
 					/>
 					{tag.title}

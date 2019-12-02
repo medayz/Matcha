@@ -28,13 +28,12 @@ const SearchFilters = (props) => {
 	};
 
 	const filterLocation = (event) => {
-		setLocation(event.target.value);
+		const value = event.target.value ? event.target.value.trim() : "";
+		value && setLocation(value);
 	};
 
-	const filterTags = (event, name) => {
-		event.target.checked ?
-			setTagsFilter([...tagsFilter, name])
-			: setTagsFilter(tagsFilter.filter(item => item !== name));
+	const filterTags = (selected) => {
+		setTagsFilter(selected.map(item => item.title));
 	};
 
 	const filterFame = (e, newValue) => {

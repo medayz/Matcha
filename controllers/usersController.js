@@ -186,8 +186,7 @@ module.exports = {
 		if (checkusername !== undefined)
 			params.err.username = "username already exist";
 		if (!Object.values(params.err).filter(obj => obj !== "").length) {
-			let newUser = {};
-			Object.assign(newUser, params);
+			let newUser = Object.assign({}, params);
 			delete newUser.err;
 			delete newUser.cPass;
 			const tok = token.get();
