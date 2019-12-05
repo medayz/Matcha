@@ -9,8 +9,7 @@ const publicKey = fs.readFileSync(path.join(paths.RSA_KEYS, 'public.key'));
 module.exports = {
     getToken: userData => {
         return jwt.sign(userData, privateKey, {
-            algorithm: "RS256",
-            expiresIn: 3600
+            algorithm: "RS256"
         });
     },
     checkToken: async token => {

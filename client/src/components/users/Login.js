@@ -31,7 +31,7 @@ class Login extends Component {
     longitude: -1,
     latitude: -1,
     apikey: "7fe00b97-6bab-4efc-b916-f95e25a32256",
-    myip: publicIp.v4(),
+    myip: publicIp.v4().catch(err => {console.log('SALAM')}),
     show: undefined,
     userConnection: false
   };
@@ -160,14 +160,17 @@ class Login extends Component {
   };
   
   componentDidMount () {
-      axios.get('/api/users/whoami')
+      /*axios.get('/api/users/whoami')
       .then(res => {
+        console.log("hallo");
         this._unmount && this.setState({
           userConnection : true
         });
       })
       .catch(err => {
-      });
+        console.log("hallo");
+
+      });*/
   }
 
   componentWillUnmount () {
@@ -179,7 +182,7 @@ class Login extends Component {
 
     return (
         <div className="container">
-          {this.state.userConnection === true && <Redirect to='/home'/>}
+          {this.props.userState === true && <Redirect to='/home'/>}
           {this.state.errState.active && (
                 <div className="alert alert-primary" role="alert">
                   {" "}

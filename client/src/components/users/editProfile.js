@@ -98,6 +98,7 @@ class EditProfile extends Component {
 				if (this.state.pics.length === 4)
 					this.setState({addlogo : false});
 				this.setState({err : true});
+				console.log(this.state);
 			})
 			.catch(err => {
 				this.setState({err : false});
@@ -150,6 +151,10 @@ class EditProfile extends Component {
 			this.props.user_socket(false);
 			this.setState({tokenErr : true});
 		};
+	}
+
+	componentDidMount () {
+		console.log(this.state);
 	}
 
 	onChange = e => {

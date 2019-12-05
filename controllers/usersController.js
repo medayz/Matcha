@@ -454,16 +454,22 @@ module.exports = {
 				username: req.username,
 				long: req.body.long || null,
 				lat: req.body.lat || null,
-				place: req.body.place || ""
+				place: req.body.place || "",
+				err: {}
 			};
-			params.err = {
-				place: validator.place(await geocoder.geocode(params.place), params.long, params.lat)
-			};
+			let location = [];
+			if (params.place) {
+				location = await geocoder.geocode(params.place)
+				params.err = {
+					place: validator.place(location, params.long, params.lat)
+				};
+			} else if (!params.long || !params.lat) {
+				return response.sendStatus(200);
+			}
 			if (!Object.values(params.err).filter(obj => obj !== "").length) {
 				if (params.place) {
-					const place = await geocoder.geocode(params.place);
-					params.long = place[0].longitude;
-					params.lat = place[0].latitude;
+					params.long = location[0].longitude;
+					params.lat = location[0].latitude;
 				} else if (params.long && params.lat) {
 					const place = await geocoder.reverse({ lat: params.lat, lon: params.long });
 					params.place = place[0].formattedAddress;

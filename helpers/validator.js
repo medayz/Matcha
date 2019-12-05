@@ -78,7 +78,6 @@ module.exports = {
 		return (error ? 'The date you entered is not valid!' : '');
 	},
 	place: (place, lon, lat) => {
-		console.log(place);
 		if (!Array.isArray(place))
 			return lon === null || lat === null ?
 				"Please enter your location"
