@@ -100,7 +100,7 @@ module.exports = {
 		if (!sexualPref)
 			return "Please enter your sexual preference";
 
-		return !["Men", "Women", "Everyone"].includes(sexualPref) ?
+		return !["Male", "Female", "Everyone"].includes(sexualPref) ?
 			"Please choose your sexual preference from the suggested list"
 			: "";
 	},

@@ -18,6 +18,14 @@ const red = {
   color : "red"
 }
 
+const genderMapping = {
+  Men: "Male",
+  Women: "Female",
+  Everyone: "Everyone",
+  Male: "Men",
+  Female: "Women"
+};
+
 export default class EditInfos extends Component {
   state = {
     fName: "",
@@ -35,7 +43,7 @@ export default class EditInfos extends Component {
     tagsExit: "",
     visible: false,
     genderArr: ["Male", "Female", "Other"],
-    sexual: ["Male", "Female", "Everyone"],
+    sexual: ["Men", "Women", "Everyone"],
     location: ''
   };
 
@@ -160,7 +168,7 @@ export default class EditInfos extends Component {
       user.lName && this.setState({ lName: user.lName });
       user.gender && this.setState({ gender: user.gender });
       user.bio && this.setState({ bio: user.bio });
-      user.sexualPref && this.setState({ sexualPref: user.sexualPref });
+      user.sexualPref && this.setState({ sexualPref: genderMapping[user.sexualPref] });
       user.birthDate && this.setState({ birthDate: user.birthDate });
       user.place && this.setState({location: user.place});
       this.setState({ visible: true });
@@ -179,7 +187,7 @@ export default class EditInfos extends Component {
       activeLocation: this.state.activeLocation,
       bio: this.state.bio,
       birthDate: this.state.birthDate,
-      sexualPref: this.state.sexualPref
+      sexualPref: genderMapping[this.state.sexualPref]
     };
     if (usr.activeLocation === "1") usr.activeLocation = true;
     else usr.activeLocation = false;
