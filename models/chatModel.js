@@ -10,6 +10,16 @@ module.exports = {
             }
         );
     },
+    chatExists: async (user1, user2) => {
+        return await query.getOneSpecialNode(
+            "OPTIONAL MATCH (u1:User {username: $name1})-[:PARTICIPATE_IN]->(c)<-[:PARTICIPATE_IN]-(u2:User {username: $name2}) RETURN collect({exists: c IS NOT NULL});",
+            {
+                name1: user1,
+                name2: user2
+            }
+        );
+    }
+    ,
     getMessages: async (sender, receiver) => {
         return await query.getAllRows(
             "MATCH (:User {username: $sender})-[]->(c:Chat)<-[]-(:User {username: $receiver}) MATCH (c)-[:CONTAINS]->(m) RETURN m;",

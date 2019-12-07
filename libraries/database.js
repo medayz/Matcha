@@ -70,7 +70,7 @@ module.exports = {
 		const results = await getSpecialNodes(query, params);
 		return results;
 	},
-	getOneSpecialNodes : async (query, params) => {
+	getOneSpecialNode : async (query, params) => {
 		const results = await getSpecialNodes(query, params);
 		return results[0];
 	},

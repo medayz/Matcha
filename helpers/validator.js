@@ -1,4 +1,5 @@
 const NodeGeocoder = require("node-geocoder");
+const moment = require("moment");
 
 const options = {
   provider: "google",
@@ -75,7 +76,11 @@ module.exports = {
 		months[2] += leap;
 		const error = month && day && day <= months[month] ? false : true;
 
-		return (error ? 'The date you entered is not valid!' : '');
+		const age = moment().diff(birthDate, "years");
+		if (age < 18 || age > 55)
+			return "Only persons between 18 and 55 are allowed to register!";
+		else
+			return (error ? 'The date you entered is not valid!' : '');
 	},
 	place: (place, lon, lat) => {
 		if (!Array.isArray(place))

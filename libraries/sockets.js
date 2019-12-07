@@ -6,19 +6,22 @@ const sockets = require(`${paths.HELPERS}/sockets`);
 const eventHandlers = {
   msg: async (msg, callback, socketat) => {
     try {
-      const message = await chatModel.addMessage({
-        sender: msg.from,
-        receiver: msg.to,
-        body: msg.msg,
-        date: msg.date
-      });
-      const notif = await userModel.add.notification({
-        username: msg.to,
-        text: `${msg.from} sent you a message`
-      });
-      sockets.eventEmitter(msg.to, socketat, "msg", message.props);
-      sockets.eventEmitter(msg.to, socketat, "notification", notif.props);
-      callback(message.props);
+      const chat = await chatModel.chatExists(msg.from, msg.to);
+      if (chat.exists) {
+        const message = await chatModel.addMessage({
+          sender: msg.from,
+          receiver: msg.to,
+          body: msg.msg,
+          date: msg.date
+        });
+        const notif = await userModel.add.notification({
+          username: msg.to,
+          text: `${msg.from} sent you a message`
+        });
+        sockets.eventEmitter(msg.to, socketat, "msg", message.props);
+        sockets.eventEmitter(msg.to, socketat, "notification", notif.props);
+        callback(message.props);
+      }
     } catch (err) {
       console.log(err.message);
     }

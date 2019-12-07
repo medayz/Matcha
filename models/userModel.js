@@ -4,7 +4,7 @@ const password = require(paths.HELPERS + "/hashing");
 
 module.exports = {
 	likeUser: async (user1, user2) => {
-		return await query.getOneSpecialNodes(
+		return await query.getOneSpecialNode(
 			"MATCH (u1:User {username: $user1}), (u2:User {username: $user2}) OPTIONAL MATCH (u1)-[l1:LIKES]->(u2) OPTIONAL MATCH (u2)-[l2:LIKES]->(u1) MERGE (u1)-[:LIKES]->(u2) RETURN collect({user1: l1, user2: l2});",
 			{
 				user1: user1,
