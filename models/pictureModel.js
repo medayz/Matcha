@@ -11,7 +11,7 @@ module.exports = {
     },
 	countUserPics: async (username) => {
         return await query.rowCount(
-            "MATCH (u:User {username: $username})-[:UPLOADED]->(p:Picture { isProfilePic: false }) RETURN p;",
+            "MATCH (u:User {username: $username})-[:UPLOADED]->(p:Picture) RETURN p;",
             { username: username }
         );
 	}

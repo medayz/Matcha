@@ -101,9 +101,8 @@ const BarTop = () => {
 				});    
 			let pics = await axios.get(`/api/pics/get/${result.data.user}`);
 			pics = pics.data.data;
-			let picture = pics.filter(img =>  img.ispp === "false");
 			let data = res.data.data;
-			if (picture.length === 0 || data.birthDate === "" || data.gender === "")
+			if (pics.length === 0 || data.birthDate === "" || data.gender === "")
 				setToEdit(true);
 		}).catch(err => {});
 	}, [])

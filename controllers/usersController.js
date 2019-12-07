@@ -406,17 +406,12 @@ module.exports = {
 
 			try {
 				const npics = await pictureModel.countUserPics(params.username);
-				if (npics === 4) {
-					const err = new Error("You can't upload more than 4 pictures");
+				if (npics === 5) {
+					const err = new Error("You can't upload more than 5 pictures");
 					err.status = 400;
 				}
-				if (params.isProfilePic === "true")
-				{
-					let deleteObj = {
-						username: req.username,
-					}
-					await userModel.delete.pictureProf(deleteObj);
-				}
+				if (npics === 0)
+					params.isProfilePic = 'true';
 				await userModel.add.picture(params)
 				res.status(200).json({
 					status: 200,
@@ -766,6 +761,22 @@ module.exports = {
 					data: params
 				});
 			}
+		},
+		picture: async (req, response) => {
+			const params = {
+				filename: req.body.filename
+			};
+			try {
+				await userModel.edit.removeProfilePicture(req.username);
+				await userModel.edit.setProfilePicture(params.filename);
+				response.status(200).json({
+					status: 200,
+					msg: "Image was setted as profile picture"
+				});
+			} catch (error) {
+				console.log(error);
+			}
+			
 		}
 	},
 	delete: {

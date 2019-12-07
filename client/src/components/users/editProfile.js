@@ -92,13 +92,18 @@ class EditProfile extends Component {
 			.then(({ data }) => {
 				this.setState({msguploadimage : data.status});
 				let imgs = this.state.pics;
-				data.img.isProfilePic = false;
+				let arr = [];
+				if (data.img.isProfilePic === "true")
+				{
+					arr.push(data.img);
+					this.setState({pp : arr});
+				}
 				imgs.push(data.img);
 				this.setState({pics : imgs});
 				if (this.state.pics.length === 4)
 					this.setState({addlogo : false});
 				this.setState({err : true});
-				console.log(this.state);
+
 			})
 			.catch(err => {
 				this.setState({err : false});
@@ -116,21 +121,37 @@ class EditProfile extends Component {
 			value: newValue.value,
 			label: newValue.label
 		};
-		console.log(Tags);
 	};
 
 	deleteImg = (filename) => {
+		if (this.state.pp && this.state.pp[0].filename === filename)
+			this.setState({pp : ''});
 		axios
 		.post('/api/users/delete/picture',{ filename })
 		.then(res => {
 			let pics = this.state.pics;
 			this.setState({pics : pics.filter(img => img.filename !== filename)});
-			if (this.state.pics.length < 4)
+			if (this.state.pics.length < 5)
 				this.setState({addlogo : true});
+			if (this.state.pics.length === 0)
+				this.setState({pp : []});
 			this.setState({err : "deleted"});
 		})
 		;
 		this.setState({err : 'not yet'});
+	}
+
+	setAsProfilePicture = (filename) => {
+		axios
+		.put('/api/users/edit/setProfilePicture', { filename })
+		.then(async res => {
+			let pics = await axios.get(`/api/pics/get/${this.state.username}`);
+			pics = pics.data.data;
+			this.setState({pp : pics.filter(img => img.ispp === "true")});
+			this.setState({pics : pics});
+		}).catch(err => {
+			console.log(err);
+		});
 	}
 
 	async UNSAFE_componentWillMount() {
@@ -143,7 +164,7 @@ class EditProfile extends Component {
 				user.email && this.setState({ email: user.email });
 				let pics = await axios.get(`/api/pics/get/${user.username}`);
 				pics = pics.data.data;
-				this.setState({pics : pics.filter(img => img.ispp === "false")});
+				this.setState({pics : pics});
 				this.setState({pp : pics.filter(img => img.ispp === "true")});
 				this.setState({ visible: true });
 			}
@@ -151,10 +172,6 @@ class EditProfile extends Component {
 			this.props.user_socket(false);
 			this.setState({tokenErr : true});
 		};
-	}
-
-	componentDidMount () {
-		console.log(this.state);
 	}
 
 	onChange = e => {
@@ -215,7 +232,7 @@ class EditProfile extends Component {
 									<div className="row jjj">
 										{this.state.pics.map((img, index) => (
 											<div className="col-md-6 col-lg-3" style={{marginTop: '2%'}} key={index}>
-												<Picture img={ img.filename } deleteImg={ () => this.deleteImg(img.filename) } />
+												<Picture img={ img.filename } setAsProfilePic={() => this.setAsProfilePicture(img.filename)} deleteImg={ () => this.deleteImg(img.filename) } />
 											</div>
 										))}
 									</div>

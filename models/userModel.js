@@ -227,7 +227,23 @@ module.exports = {
                     username: username
                 }
             );
-        }
+		},
+		removeProfilePicture: async (username) => {
+            await query.execute(
+                "MATCH (:User {username: $username})-[:UPLOADED]->(p:Picture {isProfilePicture: 'true'}) SET p.isProfilePicture='false';",
+                {
+                    username: username
+                }
+            );
+		},
+		setProfilePicture: async (name) => {
+            await query.execute(
+                "MATCH (p:Picture {name: $name}) SET p.isProfilePicture='true';",
+                {
+                    name: name
+                }
+            );
+		},
 	},
 	delete: {
 		picture: async params => {
