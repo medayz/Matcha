@@ -29,6 +29,7 @@ class App extends Component {
             <Route exact path="/confirmAcc/:username/:token" component={ConfirmAcc}/>
             <Route exact path="/resetpwd/:username/:token" component={NewPass}/>            
             <Route exact path="/profile/:username" component={Profileuser}/>
+               
             <Route exact path="/logout" component={Login}/>
             <Route exact path="/infos" component={Infos}/>
             <Route exact path="/chats" component={Chats}/>

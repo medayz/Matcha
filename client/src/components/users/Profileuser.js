@@ -106,7 +106,6 @@ class Profileuser extends Component {
     let user = {
       to: this.state.user
     };
-    //console.log("outside");
     axios
       .post("/api/users/like", user)
       .then(res => {
@@ -117,57 +116,67 @@ class Profileuser extends Component {
       .catch();
   };
 
-  componentDidMount() {
+  traitement = () => {
     this._unmout && axios.get('/api/users/whoami')
-      .then (async res => {
-        this._unmout &&  this.setState({ whoami: res.data.user });
-        this._unmout && this.setState({connected : true});
-          let socket = this.props.userSocket;
-          if (!socket) {
-            socket = io(':1337');
-            this._unmout && this.props.user_socket(socket);
+    .then (async res => {
+      this._unmout &&  this.setState({ whoami: res.data.user });
+      this._unmout && this.setState({connected : true});
+        let socket = this.props.userSocket;
+        if (!socket) {
+          socket = io(':1337');
+          this._unmout && this.props.user_socket(socket);
+        }
+
+        try {
+          let res = await axios.get(`/api/users/get/${this.state.user}`);
+          this._unmout && this.setState({ data: res.data.data });
+          res = await getUserTags(this.state.user);
+          this._unmout && this.setState({ tags: res.data.data });
+          let pics = await axios.get(`/api/pics/get/${this.state.user}`);
+          pics = pics.data.data;
+          this._unmout && this.setState({ pics: pics.filter(img => img.ispp === "false") });
+          this._unmout && this.setState({ pp: pics.filter(img => img.ispp === "true") });
+          let user = { to: this.state.user };
+          res = await axios.post("/api/users/stateOfLike", user);
+          this._unmout && this.setState({ like: res.data.like });
+          this._unmout && this.setState({ visible: true });
+          if (this.state.user === this.state.whoami)
+            this._unmout && this.setState({ online: true });
+          else {
+            this._unmout && this.setState({ socket: socket });
+            this.state.socket.on("isOnline", data => {
+              if (data === true) this._unmout && this.setState({ online: true });
+              else this._unmout && this.setState({ online: false });
+            });
+            this.state.socket.emit("isOnline", this.state.user);
+            axios.post("/api/users/add/view", { viewed: this.state.user });
           }
 
-          try {
-            let res = await axios.get(`/api/users/get/${this.state.user}`);
+        } catch (err) {
 
-            this._unmout && this.setState({ data: res.data.data });
-            res = await getUserTags(this.state.user);
-            this._unmout && this.setState({ tags: res.data.data });
-            let pics = await axios.get(`/api/pics/get/${this.state.user}`);
-            pics = pics.data.data;
-            this._unmout && this.setState({ pics: pics.filter(img => img.ispp === "false") });
-            this._unmout && this.setState({ pp: pics.filter(img => img.ispp === "true") });
-            let user = { to: this.state.user };
-            res = await axios.post("/api/users/stateOfLike", user);
-            this._unmout && this.setState({ like: res.data.like });
-            this._unmout && this.setState({ visible: true });
-            if (this.state.user === this.state.whoami)
-              this._unmout && this.setState({ online: true });
-            else {
-              this._unmout && this.setState({ socket: socket });
-              this.state.socket.on("isOnline", data => {
-                if (data === true) this._unmout && this.setState({ online: true });
-                else this._unmout && this.setState({ online: false });
-              });
-              this.state.socket.emit("isOnline", this.state.user);
-              axios.post("/api/users/add/view", { viewed: this.state.user });
-            }
+        }
+        if (
+          this.state.user === this.state.whoami &&
+          (this.state.pics.length === 0 || this.state.data.birthDate === "" ||
+            this.state.data.gender === "" )
+        )
+          this._unmout &&  this.setState({ redirect: true });
+    })
+    .catch (err => {
+      console.log(err);
+    })
+  }
 
-          } catch (err) {
+  componentDidMount() {
+    this.traitement();
+  }
 
-          }
-          if (
-            this.state.user === this.state.whoami &&
-            (this.state.pics.length === 0 || this.state.data.birthDate === "" ||
-              this.state.data.gender === "" )
-          )
-            this._unmout &&  this.setState({ redirect: true });
-      })
-      .catch (err => {
-
-      })
-    
+  componentDidUpdate () {
+    this.unlisten = this.props.history.listen((location, action) => {
+      let username = location.pathname.split("/");
+      this._unmout && this.setState({user: username[2]});
+      this._unmout && this.traitement();
+    });
   }
 
   componentWillUnmount () {
