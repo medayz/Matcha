@@ -19,5 +19,11 @@ module.exports = {
 		return await query.getAllRows('MATCH p=(u:User {username: $username})-[r:INTERESTED_IN]->(t:Tag) RETURN t', {
 			username: username
 		});
+	},
+	countUserTags: async (username) => {
+        return await query.rowCount(
+            "MATCH p=(u:User {username: $username})-[r:INTERESTED_IN]->(t:Tag) RETURN t",
+            { username: username }
+        );
 	}
 };

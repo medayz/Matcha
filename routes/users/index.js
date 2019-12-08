@@ -2,6 +2,7 @@ const paths = require("../../config/paths");
 const usersRouter = require("express").Router();
 const usersController = require(`${paths.CONTROLLERS}/usersController`);
 const auth = require(`${paths.MIDDLEWARES}/checkToken`);
+const profileCompletion = require(`${paths.MIDDLEWARES}/checkUserInfo`);
 
 usersRouter.use(require("express").json());
 
@@ -9,14 +10,18 @@ usersRouter.use("/add", auth, require("./add"));
 usersRouter.use("/delete", auth, require("./delete"));
 usersRouter.use("/edit", auth, require("./edit"));
 
-//add just for chat we should change it by getting user matches
-usersRouter.route("/getAllUsers").get(usersController.getAllUsers);
-usersRouter.route("/get").get(auth, usersController.getPersonalInfos);
-usersRouter.route("/get/:username").get(usersController.getUserByUsername);
-
-usersRouter.route("/isLoggedOn").get(auth, (req, res) => res.send("logged"));
-usersRouter.route("/logout").get(auth,usersController.logOut);
-
+usersRouter
+  .route("/get")
+  .get(auth, usersController.getPersonalInfos);
+usersRouter
+  .route("/get/:username")
+  .get(usersController.getUserByUsername);
+usersRouter
+  .route("/isLoggedOn")
+  .get(auth, (req, res) => res.send("logged"));
+usersRouter
+  .route("/logout")
+  .get(auth,usersController.logOut);
 usersRouter
   .route("/create")
   .post(usersController.addUser);
@@ -34,17 +39,21 @@ usersRouter
   .post(usersController.resetPassword);
 usersRouter
   .route("/filter")
-  .post(auth, usersController.filter);
+  .post(auth, profileCompletion, usersController.filter);
 usersRouter
   .route("/search")
-  .post(auth, usersController.search);
-
-
-// like
-usersRouter.route("/like").post(auth, usersController.like);
-// stateOflike
-usersRouter.route("/stateOfLike").post(auth, usersController.stateOfLike);
-// who am i route 
-usersRouter.route("/whoami").get(auth, usersController.whoami);
+  .post(auth, profileCompletion, usersController.search);
+usersRouter
+  .route("/like")
+  .post(auth, profileCompletion, usersController.like);
+usersRouter
+  .route("/stateOfLike")
+  .post(auth, profileCompletion, usersController.stateOfLike);
+usersRouter
+  .route("/whoami")
+  .get(auth, usersController.whoami);
+usersRouter
+  .route("/completed")
+  .get(auth, profileCompletion, usersController.completed);
 
 module.exports = usersRouter;

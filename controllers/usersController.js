@@ -24,9 +24,12 @@ const geocoder = NodeGeocoder(options);
 
 module.exports = {
 	whoami: async (req, response) => {
-		response.status(200).json({
+		response.json({
 			user: req.username
 		});
+	},
+	completed: async (req, response) => {
+		response.sendStatus(200);
 	},
 	getAllUsers: async (req, response) => {
 		userModel
@@ -177,14 +180,17 @@ module.exports = {
 		params.err = {
 			fName: validator.firstName(params.fName),
 			lName: validator.lastName(params.lName),
-			username: validator.username(params.username),
-			email: validator.email(params.email),
+			username: validator.username(
+				params.username,
+				await userModel.getUser(params.username)
+			),
+			email: validator.email(
+				params.email,
+				await userModel.getUserByEmail(params.email)
+			),
 			pass: validator.password(params.pass),
 			cPass: validator.confirmPassword(params.pass, params.cPass)
 		};
-		let checkusername = await userModel.getUser(params.username);
-		if (checkusername !== undefined)
-			params.err.username = "username already exist";
 		if (!Object.values(params.err).filter(obj => obj !== "").length) {
 			let newUser = Object.assign({}, params);
 			delete newUser.err;
