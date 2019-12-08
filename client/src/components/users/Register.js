@@ -4,7 +4,8 @@ import axios from 'axios';
 import { btnColor } from "../../css/styleClasses";
 import '../../css/login.css';
 import { Redirect } from "react-router-dom";
-
+import TextField from '@material-ui/core/TextField';
+import classnames from "classnames";
 const regStyle = {
   padding: '15px'
 }
@@ -15,6 +16,7 @@ class Register extends Component {
       lName: '',
       username: '',
       email: '',
+      birthDate: '',
       pass: '',
       cPass: '',
       errState: {},
@@ -90,6 +92,7 @@ class Register extends Component {
         lName: '',
         username: '',
         email: '',
+        birthDate: '',
         pass: '',
         cPass: ''
       };
@@ -109,10 +112,12 @@ class Register extends Component {
           err.lName = 'Last name is required';
         if (this.state.fName.length === 0)
           err.fName = 'First name is required';
-        
+        if (this.state.birthDate.length === 0)
+          err.birthDate = 'Birthday date is required';
+
         if (err.fName === '' && err.lName === ''
         && err.username === '' && err.email === ''
-        && err.pass === '' && err.cPass === '')
+        && err.pass === '' && err.cPass === '' && err.birthDate === '')
         {
           const user = this.state;
           await axios
@@ -130,6 +135,7 @@ class Register extends Component {
                     email: '',
                     pass: '',
                     cPass: '',
+                    birthDate: '',
                     errState: {}
                   }
                 );
@@ -148,6 +154,8 @@ class Register extends Component {
                   err.email = back_err.data.err.email;
                 if (back_err.data.err.username !== '')
                   err.username = back_err.data.err.username;
+                if (back_err.data.err.birthDate !== '')
+                  err.birthDate = back_err.data.err.birthDate;
                 if (back_err.data.err.pass !== '')
                   err.pass = back_err.data.err.pass;
                 if (back_err.data.err.cPass !== '')
@@ -159,8 +167,8 @@ class Register extends Component {
         else
           return;
       }
-      catch (err ) {
-        
+      catch (err) {
+        console.log(err);
       }
   }
 
@@ -232,6 +240,24 @@ class Register extends Component {
                   value={this.state.email}
                   onChange={this.onChange}
               />
+              <div className="form-group">
+                <label htmlFor='date' style={{color: 'pink'}}>Bithday date</label>
+                <TextField
+                  id="date"
+                  name="birthDate"
+                  className={classnames("form-control", { "is-invalid": this.state.errState.birthDate })}
+                  variant="outlined"
+                  type="date"
+                  style={{width: '100%'}}
+                  onChange={this.onChange}
+                  defaultValue={this.state.fName}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                />
+                <br /><br />
+                {this.state.errState.birthDate && <div className="invalid-feedback"> {this.state.errState.birthDate} </div>}
+              </div>
               <RegisterInput 
                   label="Password"
                   type="password"

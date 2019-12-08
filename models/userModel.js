@@ -52,13 +52,14 @@ module.exports = {
 	addUser: async newUser => {
 		newUser.pass = await password.hash(newUser.pass);
 		await query.execute(
-			"CREATE (u:User {dateLastCnx: date(),timeLastCnx: time(), emailToken: $emailToken, lName: $lName, activated: $active, fName: $fName, email: $email, username: $username, fameRating: 0, pwd: $pwd})-[:UPLOADED]->(:Picture {name: 'default.png', isProfilePicture: 'true', date: date()})",
+			"CREATE (u:User {birthDate: $birthDate, dateLastCnx: date(),timeLastCnx: time(), emailToken: $emailToken, lName: $lName, activated: $active, fName: $fName, email: $email, username: $username, fameRating: 0, pwd: $pwd})",
 			{
 				fName: newUser.fName,
 				lName: newUser.lName,
 				username: newUser.username,
 				email: newUser.email,
 				pwd: newUser.pass,
+				birthDate: newUser.birthDate,
 				emailToken: newUser.emailToken,
 				active: false
 			}
