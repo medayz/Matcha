@@ -171,14 +171,16 @@ module.exports = {
 			lName: req.body.lName || "",
 			username: req.body.username || "",
 			email: req.body.email || "",
+			birthDate: req.body.birthDate || "",
 			pass: req.body.pass || "",
-			cPass: req.body.cPass || ""
+			cPass: req.body.cPass || "",
 		};
 		params.err = {
 			fName: validator.firstName(params.fName),
 			lName: validator.lastName(params.lName),
 			username: validator.username(params.username),
 			email: validator.email(params.email),
+			birthDate: validator.birthDate(params.birthDate),
 			pass: validator.password(params.pass),
 			cPass: validator.confirmPassword(params.pass, params.cPass)
 		};

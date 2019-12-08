@@ -204,7 +204,7 @@ export default class EditInfos extends Component {
           .post('/api/users/add/location', { place: this.state.location })
           .then(res => {
             this.setState({
-              msg1: res.data.msg
+              msg1: "Modified !"
             });
           })
           .catch(err => {});
@@ -327,6 +327,7 @@ export default class EditInfos extends Component {
                     style={{width : '100%'}}
                     id="date"
                     type="date"
+                    variant="outlined"
                     onChange={this.handleBirthday}
                     defaultValue={this.state.birthDate}
                     InputLabelProps={{
