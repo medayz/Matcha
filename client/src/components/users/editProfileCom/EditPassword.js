@@ -25,7 +25,6 @@ class EditPassword extends Component {
       newPass: this.state.newPass,
       cPass: this.state.cPass
     };
-    console.log(pwd);
     await axios
       .put(`/api/users/edit/password`, pwd)
       .then(res => {

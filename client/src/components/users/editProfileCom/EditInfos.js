@@ -212,7 +212,6 @@ export default class EditInfos extends Component {
       })
       .catch(err => {
         const backend = err.response.data;
-        console.log(backend);
         if (backend.status === 400)
           this.setState({
             errState: backend.data.err

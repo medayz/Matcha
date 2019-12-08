@@ -84,7 +84,7 @@ class EditProfile extends Component {
 
 	uploadProfileImg = async e => {
 		let img = e.target.files[0];
-		if (img.name.match(/\.(jpg|jpeg|png)$/)) {
+		if (img && img.name.match(/\.(jpg|jpeg|png)$/)) {
 		var formData = new FormData();
 		formData.append("profileImg", img);
 		formData.append("isProfilePic", false);
@@ -100,7 +100,7 @@ class EditProfile extends Component {
 				}
 				imgs.push(data.img);
 				this.setState({pics : imgs});
-				if (this.state.pics.length === 4)
+				if (this.state.pics.length === 5)
 					this.setState({addlogo : false});
 				this.setState({err : true});
 
@@ -116,15 +116,10 @@ class EditProfile extends Component {
 	uploadsnap = () => {
 		this.fileUpload.current.click();
 	};
-	onChangeTags = newValue => {
-		var Tags = {
-			value: newValue.value,
-			label: newValue.label
-		};
-	};
+
 
 	deleteImg = (filename) => {
-		if (this.state.pp && this.state.pp[0].filename === filename)
+		if (this.state.pp[0] && this.state.pp[0].filename === filename)
 			this.setState({pp : ''});
 		axios
 		.post('/api/users/delete/picture',{ filename })
@@ -150,7 +145,6 @@ class EditProfile extends Component {
 			this.setState({pp : pics.filter(img => img.ispp === "true")});
 			this.setState({pics : pics});
 		}).catch(err => {
-			console.log(err);
 		});
 	}
 

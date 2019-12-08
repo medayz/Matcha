@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { addPic } from "../../../helpers/addImg";
-
+import axios from 'axios';
 const avatarcss = {
   width: '140px',
   height: '140px',
@@ -46,7 +46,8 @@ export default class ProfilePic extends Component {
   state = {
     msguploadimage: '',
     err: 'not yet',
-    pp : this.props.pp
+    pp : this.props.pp,
+    completed: true
   }
 
   uploadProfileImg = async e => {
@@ -84,6 +85,15 @@ export default class ProfilePic extends Component {
     }
   }
 
+  componentDidMount () {
+    axios
+    .get('/api/users/completed')
+    .then (res => {})
+    .catch(err => {
+      this.setState({completed: false});
+    });
+  }
+
   render() {
     return (
       <div>
@@ -105,18 +115,17 @@ export default class ProfilePic extends Component {
         {this.state.err === true && <Alertmsgsuccess />}
         {this.state.err === false && <Alertmsgerror />}
         <br />
-        <div>
+        {!this.state.completed && <div>
             <div className="alert alert-primary" role="alert" style={alertCss}>
                 <span>Complete your profile:</span>
                 <br />
                 <br />
                 <li>
                   <ul>At least one picture</ul>
-                  <ul>Birth date</ul>
-                  <ul>Gender</ul>
+                  <ul>At least one tag</ul>
                 </li>
             </div>
-        </div>
+        </div>}
       </div>
     );
   }

@@ -24,7 +24,7 @@ const geocoder = NodeGeocoder(options);
 
 module.exports = {
 	whoami: async (req, response) => {
-		response.json({
+		response.status(200).json({
 			user: req.username
 		});
 	},

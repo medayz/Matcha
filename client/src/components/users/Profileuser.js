@@ -77,7 +77,8 @@ class Profileuser extends Component {
     online: false,
     socket: null,
     connected: undefined,
-    toHome: false
+    toHome: false,
+    completed: true
   };
 
   toEditProfile = () => {
@@ -109,7 +110,6 @@ class Profileuser extends Component {
     axios
       .post("/api/users/like", user)
       .then(res => {
-        console.log(res);
         let like = res.data.like;
         this.setState({ like: like });
       })
@@ -128,16 +128,16 @@ class Profileuser extends Component {
         }
 
         try {
-          let res = await axios.get(`/api/users/get/${this.state.user}`);
+          let res = this._unmout && await axios.get(`/api/users/get/${this.state.user}`);
           this._unmout && this.setState({ data: res.data.data });
-          res = await getUserTags(this.state.user);
+          res = this._unmout && await getUserTags(this.state.user);
           this._unmout && this.setState({ tags: res.data.data });
-          let pics = await axios.get(`/api/pics/get/${this.state.user}`);
+          let pics = this._unmout && await axios.get(`/api/pics/get/${this.state.user}`);
           pics = pics.data.data;
           this._unmout && this.setState({ pics: pics });
           this._unmout && this.setState({ pp: pics.filter(img => img.ispp === "true") });
           let user = { to: this.state.user };
-          res = await axios.post("/api/users/stateOfLike", user);
+          res = this._unmout && await axios.post("/api/users/stateOfLike", user);
           this._unmout && this.setState({ like: res.data.like });
           this._unmout && this.setState({ visible: true });
           if (this.state.user === this.state.whoami)
@@ -148,19 +148,13 @@ class Profileuser extends Component {
               if (data === true) this._unmout && this.setState({ online: true });
               else this._unmout && this.setState({ online: false });
             });
-            this.state.socket.emit("isOnline", this.state.user);
-            axios.post("/api/users/add/view", { viewed: this.state.user });
+            this._unmout && this.state.socket.emit("isOnline", this.state.user);
+            this._unmout && axios.post("/api/users/add/view", { viewed: this.state.user });
           }
 
         } catch (err) {
 
         }
-        if (
-          this.state.user === this.state.whoami &&
-          (this.state.pics.length === 0 || this.state.data.birthDate === "" ||
-            this.state.data.gender === "" )
-        )
-          this._unmout &&  this.setState({ redirect: true });
     })
     .catch (err => {
       console.log(err);
@@ -168,7 +162,16 @@ class Profileuser extends Component {
   }
 
   componentDidMount() {
-    this.traitement();
+    axios
+    .get('/api/users/completed')
+    .then (res => {
+      this.traitement();
+    })
+    .catch(err => {
+      this._unmout && this.setState({completed: false});
+    });
+    
+
   }
 
   componentDidUpdate () {
@@ -188,7 +191,8 @@ class Profileuser extends Component {
     return (
       <div className="container-fluid">
         <div>
-        {this.state.toHome && <Redirect to='/home'/>}
+        {!this.state.completed && <Redirect to='/profile/edit'/>}
+        {this.state.toHome && <Redirect to='/'/>}
         {this.state.redirect && <Redirect to={`/profile/edit`} />}
         {this.state.visible && (
           <div className="row profile">

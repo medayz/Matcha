@@ -36,7 +36,6 @@ export default function CheckboxesTags(props) {
 				})
 				.catch(err => {});
 		} catch (error) {
-			console.log(error);
 		}
 	}, []);
 

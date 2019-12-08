@@ -51,12 +51,18 @@ class Chats extends Component {
         from: "",
         conversation : [],
         socket : null,
-        redirect: false
+        redirect: false,
+        ToEdit: false
     }
 
     onChange = async e => {
         this.setState({ [e.target.name]: e.target.value });
     };
+
+    scrollDown = () => {
+        const ele = document.querySelector('#messages');
+        ele.scrollTop = ele.scrollHeight;
+    }
 
     mapOnChats = (chat) => {
         let promise = new Promise((resolve, reject) => {
@@ -95,16 +101,16 @@ class Chats extends Component {
                     let conv = res;
                     conv = conv.reverse();
                     this.setState({conversation : conv});
-                    
+                    this.scrollDown();
                 });
                 
             })
             .catch(err => {
-                console.log(err);
             });
     }
 
-    sendmsg = async () => {
+    sendmsg = async (e) => {
+        e.preventDefault();
         let obj = {
             from : this.state.from,
             to : this.state.to,
@@ -118,6 +124,7 @@ class Chats extends Component {
                 const conv = this.state.conversation.slice();
                 conv.push(data);
                 this.setState({conversation : conv});
+                this.scrollDown();
             });
             this.setState({msg : ""});
         }
@@ -129,35 +136,37 @@ class Chats extends Component {
         .then(res => {
             this.setState({
                 from : res.data.user
+            });
+            axios
+            .get(`/api/chats/get/${this.state.from}`)
+            .then ( async (res) => {
+                await this.mapOnChats(res.data.data).then(res => {
+                    this.setState({usernames : res});
+                });
+                this.setState({socket : this.props.userSocket});
+                this.state.socket.on('msg', (data) => {
+                    let allmsg = this.state.conversation;
+                    allmsg.push(data);
+                    if ((allmsg[0].sender === this.state.to) || (allmsg[0].receiver === this.state.to))
+                        this.setState({conversation : allmsg});
+                    this.scrollDown();
+                });
             })
-        })
-        .catch(err => {
-            //this.setState({redirect: true});
-        })
-        await axios
-        .get(`/api/chats/get/${this.state.from}`)
-        .then ( async (res) => {
-            await this.mapOnChats(res.data.data).then(res => {
-                this.setState({usernames : res});
-            });
-            this.setState({socket : this.props.userSocket});
-            this.state.socket.on('msg', (data) => {
-                let allmsg = this.state.conversation;
-                allmsg.push(data);
-                if ((allmsg[0].sender === this.state.to) || (allmsg[0].receiver === this.state.to))
-                    this.setState({conversation : allmsg});
+            .catch(err => {
+                if (err.response.data.status === 403)
+                    this.setState({ToEdit : true});
             });
         })
         .catch(err => {
-           // this.setState({redirect : true});
-        });
-        //<span style={styleDate}>{msg.time.hour.low}:{msg.time.minute.low}</span>
+        })
+
     }
 
     render() {
         return (
             <div className="container-fluid">
                 {this.state.redirect && <Redirect to={`/login`} />}
+                {this.state.ToEdit && <Redirect to={`/profile/edit`} />}
                 {!this.state.redirect &&
                 <div className="row">
                     <div className="col-md-4">
@@ -187,7 +196,7 @@ class Chats extends Component {
                                         <li className="list-group-item" style={{color:'black'}}>{this.state.to}</li>
                                     </ul>
                                 </div>
-                                <div style={scroll}>
+                                <div id="messages" style={scroll}>
                                     {this.state.conversation.map((msg, index) => 
                                         <div key={index}>
                                             {(msg.receiver === this.state.from
@@ -200,18 +209,20 @@ class Chats extends Component {
                                     )}
                                 </div>
                                 {this.state.to !== "Choose a conversation" && 
-                                <div>
-                                    <TextField
-                                        style={styleinput}
-                                        id="standard-dense"
-                                        label="Message"
-                                        margin="dense"
-                                        name="msg"
-                                        value={this.state.msg}
-                                        onChange={this.onChange}
-                                    />
-                                    <SendIcon style={sendstyle} size='large' onClick={this.sendmsg} color="primary"/>
-                                </div>
+                                <form onSubmit={this.sendmsg}>
+                                    <div>
+                                        <TextField
+                                            style={styleinput}
+                                            id="standard-dense"
+                                            label="Message"
+                                            margin="dense"
+                                            name="msg"
+                                            value={this.state.msg}
+                                            onChange={this.onChange}
+                                        />
+                                        <SendIcon style={sendstyle} size='large' onClick={this.sendmsg} color="primary"/>
+                                    </div>
+                                </form>
                                 }
                             </div>
                         </div>

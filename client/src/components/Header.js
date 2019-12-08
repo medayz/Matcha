@@ -57,7 +57,6 @@ class Header extends Component {
         }
         else
         {
-          console.log("isloggen on false");
           this._unmout && this.props.user_state(false);
           if (this.props.userSocket !== {})
             this._unmout && this.props.user_socket(null);
@@ -100,7 +99,7 @@ class Header extends Component {
         <div className="container">
           
           {this.props.userState && 
-          <Link to="/home" className="navbar-brand">
+          <Link to="/" className="navbar-brand">
             Matcha
           </Link>}
           {!this.props.userState && 

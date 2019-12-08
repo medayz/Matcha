@@ -50,7 +50,6 @@ class Register extends Component {
         axios
           .post('/api/users/add/location', loc, head)
           .catch(err => console.log(err));
-        console.log(loc);
       },
       (error) => {
         if (error.code === error.PERMISSION_DENIED)
@@ -188,7 +187,7 @@ class Register extends Component {
 
   render() {
     if (this.state.show)
-      return (<Redirect to="/home"/>)
+      return (<Redirect to="/"/>)
     return (
     <div className="container">
         

@@ -20,6 +20,7 @@ class Home extends Component {
 		user: {},
 		whoami: "",
 		redirectToEdit: false,
+		completed: true
 	};
 
 	//abortController = new AbortController();
@@ -60,32 +61,31 @@ class Home extends Component {
 		axios
 			.post('/api/users/filter', filters)
 			.then(res => {
-				this.setState({ suggestions: res.data.data });
+				this._unmout && this.setState({ suggestions: res.data.data });
 			})
 			.catch(err => {
 				//this.setState({tokenErr : true});
 			});
 	}
 
-	async componentDidMount () {
-		if (this.props.userState){
-			axios.get('/api/users/whoami')
-			.then(async res => {
-				this._unmout && this.setState({whoami: res.data.user});
-				res = await axios.get(`/api/users/get/${this.state.whoami}`)
-						.catch(er => {
-							this._unmout && this.setState({redirect: true});    
-				});
-				let pics = await axios.get(`/api/pics/get/${this.state.whoami}`);
-				pics = pics.data.data;
-				this._unmout && this.setState({pics : pics});
-				this._unmout && this.setState({data: res.data.data});
-				if (this.state.pics.length === 0 || this.state.data.birthDate === "" || this.state.data.gender === "")
-					this._unmout && this.setState({redirectToEdit: true});
-			})
-			.catch(err => {
-			})
-		}
+	componentDidMount () {
+		axios
+		.get('/api/users/completed')
+		.then (res => {
+			if (this.props.userState){
+				const test = {
+					ageFilter: [18, 25],
+					tagsFilter : 1,
+					distanceFilter : 10,
+					fameFilter : 0
+				}
+				this._unmout && this.filter(test);
+			}
+		})
+		.catch(err => {
+			this._unmout && this.setState({completed: false});
+		});
+		
 	}
 
 	componentWillUnmount () {
@@ -96,8 +96,8 @@ class Home extends Component {
 		
 			return (
 			<div>
-				
-				{this.state.redirectToEdit && <Redirect to="/profile/edit" />}
+				{!this.props.userState && <Redirect to="/login" />}
+				{!this.state.completed && <Redirect to="/profile/edit" />}
 				{this.state.redirect && <Redirect to={
 					{
 						pathname: `/profile/${this.state.dataprofile.username}`,

@@ -8,7 +8,6 @@ import { setUser } from "../../actions/user";
 import { user_socket } from "../../actions/socket";
 import { user_state } from "../../actions/connected";
 import { Redirect } from "react-router-dom";
-import profile from "./ConfirmAcc";
 import publicIp from "public-ip";
 import io from 'socket.io-client';
 import '../../css/login.css';
@@ -33,7 +32,9 @@ class Login extends Component {
     apikey: "7fe00b97-6bab-4efc-b916-f95e25a32256",
     myip: publicIp.v4().catch(err => {console.log('SALAM')}),
     show: undefined,
-    userConnection: false
+    userConnection: false,
+    toHome: false,
+    toEdit: false
   };
 
   _unmount = true;
@@ -114,7 +115,7 @@ class Login extends Component {
       if (this.state.pass.length === 0) err.pass = "password is required";
       if (err.username === "" && err.pass === "") {
         const user = this.state;
-        await axios
+        axios
           .post(`/api/users/auth`, user, head)
           .then(async res => {
             await this.getlocalisation();
@@ -127,8 +128,15 @@ class Login extends Component {
               });
               let socket = io(':1337', {query: `owner=${this.state.username}`});
               this.props.user_socket(socket);
-              this.setState({ login: "done" });
               this.props.user_state(true);
+              axios
+              .get('/api/users/completed')
+              .then (res => {
+                this._unmount && this.setState({toHome: true});
+              })
+              .catch(err => {
+                this._unmount && this.setState({toEdit: true});
+              });
             } else {
               if (backend.data.err.username !== "")
                 err.email = backend.data.err.username;
@@ -182,7 +190,9 @@ class Login extends Component {
 
     return (
         <div className="container">
-          {this.props.userState === true && <Redirect to='/home'/>}
+          {this.props.userState === true && this.state.toHome && <Redirect to='/'/>}
+          {this.props.userState === true && this.state.toEdit && <Redirect to='/profile/edit'/>}
+          {this.props.userState === true && !this.state.toEdit && !this.state.toHome && <Redirect to='/'/>}
           {this.state.errState.active && (
                 <div className="alert alert-primary" role="alert">
                   {" "}
@@ -231,9 +241,7 @@ class Login extends Component {
                         />
                       </div>
                       <div className="group">
-                        {this.state.login === "done" && (
-                          <Redirect to={`/profile/edit`} Component={profile} />
-                        )}
+
                         <button type="submit" className="button">
                           Login
                         </button>

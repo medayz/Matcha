@@ -52,7 +52,7 @@ module.exports = {
 	addUser: async newUser => {
 		newUser.pass = await password.hash(newUser.pass);
 		await query.execute(
-			"CREATE (u:User {birthDate: $birthDate, dateLastCnx: date(),timeLastCnx: time(), emailToken: $emailToken, lName: $lName, activated: $active, fName: $fName, email: $email, username: $username, fameRating: 0, pwd: $pwd})",
+			"CREATE (u:User {gender: 'Other', sexualPref: 'Everyone', birthDate: $birthDate, dateLastCnx: date(),timeLastCnx: time(), emailToken: $emailToken, lName: $lName, activated: $active, fName: $fName, email: $email, username: $username, fameRating: 0, pwd: $pwd})",
 			{
 				fName: newUser.fName,
 				lName: newUser.lName,
@@ -124,7 +124,7 @@ module.exports = {
 	},
 	searchUsers: async params => {
 		return await query.getAllSpecialNodes(
-			"UNWIND $tags AS tagname MATCH (u1:User {username: $username})-[:INTERESTED_IN]->(tag:Tag {name: tagname})<-[:INTERESTED_IN]-(u2)-[]->(p:Picture {`isProfilePicture`: 'true'}) WITH u1 AS u1, u2 AS u2, count(tag) AS tag_count, duration.between(date(u2.birthDate), date()).years AS age, round(distance(u1.location, u2.location)) AS dist, p.name AS pp, round(distance(u2.location, point({longitude: $lon, latitude: $lat}))/1000) AS dist2 WHERE age >= $ageMin AND age <= $ageMax AND u2.fameRating >= $fameMin AND u2.fameRating <= $fameMax AND NOT (u1)-[:BLOCKED]-(u2) AND NOT (u1)-[:LIKES]->(u2) AND dist2 <= 3 RETURN collect({username: u2.username, ntags: tag_count, age: age, fame: u2.fameRating, distance: dist2, meters: dist, pp: pp})",
+			"UNWIND $tags AS tagname MATCH (u1:User {username: $username})-[:INTERESTED_IN]->(tag:Tag {name: tagname})<-[:INTERESTED_IN]-(u2)-[]->(p:Picture {`isProfilePicture`: 'true'}) WITH u1 AS u1, u2 AS u2, count(tag) AS tag_count, duration.between(date(u2.birthDate), date()).years AS age, round(distance(u1.location, u2.location)) AS dist, p.name AS pp, round(distance(u2.location, point({longitude: $lon, latitude: $lat}))/1000) AS dist2 WHERE age >= $ageMin AND age <= $ageMax AND u2.fameRating >= $fameMin AND u2.fameRating <= $fameMax AND NOT (u1)-[:BLOCKED]-(u2) AND NOT (u1)-[:LIKES]->(u2) AND dist2 <= 5 RETURN collect({username: u2.username, ntags: tag_count, age: age, fame: u2.fameRating, distance: dist2, meters: dist, pp: pp})",
 			params
 		);
 	},

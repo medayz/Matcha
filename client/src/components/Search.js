@@ -42,7 +42,6 @@ const BarTop = () => {
 				setActiveSort(true);
 			})
 			.catch(err => {
-				console.log('search error!');
 			});
 	};
 

@@ -21,6 +21,8 @@ class Notifications extends Component {
         number: 0
     };
 
+    _unmout = true;
+
     countUnReadNotifs = (notifs) => {
         let number = 0;
         let promise = new Promise((resolve, reject) => {
@@ -34,7 +36,6 @@ class Notifications extends Component {
     }
 
     handleClick = event => {
-        //console.log(event.currentTarget);
         this.setState({anchor: event.currentTarget});
     };
 
@@ -52,15 +53,12 @@ class Notifications extends Component {
     };
 
     profile = () => {
-        console.log('PROOOOOFFIIIIIILEEE');
         this.handleClose();
     };
 
     async componentDidMount () {
         if (this.props.connected)
         {
-            console.log("done");
-
             try {
                 let socket = this.props.userSocket;
                 if (!socket) {
@@ -68,15 +66,15 @@ class Notifications extends Component {
                     this.props.user_socket(socket);
                 }
                 const notifs = await axios.get("/api/notifs/get");
-                this.setState({ notifs: notifs.data.data });
+                this._unmout && this.setState({ notifs: notifs.data.data });
                 const nb_unread_notifs = await this.countUnReadNotifs(this.state.notifs);
-                this.setState({number : nb_unread_notifs});
+                this._unmout && this.setState({number : nb_unread_notifs});
                 socket.on('notification', async res => {
                     const newNotif = this.state.notifs.slice();
                     newNotif.unshift(res);
-                    this.setState({notifs: newNotif});
+                    this._unmout && this.setState({notifs: newNotif});
                     const nb_unread_notifs = await this.countUnReadNotifs(this.state.notifs);
-                    this.setState({number : nb_unread_notifs});
+                    this._unmout && this.setState({number : nb_unread_notifs});
                 });
             } catch (error) {
     
