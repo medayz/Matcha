@@ -40,6 +40,12 @@ const timeStyle = {
   color: '#757575'
 }
 
+const ForbiddenCss = {
+  textAlign: 'center',
+  fontSize: '50px',
+  marginTop: '10%'
+}
+
 const avatarcss = {
   width: "140px",
   height: "140px",
@@ -78,7 +84,8 @@ class Profileuser extends Component {
     socket: null,
     connected: undefined,
     toHome: false,
-    completed: true
+    completed: true,
+    Forbidden: false
   };
 
   toEditProfile = () => {
@@ -153,11 +160,10 @@ class Profileuser extends Component {
           }
 
         } catch (err) {
-
+          this._unmout &&  this.setState({ Forbidden: true });
         }
     })
     .catch (err => {
-      console.log(err);
     })
   }
 
@@ -194,11 +200,15 @@ class Profileuser extends Component {
         {!this.state.completed && <Redirect to='/profile/edit'/>}
         {this.state.toHome && <Redirect to='/'/>}
         {this.state.redirect && <Redirect to={`/profile/edit`} />}
+        {this.state.Forbidden && <div style={ForbiddenCss}>
+            Forbidden 403          
+        </div>}
         {this.state.visible && (
           <div className="row profile">
             <div className="col-md-1" />
             <br />
             <div className="col-md-10">
+
               <div className="profile-content">
                 <div className="row">
                   <div className="col-md-4">
@@ -261,6 +271,14 @@ class Profileuser extends Component {
                           </div>
                         </div>
                       )}
+                      <br />
+                      {this.state.data.match.length > 0 && (
+                            <span style={timeStyle}>
+                              <span style={{fontSize: '14px',color: 'pink'}}>{this.state.data.match}</span>
+                              <br />
+                            </span>
+                      )}
+                      <br />
                       {this.state.user === this.state.whoami && (
                         <div className="row">
                           <div className="col-md-4"></div>

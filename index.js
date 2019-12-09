@@ -12,7 +12,6 @@ const sockets = require(`${paths.LIBRARIES}/sockets`);
 var http = require('http').createServer(app);
 var io = require('socket.io')(http, {pingTimeout: 60000});
 const socketat = [];
-const path = require('path');
 
 app.disable("x-powered-by");
 app.use(cors());

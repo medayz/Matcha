@@ -98,7 +98,20 @@ const Who = () => {
 
     const [liked, setliked] = useState([]);
 
+
+    const [likedme, setlikedme] = useState([]);
+
     const likedUser = () => {
+        axios.get('/api/users/likedMe')
+        .then(res => {
+            let data = res.data.data;
+            setlikedme(data);
+        })
+        .catch(err => {
+        });
+    }
+
+    const likedMe = () => {
         axios.get('/api/users/likedUser')
         .then(res => {
             let data = res.data.data;
@@ -143,13 +156,18 @@ const Who = () => {
         viewedUser();
         matchedUser();
         blockedUser();
+        likedMe();
     }, [])
     
     return (
         <div className="conatiner">
+            <br />
+            
             <div className="row">
                 <div className="col-md-2"></div>
                 <div className="col-md-8">
+                    <h1 style={{textAlign: 'center'}}>Who ?</h1>
+                    <br />
                     <ul className="nav nav-tabs" id="myTab" role="tablist">
                         <li className="nav-item">
                             <a className="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Matched users</a>
@@ -162,6 +180,9 @@ const Who = () => {
                         </li>
                         <li className="nav-item">
                             <a className="nav-link" id="email-tab" data-toggle="tab" href="#likes" role="tab" aria-controls="contact" aria-selected="false">Liked users</a>
+                        </li>
+                        <li className="nav-item">
+                            <a className="nav-link" id="email-tab" data-toggle="tab" href="#likeme" role="tab" aria-controls="contact" aria-selected="false">Liked me</a>
                         </li>
                     </ul>
                     <div className="tab-content" id="myTabContent">
@@ -203,6 +224,18 @@ const Who = () => {
                             <br />
                             <div className="row">
                                 {liked.map((user, index) => 
+                                    <div key={index} className="col-md-6">
+                                        <MyCard user={user} block={false}></MyCard>    
+                                    </div>
+                                )}
+                            </div>
+                            
+                        </div>
+                        <div className="tab-pane fade" id="likeme" role="tabpanel" aria-labelledby="email-tab">
+                            <br />
+                            <br />
+                            <div className="row">
+                                {likedme.map((user, index) => 
                                     <div key={index} className="col-md-6">
                                         <MyCard user={user} block={false}></MyCard>    
                                     </div>

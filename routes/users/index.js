@@ -15,10 +15,13 @@ usersRouter
   .get(auth, usersController.getPersonalInfos);
 usersRouter
   .route("/get/:username")
-  .get(usersController.getUserByUsername);
+  .get(auth, usersController.getUserByUsername);
 usersRouter
   .route("/likedUser")
   .get(auth, usersController.getLikedUser);
+usersRouter
+  .route("/likedMe")
+  .get(auth, usersController.getLikedMe);
 usersRouter
   .route("/viewedUser")
   .get(auth, usersController.getViewedUser);

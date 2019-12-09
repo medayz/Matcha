@@ -55,7 +55,7 @@ module.exports = {
 		userModel
 			.isBlocked(req.username, req.params.visited)
 			.then(res => {
-				if (!res) {
+				if (!res.blocked) {
 					response.json({
 						status: 200,
 						msg: "Not Blocked!"
@@ -91,6 +91,23 @@ module.exports = {
 	getLikedUser: async (req, response) => {
 		userModel
 			.getLikedUser(req.username)
+			.then(results => {
+				response.json({
+					status: 200,
+					data: results
+				});
+			})
+			.catch(err => {
+				console.log(err.message);
+				response.status(500).json({
+					status: 500,
+					msg: "Error fetching users"
+				});
+			});
+	},
+	getLikedMe: async (req, response) => {
+		userModel
+			.getLikedMe(req.username)
 			.then(results => {
 				response.json({
 					status: 200,
@@ -204,9 +221,9 @@ module.exports = {
 		userModel
 			.getUser(req.params.username)
 			.then(async results => {
-				const isBlocked = await userModel.isBlocked(req.username, req.params.username);
-				if (results && !isBlocked) {
-					const isAmatch = await chatModel.chatExists(req.username, req.params.username);
+				const visited = await userModel.isBlocked(req.username, req.params.username);
+				if (results && !visited.blocked) {
+					const chat = await chatModel.chatExists(req.username, req.params.username);
 					let {
 						lName,
 						fName,
@@ -234,13 +251,13 @@ module.exports = {
 						fameRating: fameRating,
 						timeLastCnx: timeLastCnx,
 						dateLastCnx: dateLastCnx,
-						match: isAmatch ? "You're connected to this user!" : ""
+						match: chat.exists ? "You're connected to this user!" : ""
 					};
 					response.json({
 						status: 200,
 						data: results
 					});
-				} else if (isBlocked) {
+				} else if (visited.blocked) {
 					response.status(403).json({
 						status: 403,
 						msg: "Blocked"

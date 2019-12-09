@@ -31,8 +31,8 @@ module.exports = {
 		);
 	},
 	isBlocked: async (user1, user2) => {
-		return await query.getOneRow(
-			"OPTIONAL MATCH (u1:User {username: $user1})-[b:BLOCKED]-(u2:User {username: $user2}) RETURN b",
+		return await query.getOneSpecialNode(
+			"OPTIONAL MATCH (u1:User {username: $user1})-[b:BLOCKED]-(u2:User {username: $user2}) RETURN collect({blocked: b})",
 			{
 				user1: user1,
 				user2: user2
@@ -44,6 +44,13 @@ module.exports = {
 	},
 	getLikedUser: async (username) => {
 		return await query.getAllRows("MATCH (u1:User {username: $username})-[:LIKES]->(u2:User) return u2;",
+		{
+			username: username
+		}
+		);
+	},
+	getLikedMe: async (username) => {
+		return await query.getAllRows("MATCH (u1:User {username: $username})<-[:LIKES]-(u2:User) return u2;",
 		{
 			username: username
 		}
