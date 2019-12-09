@@ -32,7 +32,7 @@ class Home extends Component {
 			tags: (a, b) => b.ntags - a.ntags,
 			distance: (a, b) => a.distance - b.distance,
 			age: (a, b) => a.age - b.age,
-			fame: (a, b) => a.fameRating - b.fameRating
+			fame: (a, b) => b.fameRating - a.fameRating
 		};
 		this.setState({
 			suggestions: this.state.suggestions.sort(sortFuncs[sortingCriteria]).slice()

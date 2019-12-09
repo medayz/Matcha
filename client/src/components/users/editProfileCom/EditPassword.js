@@ -28,9 +28,14 @@ class EditPassword extends Component {
     await axios
       .put(`/api/users/edit/password`, pwd)
       .then(res => {
-        this.props.user_state(false);
-        this.props.user_socket(null);
-        this.setState({ isValid: true });
+        axios
+          .get('/api/users/logout')
+          .then(res => {
+            this.props.userSocket.emit('ForceDisconnect', this.state.whoami);
+            this.props.user_state(false);
+            this.props.user_socket(null);
+            this.setState({ isValid: true });
+          });
       })
       .catch(err => {
         const backend = err.response.data;
