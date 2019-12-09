@@ -42,6 +42,34 @@ module.exports = {
 	getAllUsers: async () => {
 		return await query.getAllRows("MATCH (n:User) RETURN n;");
 	},
+	getLikedUser: async (username) => {
+		return await query.getAllRows("MATCH (u1:User {username: $username})-[:LIKES]->(u2:User) return u2;",
+		{
+			username: username
+		}
+		);
+	},
+	getViewedUser: async (username) => {
+		return await query.getAllRows("MATCH (u1:User {username: $username})<-[:VIEWED]-(u2:User) return u2;",
+		{
+			username: username
+		}
+		);
+	},
+	getMatchedUser: async (username) => {
+		return await query.getAllRows("MATCH (:User {username: $username})-[]->(c:Chat)<-[]-(u:User) RETURN u;",
+		{
+			username: username
+		}
+		);
+	},
+	getBlockedUser: async (username) => {
+		return await query.getAllRows("MATCH (u1:User {username: $username})-[:BLOCKED]->(u2:User) return u2;",
+		{
+			username: username
+		}
+		);
+	},
 	getUser: async user => {
 		return await query.getOneRow(
 			"MATCH (n:User {username: $name }) return n;",
@@ -177,6 +205,12 @@ module.exports = {
 		block: async params => {
 			await query.execute(
 				"MATCH (u1:User {username: $user1}), (u2:User {username: $user2}) MERGE (u1)-[:BLOCKED]->(u2)",
+				params
+			);
+		},
+		unblock: async params => {
+			await query.execute(
+				"MATCH (u1:User {username: $user1})-[b:BLOCKED]->(u2:User {username: $user2}) delete b;",
 				params
 			);
 		},

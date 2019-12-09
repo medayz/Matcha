@@ -64,14 +64,14 @@ export default class EditInfos extends Component {
         value: newValue.value,
         label: newValue.value
       };
-      var neww = [...this.state.options, Tag];
+      let alltags = this.state.options.filter(tg => tg.value !== Tag.value);
+      var neww = [...alltags, Tag];
       this.setState({
         options: neww
       });
       addTags(Tags)
         .then(({ data }) => {
           this.calluserTags();
-          this.callTags();
         })
         .catch(err => {
           this.setState({

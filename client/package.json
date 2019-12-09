@@ -15,6 +15,7 @@
     "http-proxy-middleware": "^0.20.0",
     "jsonwebtoken": "^8.5.1",
     "jwt-decode": "^2.2.0",
+    "lottie-react-web": "^2.1.4",
     "mdbreact": "^4.21.0",
     "node-geocoder": "^3.25.0",
     "notistack": "^0.9.3",
