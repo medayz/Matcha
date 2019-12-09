@@ -17,6 +17,21 @@ usersRouter
   .route("/get/:username")
   .get(usersController.getUserByUsername);
 usersRouter
+  .route("/likedUser")
+  .get(auth, usersController.getLikedUser);
+usersRouter
+  .route("/viewedUser")
+  .get(auth, usersController.getViewedUser);
+usersRouter
+  .route("/matchedUser")
+  .get(auth, usersController.getMatchedUser);
+usersRouter
+  .route("/blockedUser")
+  .get(auth, usersController.getBlockedUser);
+usersRouter
+  .route("/unblockUser/:username")
+  .get(auth, usersController.add.unblock);
+usersRouter
   .route("/isLoggedOn")
   .get(auth, (req, res) => res.send("logged"));
 usersRouter

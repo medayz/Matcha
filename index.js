@@ -11,10 +11,13 @@ const sockets = require(`${paths.LIBRARIES}/sockets`);
 var http = require('http').createServer(app);
 var io = require('socket.io')(http, {pingTimeout: 60000});
 const socketat = [];
+const path = require('path');
 
 app.disable("x-powered-by");
 app.use(cors());
 app.use(cookieParser());
+
+app.use(express.static(path.join(__dirname, 'client/build')));
 
 app.use(express.static('public'));
 
@@ -22,8 +25,10 @@ app.use("/api", (req, res, next) => {
 	req.sockets = socketat;
 	next();
 }, require("./routes"));
-
-app.get("/home", (req, res) => res.send("Hello World from 1337!"));
+/*
+app.get('*', (req, res) => {
+	res.sendFile(path.join(__dirname+'/client/build/index.html'));
+});*/
 
 app.use((req, response, next) => {
 	const error = new Error();
@@ -31,6 +36,7 @@ app.use((req, response, next) => {
 	error.status = 404;
 	next(error);
 });
+
 
 app.use((err, req, response, next) => {
 	const status = err.status || 500;
@@ -57,6 +63,7 @@ io.use(async function (socket, next) {
 		next(err);
 	}
 });
+
 
 io.on('connection', (socketa) => sockets(socketa, socketat));
 

@@ -149,6 +149,13 @@ class Header extends Component {
               )}
               {this.state.connected && (
                 <li className="nav-item">
+                  <Link to={'/who'} className="nav-link">
+                    Who?
+                  </Link>
+                </li>
+              )}
+              {this.state.connected && (
+                <li className="nav-item">
                   <Link to={'/infos'} className="nav-link">
                     History
                   </Link>

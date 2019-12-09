@@ -48,6 +48,74 @@ module.exports = {
 				});
 			});
 	},
+	getLikedUser: async (req, response) => {
+		userModel
+			.getLikedUser(req.username)
+			.then(results => {
+				response.json({
+					status: 200,
+					data: results
+				});
+			})
+			.catch(err => {
+				console.log(err.message);
+				response.status(500).json({
+					status: 500,
+					msg: "Error fetching users"
+				});
+			});
+	},
+	getViewedUser: async (req, response) => {
+		userModel
+			.getViewedUser(req.username)
+			.then(results => {
+				response.json({
+					status: 200,
+					data: results
+				});
+			})
+			.catch(err => {
+				console.log(err.message);
+				response.status(500).json({
+					status: 500,
+					msg: "Error fetching users"
+				});
+			});
+	},
+	getMatchedUser: async (req, response) => {
+		userModel
+			.getMatchedUser(req.username)
+			.then(results => {
+				response.json({
+					status: 200,
+					data: results
+				});
+			})
+			.catch(err => {
+				console.log(err.message);
+				response.status(500).json({
+					status: 500,
+					msg: "Error fetching users"
+				});
+			});
+	},
+	getBlockedUser: async (req, response) => {
+		userModel
+			.getBlockedUser(req.username)
+			.then(results => {
+				response.json({
+					status: 200,
+					data: results
+				});
+			})
+			.catch(err => {
+				console.log(err.message);
+				response.status(500).json({
+					status: 500,
+					msg: "Error fetching users"
+				});
+			});
+	},
 	getPersonalInfos: (req, response) => {
 		userModel
 			.getUser(req.username)
@@ -526,6 +594,24 @@ module.exports = {
 				.then(res => {
 					userModel.disLikeUser(params.user1, params.user2);
 					chatModel.deleteChat(params.user1, params.user2);
+					response.json({
+						status: 200,
+						msg: "User blocked successfully!"
+					});
+				}).catch(err => {
+					response.status(500).json({
+						status: 500,
+						msg: "Something went wrong!"
+					});
+				});
+		},
+		unblock: async (req, response) => {
+			const params = {
+				user1: req.username,
+				user2: req.params.username
+			};
+			userModel.add.unblock(params)
+				.then(res => {
 					response.json({
 						status: 200,
 						msg: "User blocked successfully!"
