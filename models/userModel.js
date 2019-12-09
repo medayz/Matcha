@@ -30,6 +30,15 @@ module.exports = {
 			}
 		);
 	},
+	isBlocked: async (user1, user2) => {
+		return await query.getOneRow(
+			"OPTIONAL MATCH (u1:User {username: $user1})-[b:BLOCKED]-(u2:User {username: $user2}) RETURN b",
+			{
+				user1: user1,
+				user2: user2
+			}
+		);
+	},
 	getAllUsers: async () => {
 		return await query.getAllRows("MATCH (n:User) RETURN n;");
 	},

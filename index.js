@@ -1,4 +1,5 @@
 const express = require("express");
+const path = require("path");
 const app = express();
 const PORT = process.env.PORT || 1337;
 const cors = require("cors");
@@ -17,13 +18,16 @@ app.use(cors());
 app.use(cookieParser());
 
 app.use(express.static('public'));
+app.use(express.static(path.join(__dirname, 'client/build')));
 
 app.use("/api", (req, res, next) => {
 	req.sockets = socketat;
 	next();
 }, require("./routes"));
 
-app.get("/home", (req, res) => res.send("Hello World from 1337!"));
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname+'/client/build/index.html'));
+});
 
 app.use((req, response, next) => {
 	const error = new Error();

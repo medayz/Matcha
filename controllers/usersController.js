@@ -3,7 +3,6 @@ const jwtHelper = require(`${paths.HELPERS}/jwtokens`);
 const userModel = require(`${paths.MODELS}/userModel`);
 const chatModel = require(`${paths.MODELS}/chatModel`);
 const pictureModel = require(`${paths.MODELS}/pictureModel`);
-const tagModel = require(`${paths.MODELS}/tagModel`);
 const validator = require(`${paths.HELPERS}/validator`);
 const mail = require(`${paths.HELPERS}/sendmail`);
 const token = require(`${paths.HELPERS}/token`);
@@ -24,12 +23,53 @@ const geocoder = NodeGeocoder(options);
 
 module.exports = {
 	whoami: async (req, response) => {
-		response.status(200).json({
+		response.json({
+			status: 200,
 			user: req.username
 		});
 	},
 	completed: async (req, response) => {
 		response.sendStatus(200);
+	},
+	isAmatch: async (req, response) => {
+		chatModel
+			.chatExists(req.username, req.params.visited)
+			.then(res => {
+				if (res.exists) {
+					response.json({
+						status: 200,
+						msg: "You're connected to this user!"
+					});
+				} else {
+					response.json({
+						status: 200,
+						msg: ""
+					});
+				}
+			})
+			.catch(err => {
+				console.log("it's not a match");
+			});
+	},
+	isBlocked: async (req, response) => {
+		userModel
+			.isBlocked(req.username, req.params.visited)
+			.then(res => {
+				if (!res) {
+					response.json({
+						status: 200,
+						msg: "Not Blocked!"
+					});
+				} else {
+					response.status(403).json({
+						status: 403,
+						msg: "Blocked"
+					});
+				}
+			})
+			.catch(err => {
+				console.log("not blocked!");
+			});
 	},
 	getAllUsers: async (req, response) => {
 		userModel
@@ -92,11 +132,13 @@ module.exports = {
 				next("Error getting your personal info");
 			});
 	},
-	getUserByUsername: (req, response) => {
+	getUserByUsername: async (req, response) => {
 		userModel
 			.getUser(req.params.username)
-			.then(results => {
-				if (results) {
+			.then(async results => {
+				const isBlocked = await userModel.isBlocked(req.username, req.params.username);
+				if (results && !isBlocked) {
+					const isAmatch = await chatModel.chatExists(req.username, req.params.username);
 					let {
 						lName,
 						fName,
@@ -123,11 +165,17 @@ module.exports = {
 						bio: bio,
 						fameRating: fameRating,
 						timeLastCnx: timeLastCnx,
-						dateLastCnx: dateLastCnx
+						dateLastCnx: dateLastCnx,
+						match: isAmatch ? "You're connected to this user!" : ""
 					};
 					response.json({
 						status: 200,
 						data: results
+					});
+				} else if (isBlocked) {
+					response.status(403).json({
+						status: 403,
+						msg: "Blocked"
 					});
 				} else {
 					response.status(404).json({
@@ -703,7 +751,7 @@ module.exports = {
 								params.username,
 								params.newPass
 							);
-							response.json({
+							response.clearCookie("token").json({
 								status: 200,
 								msg: "Password changed successfully!"
 							});

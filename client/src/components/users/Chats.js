@@ -61,7 +61,8 @@ class Chats extends Component {
 
     scrollDown = () => {
         const ele = document.querySelector('#messages');
-        ele.scrollTop = ele.scrollHeight;
+        if (ele)
+            ele.scrollTop = ele.scrollHeight;
     }
 
     mapOnChats = (chat) => {
