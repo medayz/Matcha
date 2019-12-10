@@ -93,7 +93,7 @@ class Header extends Component {
   render() {
     return (
       
-      <nav style={navBar} className="navbar navbar-expand-sm navbar-dark mb-3 py-0">
+      <nav style={navBar} className="navbar navbar-expand-sm navbar-dark">
       {this.state.toLogin && <Redirect to='/login'/>} 
       {this.state.show &&
         <div className="container">

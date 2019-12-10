@@ -369,7 +369,7 @@ class Profileuser extends Component {
                           secondary={this.state.tags.map((tag, index) => {
                             return (
                               <span className="mr-1 mb-1" key={tag.id}>
-                                #{tag.props.name}{" "}
+                                {tag.props.name}{" "}
                                 {index !== 0 && index % 4 === 0 && <br />}
                               </span>
                             );

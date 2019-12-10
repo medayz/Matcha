@@ -75,7 +75,7 @@ class Home extends Component {
 			if (this.props.userState){
 				const test = {
 					ageFilter: [18, 25],
-					tagsFilter : 1,
+					tagsFilter : 0,
 					distanceFilter : 10,
 					fameFilter : 0
 				}
@@ -104,11 +104,10 @@ class Home extends Component {
 						state: {userprofile: this.state.dataprofile }
 					}
 				} Component={Profileuser} />}
-				<div className="container">
-					<div className="row" >
-						<div className="col-md-1" />
-							<Sort changeSorting={this.changeSorting} />
-						<div className="col-md-2" />
+				<div className="container" style={{margin: '30px auto'}}>
+					<div className="row">
+						<Sort changeSorting={this.changeSorting} />
+						<div className="col-md-4" />
 						<div className="col-md-4">
 							<Filters filterFunction={this.filter}/>
 						</div>

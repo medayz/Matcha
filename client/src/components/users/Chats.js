@@ -24,7 +24,11 @@ const scroll = {
 }
 
 const styleinput = {
-    width: '85%'
+    width: '85%',
+    backgroundColor: '#FFE8EC',
+    padding: '6px',
+    margin: '4px',
+    borderRadius: '4px'
 }
 
 const mymsgStyle = {
@@ -34,14 +38,34 @@ const mymsgStyle = {
 }
 
 const sendstyle = {
-    color : 'pink',
-    margin: '4%'
+    color : 'white'
+}
+
+const iconContainer = {
+    display: 'inline-block',
+    backgroundColor : 'pink',
+    padding: '6px',
+    margin: '6.5px',
+    borderRadius: '4px'
 }
 
 const convstyle= {
     backgroundColor: '#ffffff0d',
     padding: '1%'
 }
+
+const pinkBackground = {
+    backgroundColor: '#FFE8EC'
+}
+
+const lightPinkBackground = {
+    backgroundColor: '#FFF3F5'
+}
+
+const inputProps = {
+    disableUnderline: true,
+    padding: '4px'
+};
 
 class Chats extends Component {
     state = {
@@ -170,11 +194,11 @@ class Chats extends Component {
                 {this.state.ToEdit && <Redirect to={`/profile/edit`} />}
                 {!this.state.redirect &&
                 <div className="row">
-                    <div className="col-md-4">
-                        <div className="card" style={{margin : '20px'}}>
+                    <div className="col-md-4" style={pinkBackground}>
+                        <div className="card" style={{margin: '20px', border: '0px'}}>
                             <ul className="list-group list-group-flush">
                                 {this.state.usernames.map(u => 
-                                <li key={u} className="list-group-item"> 
+                                <li key={u} className="list-group-item" style={{backgroundColor: '#FFF9FA'}}> 
                                 
                                     <div className="row">
                                         <div className="col-md-10">
@@ -189,10 +213,10 @@ class Chats extends Component {
                             </ul>
                         </div>
                     </div>
-                    <div className="col-md-7">
+                    <div className="col-md-8" style={lightPinkBackground}>
                         <div>
                             <div style={convstyle}>
-                                <div className="card" >
+                                <div className="card" style={{border: '0'}}>
                                     <ul className="list-group list-group-flush">
                                         <li className="list-group-item" style={{color:'black'}}>{this.state.to}</li>
                                     </ul>
@@ -214,14 +238,18 @@ class Chats extends Component {
                                     <div>
                                         <TextField
                                             style={styleinput}
-                                            id="standard-dense"
-                                            label="Message"
+                                            id="standard-basic"
+                                            variant="standard"
+                                            label=""
                                             margin="dense"
                                             name="msg"
+                                            InputProps={inputProps}
                                             value={this.state.msg}
                                             onChange={this.onChange}
                                         />
-                                        <SendIcon style={sendstyle} size='large' onClick={this.sendmsg} color="primary"/>
+                                        <div style={iconContainer}>
+                                            <SendIcon style={sendstyle} size='large' onClick={this.sendmsg} color="primary"/>
+                                        </div>
                                     </div>
                                 </form>
                                 }

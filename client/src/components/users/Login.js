@@ -201,7 +201,7 @@ class Login extends Component {
               )}
               <Alert />
           {this.state.emailSend &&
-            <div className="alert alert-success" role="alert">
+            <div className="alert alert-success mt-3" role="alert">
               {this.state.emailSend}
             </div>
           }

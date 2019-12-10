@@ -17,7 +17,8 @@ module.exports = {
 			return "Please enter a username";
 		if (found)
 			return "Username already taken!";
-
+		if (username.length > 15)
+			return "Username too long";
 		return (!username.match(/^[a-zA-Z]+[\w]*$/)) ?
 			"Username start with a letter and can only contain letters or numbers or underscores" :
 			"";
@@ -36,7 +37,8 @@ module.exports = {
 	lastName: (lastName) => {
 		if (!lastName)
 			return "Please enter your last name";
-
+		if (lastName.length > 15)
+			return "Last name too long";
 		return (lastName.match(/^[a-zA-Z]+[A-Za-z\-]*$/) === null) ?
 			"A name start with a letter and can only contain letters or dashes" :
 			"";
@@ -44,7 +46,8 @@ module.exports = {
 	firstName: (firstName) => {
 		if (!firstName)
 			return "Please enter your first name";
-
+		if (firstName.length > 15)
+			return "First name too long";
 		return (!firstName.match(/^[a-zA-Z][A-Za-z\-]*$/)) ?
 			"A name start with a letter and can only contain letters or dashes" :
 			"";

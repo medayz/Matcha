@@ -122,6 +122,23 @@ module.exports = {
 				});
 			});
 	},
+	getMyVisits: async (req, response) => {
+		userModel
+			.getMyVisits(req.username)
+			.then(results => {
+				response.json({
+					status: 200,
+					data: results
+				});
+			})
+			.catch(err => {
+				console.log(err.message);
+				response.status(500).json({
+					status: 500,
+					msg: "Error fetching users"
+				});
+			});
+	},
 	getViewedUser: async (req, response) => {
 		userModel
 			.getViewedUser(req.username)
@@ -988,56 +1005,64 @@ module.exports = {
 	like : async (req, response) =>  {
 		const user1 = req.username;
 		const user2 = req.body.to;
-
-		(user1 !== user2)
-		&& userModel.likeUser(user1, user2)
-			.then( async (res) => {
-				let ResUser1 = res.user1;
-				let ResUser2 = res.user2;
-
-				userModel.fameRate(user2);
-				if (ResUser1 === null)
-				{
-					const user2Notif = await userModel.add.notification({
-						username: user2,
-						text: `${user1} liked you`
-					});
-					sockets.eventEmitter(user2, req.sockets, 'notification', user2Notif.props);
-					if (ResUser2 !== null) {
-						const user1Notif = await userModel.add.notification({
-							username: user1,
-							text: `you're now connected with ${user2}`
-						});
+		const visited = await userModel.isBlocked(req.username, user2);
+		if (!visited.blocked){
+			(user1 !== user2)
+			&& userModel.likeUser(user1, user2)
+				.then( async (res) => {
+					let ResUser1 = res.user1;
+					let ResUser2 = res.user2;
+	
+					userModel.fameRate(user2);
+					if (ResUser1 === null)
+					{
 						const user2Notif = await userModel.add.notification({
 							username: user2,
-							text: `you're now connected with ${user1}`
+							text: `${user1} liked you`
 						});
-						sockets.eventEmitter(user1, req.sockets, 'notification', user1Notif.props);
 						sockets.eventEmitter(user2, req.sockets, 'notification', user2Notif.props);
-						chatModel.addChat(user1, user2);
+						if (ResUser2 !== null) {
+							const user1Notif = await userModel.add.notification({
+								username: user1,
+								text: `you're now connected with ${user2}`
+							});
+							const user2Notif = await userModel.add.notification({
+								username: user2,
+								text: `you're now connected with ${user1}`
+							});
+							sockets.eventEmitter(user1, req.sockets, 'notification', user1Notif.props);
+							sockets.eventEmitter(user2, req.sockets, 'notification', user2Notif.props);
+							chatModel.addChat(user1, user2);
+						}
+						response.status(200).json({
+							status: 200,
+							like: true
+						});	
 					}
-					response.status(200).json({
-						status: 200,
-						like: true
-					});	
-				}
-				else
-				{
-					const user2Notif = await userModel.add.notification({
-						username: user2,
-						text: `${user1} unliked you`
-					});
-					sockets.eventEmitter(user2, req.sockets, 'notification', user2Notif.props);
-					userModel.disLikeUser(user1, user2);
-					chatModel.deleteChat(user1, user2);
-					response.status(200).json({
-						status: 200,
-						like: false
-					});
-				}
-			})
-			.catch(err => {
-				console.log(err.message);
+					else
+					{
+						const user2Notif = await userModel.add.notification({
+							username: user2,
+							text: `${user1} unliked you`
+						});
+						sockets.eventEmitter(user2, req.sockets, 'notification', user2Notif.props);
+						userModel.disLikeUser(user1, user2);
+						chatModel.deleteChat(user1, user2);
+						response.status(200).json({
+							status: 200,
+							like: false
+						});
+					}
+				})
+				.catch(err => {
+					console.log(err.message);
+				});
+		}
+		else if (visited.blocked) {
+			response.status(403).json({
+				status: 403,
+				msg: "Blocked"
 			});
+		}
 	}
 };

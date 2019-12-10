@@ -10,13 +10,13 @@ a{color:inherit;text-decoration:none}
 	min-height:510px;
 	position:relative;
 	background-size: cover;
-	box-shadow:0 12px 15px 0 pink;
+	/* box-shadow:0 12px 15px 0 pink; */
 }
 .login-html{
 	width:100%;
 	height:100%;
 	padding:90px 70px 50px 70px;
-	background:pink;
+	background: #fff;
 }
 .login-html .sign-in-htm,
 .login-html .for-pwd-htm{
@@ -48,11 +48,11 @@ a{color:inherit;text-decoration:none}
 	margin:0 15px 10px 0;
 	display:inline-block;
 	border-bottom:2px solid transparent;
-	color: white;
+	color: pink;
 }
 .login-html .sign-in:checked + .tab,
 .login-html .for-pwd:checked + .tab{
-	color:#fff;
+	color: pink;
 }
 .login-form{
 	min-height:345px;
@@ -75,21 +75,23 @@ a{color:inherit;text-decoration:none}
 .login-form .group .input,
 .login-form .group .button{
 	border:none;
-	padding:15px 20px;
+	width: 200px;
+	margin: 30px auto;
+	padding: 10px 10px;
 	border-radius:25px;
-	background:white;
+	background:pink;
 }
 .login-form .group input[data-type="password"]{
 	text-security:circle;
 	-webkit-text-security:circle;
 }
 .login-form .group .label{
-	color:white;
+	color:pink;
 	font-size:12px;
 }
 .login-form .group .button{
-	background:white;
-	color :pink;
+	background:pink;
+	color :white;
 }
 .login-form .group label .icon{
 	width:15px;

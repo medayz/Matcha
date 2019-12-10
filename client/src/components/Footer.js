@@ -5,8 +5,8 @@ const spanStyle = {
 }
 
 const footer =  {
-    position: 'absolute',
-    bottom: '0',
+    
+    bottom: '0px',
     width: '100%',
     height: '2.5rem',
     color: 'pink',

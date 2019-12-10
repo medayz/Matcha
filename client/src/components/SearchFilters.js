@@ -101,7 +101,7 @@ const SearchFilters = (props) => {
 								fame: fame
 							})}
 							variant="contained"
-							style={{float: 'left',backgroundColor: 'pink', color: 'white'}}
+							style={{float: 'left', backgroundColor: 'pink', color: 'white', boxShadow: 'none'}}
 						>
 							Search
 						</Button>

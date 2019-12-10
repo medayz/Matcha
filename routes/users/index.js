@@ -26,6 +26,9 @@ usersRouter
   .route("/viewedUser")
   .get(auth, usersController.getViewedUser);
 usersRouter
+  .route("/myVisits")
+  .get(auth, usersController.getMyVisits);
+usersRouter
   .route("/matchedUser")
   .get(auth, usersController.getMatchedUser);
 usersRouter

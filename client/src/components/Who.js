@@ -46,7 +46,7 @@ const MyCard = (props) => {
         return () => {
             setcleanup(false);
         };
-    }, []);
+    }, [cleanup, props]);
 
     return (
         <Card style={{marginButtom: '2%'}}>
@@ -91,21 +91,28 @@ const MyCard = (props) => {
 const Who = () => {
 
     const [blocked, setBlocked] = useState([]);
-
     const [viewed, setviewed] = useState([]);
-
+    const [myvisits, setmyvisits] = useState([]);
     const [matched, setmatched] = useState([]);
-
     const [liked, setliked] = useState([]);
-
-
+    const [toEdit, setToEdit] = useState(false);
     const [likedme, setlikedme] = useState([]);
-
+    
     const likedUser = () => {
         axios.get('/api/users/likedMe')
         .then(res => {
             let data = res.data.data;
             setlikedme(data);
+        })
+        .catch(err => {
+        });
+    }
+
+    const myVisits = () => {
+        axios.get('/api/users/myVisits')
+        .then(res => {
+            let data = res.data.data;
+            setmyvisits(data);
         })
         .catch(err => {
         });
@@ -151,18 +158,28 @@ const Who = () => {
         });
     }
 
+ 
+
     useEffect(() => {
-        likedUser();
-        viewedUser();
-        matchedUser();
-        blockedUser();
-        likedMe();
+        axios
+		.get('/api/users/completed')
+		.then (res => {
+			likedUser();
+            viewedUser();
+            matchedUser();
+            blockedUser();
+            likedMe();
+            myVisits();
+		})
+		.catch(err => {
+			setToEdit(true);
+		});
     }, [])
     
     return (
         <div className="conatiner">
             <br />
-            
+            {toEdit && <Redirect to='/profile/edit'/>}
             <div className="row">
                 <div className="col-md-2"></div>
                 <div className="col-md-8">
@@ -174,6 +191,9 @@ const Who = () => {
                         </li>
                         <li className="nav-item">
                             <a className="nav-link" id="username-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Viewed My profile</a>
+                        </li>
+                        <li className="nav-item">
+                            <a className="nav-link" id="username-tab" data-toggle="tab" href="#visits" role="tab" aria-controls="profile" aria-selected="false">My visits</a>
                         </li>
                         <li className="nav-item">
                             <a className="nav-link" id="email-tab" data-toggle="tab" href="#mail" role="tab" aria-controls="contact" aria-selected="false">Blocked users</a>
@@ -202,6 +222,17 @@ const Who = () => {
                             <br />
                             <div className="row">
                                 {viewed.map((user, index) => 
+                                    <div key={index} className="col-md-6">
+                                        <MyCard user={user} block={false}></MyCard>    
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                        <div className="tab-pane fade" id="visits" role="tabpanel" aria-labelledby="username-tab">
+                            <br />
+                            <br />
+                            <div className="row">
+                                {myvisits.map((user, index) => 
                                     <div key={index} className="col-md-6">
                                         <MyCard user={user} block={false}></MyCard>    
                                     </div>

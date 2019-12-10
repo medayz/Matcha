@@ -63,6 +63,13 @@ module.exports = {
 		}
 		);
 	},
+	getMyVisits: async (username) => {
+		return await query.getAllRows("MATCH (u1:User {username: $username})-[:VIEWED]->(u2:User) return u2;",
+		{
+			username: username
+		}
+		);
+	},
 	getMatchedUser: async (username) => {
 		return await query.getAllRows("MATCH (:User {username: $username})-[]->(c:Chat)<-[]-(u:User) RETURN u;",
 		{
