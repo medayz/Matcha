@@ -27,10 +27,10 @@ app.use("/api", (req, res, next) => {
 	next();
 }, require("./routes"));
 
-/*
+
 app.get('*', (req, res) => {
 	res.sendFile(path.join(__dirname+'/client/build/index.html'));
-});*/
+});
 
 app.use((req, response, next) => {
 	const error = new Error();

@@ -72,11 +72,12 @@ class Home extends Component {
 		axios
 		.get('/api/users/completed')
 		.then (res => {
+			console.log(res);
 			if (this.props.userState){
 				const test = {
 					ageFilter: [18, 25],
-					tagsFilter : 0,
-					distanceFilter : 10,
+					tagsFilter : 1,
+					distanceFilter : 5000,
 					fameFilter : 0
 				}
 				this._unmout && this.filter(test);

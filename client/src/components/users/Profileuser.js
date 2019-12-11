@@ -240,7 +240,7 @@ class Profileuser extends Component {
                       </span>
                       <br />
                       <br />
-                      {!this.state.online && (
+                      {this.state.data.dateLastCnx && !this.state.online && (
                             <span style={timeStyle}>
                               <span style={{fontSize: '14px',color: 'pink'}}>Last time connexion</span> {` ${this.state.data.dateLastCnx.month}-${this.state.data.dateLastCnx.day}-${this.state.data.dateLastCnx.year} ${this.state.data.timeLastCnx.hour}:${this.state.data.timeLastCnx.minute}`}
                               <br />

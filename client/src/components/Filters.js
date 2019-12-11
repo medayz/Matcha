@@ -65,6 +65,8 @@ class Filters extends Component {
 						value={this.state.distanceFilter}
 						onChange={this.filterLocation}
 						valueLabelDisplay="auto"
+						min={0}
+						max={30000}
 						aria-labelledby="continuous-slider"
 						style={filterColor}
 					/>
