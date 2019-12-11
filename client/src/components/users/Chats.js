@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
-import Chip from '@material-ui/core/Chip';
 import TextField from '@material-ui/core/TextField';
 import SendIcon from '@material-ui/icons/Send';
 import { Redirect } from "react-router-dom";
@@ -32,7 +31,12 @@ const styleinput = {
 }
 
 const mymsgStyle = {
-    float: 'right',
+    wordWrap: 'break-word',
+    padding: '8px',
+    display: 'inline-block',
+    marginRight: '0',
+    borderRadius: '10px',
+    maxWidth: '50%',
     color: 'white',
     backgroundColor: 'pink',
 }
@@ -223,14 +227,26 @@ class Chats extends Component {
                                 </div>
                                 <div id="messages" style={scroll}>
                                     {this.state.conversation.map((msg, index) => 
-                                        <div key={index}>
-                                            {(msg.receiver === this.state.from
-                                                && <div><Chip label={msg.body} style={{marginTop: '3%', borderColor: 'pink', color: 'pink'}}  variant="outlined" /> </div>)
-                                                || <div><Chip  label={msg.body} style={mymsgStyle}/></div>}
-                                            <br />
-                                            <br />
-                                            <br />
-                                        </div>    
+                                            (msg.receiver === this.state.from
+                                                &&  <div key={index} style={{margin: '5px 0', width:'100%', display: 'flex'}}>
+                                                        <div style={{
+                                                            borderColor: 'pink',
+                                                            color: 'pink',
+                                                            position: 'relative',
+                                                            wordWrap: 'word-break',
+                                                            padding: '6px',
+                                                            borderRadius: '10px',
+                                                            display: 'inline-block',
+                                                            maxWidth: '50%',
+                                                            border: '2px solid pink'
+                                                        }} >
+                                                            {msg.body}
+                                                        </div>
+                                                    </div>) || (
+                                                        <div key={index} style={{margin: '5px 0', width:'100%', display: 'flex', justifyContent: 'flex-end'}}>
+                                                            <div style={mymsgStyle}>{msg.body}</div>
+                                                        </div>
+                                                    )
                                     )}
                                 </div>
                                 {this.state.to !== "Choose a conversation" && 

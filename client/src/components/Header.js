@@ -33,7 +33,8 @@ class Header extends Component {
         statesocket.emit('ForceDisconnect', this.state.whoami);
         this.setState({whoami: ""});
         this.setState({toLogin: true});
-      });
+      })
+      .catch(err => {});
   }
 
   componentDidMount () {

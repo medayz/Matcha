@@ -366,7 +366,7 @@ module.exports = {
 				receiver: params.email,
 				subject: "Confirm your e-mail address",
 				body: "message body goes here!",
-				html: `<h1>You can activate your account from <a href="http:/localhost:3000/confirmAcc/${params.username}/${tok}">here</a></h1>`
+				html: `<h1>You can activate your account from <a href="http:/localhost:1337/confirmAcc/${params.username}/${tok}">here</a></h1>`
 			}).catch(err => console.log(err));
 		} else {
 			response.status(400).json({
@@ -485,7 +485,7 @@ module.exports = {
 					receiver: result.email,
 					subject: "Reset Password link!",
 					body: "message body goes here!",
-					html: `<h1>You can reset your password from <a href="http:/localhost:3000/resetpwd/${user}/${tok}">here</a></h1>`
+					html: `<h1>You can reset your password from <a href="http:/localhost:1337/resetpwd/${user}/${tok}">here</a></h1>`
 				})
 				.then(res => {
 					response.json({

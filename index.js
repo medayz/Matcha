@@ -58,7 +58,6 @@ io.use(async function (socket, next) {
 		const cookies = cookie.parse(socket.request.headers.cookie);
 		const payload = await jwtHelper.checkToken(cookies.token);
 		socket.username = payload.username;
-		console.log(socketat.length);
 		next();
 	} catch (err) {
 		console.log(err.message);

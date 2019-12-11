@@ -42,7 +42,7 @@ const eventHandlers = {
 };
 
 module.exports = function(socketa, socketat) {
-  socketat.push(socketa);
+  sockets.addSocket(socketat, socketa);
   socketa.on("msg", (data, callback) =>
     eventHandlers.msg(data, callback, socketat)
   );
@@ -56,9 +56,4 @@ module.exports = function(socketa, socketat) {
       console.log(err.message);
     }
   });
-  socketa.on('disconnect', function() {
-    console.log('socket disconnect');
-    var i = socketat.indexOf(socketa);
-    socketat.splice(i, 1);
- });
 };

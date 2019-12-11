@@ -1,6 +1,11 @@
 module.exports = {
+    addSocket: (socketat, socketa) => {
+        if (!socketat.includes(socketa)) {
+            socketat.push(socketa);
+        }
+    },
     removeUserSockets: async (user, sockets) => {
-        const userSockets = sockets.filter(socket => socket.username != user);
+        const userSockets = sockets.filter(socket => socket.username !== user);
         return userSockets;
     },
     getUserSocket: async (user, sockets) => {

@@ -126,6 +126,7 @@ class Profileuser extends Component {
   traitement = () => {
     this._unmout && axios.get('/api/users/whoami')
     .then (async res => {
+      this._unmout && this.setState({Forbidden: false});
       this._unmout &&  this.setState({ whoami: res.data.user });
       this._unmout && this.setState({connected : true});
         let socket = this.props.userSocket;
@@ -183,8 +184,11 @@ class Profileuser extends Component {
   componentDidUpdate () {
     this.unlisten = this.props.history.listen((location, action) => {
       let username = location.pathname.split("/");
-      this._unmout && this.setState({user: username[2]});
-      this._unmout && this.traitement();
+      if (this.state.user !== username[2])
+      {
+        this._unmout && this.setState({user: username[2]});
+        this._unmout && this.traitement();
+      }
     });
   }
 
@@ -211,7 +215,7 @@ class Profileuser extends Component {
 
               <div className="profile-content">
                 <div className="row">
-                  <div className="col-md-4">
+                  <div className="col-md-4" style={{wordWrap: 'break-word'}}>
                     <center>
                       {this.state.pp.length > 0 && 
                         <Avatar
@@ -235,9 +239,9 @@ class Profileuser extends Component {
                       />
                       <br />
                       <br />
-                      <span style={{ fontWeight: "600" }}>
+                      <div style={{ fontWeight: "600"}}>
                         {this.state.data.bio}
-                      </span>
+                      </div>
                       <br />
                       <br />
                       {this.state.data.dateLastCnx && !this.state.online && (
